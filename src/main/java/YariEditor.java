@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.yari.core.table.DecisionTable;
+import utilities.FXUtil;
+import utilities.FileUtil;
 import utilities.ThemeUtil;
 import view.RootLayoutFactory;
 import view.WelcomeSplash;
@@ -53,8 +55,14 @@ public class YariEditor extends Application {
             RootLayoutFactory.show(primaryStage);
         });
         welcomeSplash.getOpenButton().setOnMouseClicked(me -> {
-            RootLayoutFactory.show(primaryStage);
-            //TODO: Update to show an open dialog and load it in
+            boolean success = FileUtil.openFile(primaryStage);
+            if (success) {
+                FXUtil.runAsync(() -> {
+                    RootLayoutFactory.init();
+
+                    FXUtil.runOnFXThread(() -> RootLayoutFactory.show(primaryStage));
+                });
+            }
         });
 
 
