@@ -98,6 +98,11 @@ public class DecisionTableValidator {
         }
     }
 
+    public static void runValidation(){
+        ValidateRequest validateRequest = new ValidateRequest(RootLayoutFactory.getInstance().getDecisionTable());
+        validateRequest.runValidation();
+    }
+
     public static void updateTable() {
         List<Row> updatedRows = new ArrayList<>();
         updatedRows.addAll(RootLayoutFactory.getInstance().getRowsList());

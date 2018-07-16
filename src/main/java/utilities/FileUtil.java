@@ -1,5 +1,7 @@
 package utilities;
 
+import com.jfoenix.controls.JFXSnackbar;
+import com.thoughtworks.xstream.XStream;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.yari.core.BasicRule;
@@ -13,6 +15,7 @@ import view.RootLayoutFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 //TODO: Save. Print. Shortcuts to open, save, print. On save show a toast notification.
 public class FileUtil {
@@ -33,6 +36,27 @@ public class FileUtil {
             return importFromFile(file);
         }
         return false;
+    }
+
+    public static void saveToFile(File file) {
+
+        DecisionTableValidator.updateTable();
+        DecisionTableValidator.runValidation();
+
+        if (!DecisionTableValidator.validProperty().get()) {
+            return;
+        }
+
+        XStream xstream = new XStream();
+        xstream.processAnnotations(DecisionTable.class);
+
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
+            currentFile = file;
+            ToastUtil.sendToast("File saved.");
+        } catch (Exception ex) {
+            ToastUtil.sendPersistantToast("Failed to save file! " + ex.getMessage());
+        }
     }
 
     private static boolean importFromFile(File file) throws FileNotFoundException, YariException {
@@ -78,4 +102,7 @@ public class FileUtil {
         RootLayoutFactory.getInstance().setDecisionTable(null);
     }
 
+    public static File getCurrentFile() {
+        return currentFile;
+    }
 }

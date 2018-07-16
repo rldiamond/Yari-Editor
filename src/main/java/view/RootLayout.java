@@ -38,14 +38,14 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
-import utilities.DecisionTableValidator;
-import utilities.FXUtil;
-import utilities.FileUtil;
-import utilities.ThemeUtil;
+import utilities.*;
+
+import java.io.File;
 
 public class RootLayout extends BorderPane {
 
@@ -177,7 +177,16 @@ public class RootLayout extends BorderPane {
         });
         HBox file_save_pane = new HBox(new Label("Save"));
         file_save_pane.setAlignment(Pos.CENTER_LEFT);
-        file_save_pane.setOnMouseClicked(me -> fileMenuPopUp.hide());
+        file_save_pane.setOnMouseClicked(me -> {
+            save(false);
+            fileMenuPopUp.hide();
+        });
+        HBox file_saveAs_pane = new HBox(new Label("Save As.."));
+        file_saveAs_pane.setAlignment(Pos.CENTER_LEFT);
+        file_saveAs_pane.setOnMouseClicked(me -> {
+            save(true);
+            fileMenuPopUp.hide();
+        });
         //TODO action & icons
         HBox file_print_pane = new HBox(new Label("Print"));
         file_print_pane.setAlignment(Pos.CENTER_LEFT);
@@ -192,7 +201,7 @@ public class RootLayout extends BorderPane {
         });
         //TODO action & icons
 
-        fileMenuList.getItems().addAll(file_new_pane, file_open_pane, file_save_pane, file_print_pane, file_exit_pane);
+        fileMenuList.getItems().addAll(file_new_pane, file_open_pane, file_save_pane, file_saveAs_pane, file_print_pane, file_exit_pane);
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
         fileMenuPopUp.setPopupContent(fileMenuList);
 
@@ -396,6 +405,37 @@ public class RootLayout extends BorderPane {
 
         setLeft(leftMenu);
 
+    }
+
+    private void save(boolean newFile) {
+        if (!DecisionTableValidator.validProperty().get()) {
+            ToastUtil.sendPersistantToast("Could not save decision table as it does not pass validation.");
+        } else if (newFile) {
+            //save as functionality
+            FileChooser fileChooser = new FileChooser();
+
+            // Set extension filter
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
+            fileChooser.getExtensionFilters().add(extFilter);
+
+            // Show the save file dialog
+            File file = fileChooser.showSaveDialog(getScene().getWindow());
+
+            if (file != null) {
+                // Make sure it has the correct extension.
+                if (!file.getPath().endsWith(".xml")) {
+                    file = new File(file.getPath() + ".xml");
+                }
+                FileUtil.saveToFile(file);
+            }
+        } else {
+            File tableFile = FileUtil.getCurrentFile();
+            if (tableFile != null) {
+                FileUtil.saveToFile(FileUtil.getCurrentFile());
+            } else {
+                save(true); //recurse
+            }
+        }
     }
 
     public Pane getMinimizeButton() {
