@@ -90,7 +90,6 @@ public class DecisionTableValidator {
                 updateTable();
                 TableValidator.validateRule(decisionTable);
                 decisionTable.convertRowData();
-                renumberRows();
             } catch (Exception ex) {
                 message.set(ex.getMessage());
                 valid = false;
@@ -112,14 +111,6 @@ public class DecisionTableValidator {
         updatedActions.addAll(RootLayoutFactory.getInstance().getActionsList());
         RootLayoutFactory.getInstance().getDecisionTable().setActions(updatedActions);
     }
-
-    public static void renumberRows() {
-        var rowNumber = 0;
-        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
-            row.setRowNumber(rowNumber++);
-        }
-    }
-
 
     /**
      * The valid property for the validator.
