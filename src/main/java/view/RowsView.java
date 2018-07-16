@@ -12,6 +12,7 @@ package view;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,12 +25,17 @@ import javafx.scene.layout.StackPane;
 import org.yari.core.table.Row;
 import view.table.RowTable;
 
-
+/**
+ * Display a table of {@link Row} to allow for creation of additional rows, editing available rows, and removing rows.
+ */
 public class RowsView extends StackPane {
 
-    public ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
+    private ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
     private RowTable rowTable = new RowTable(RootLayoutFactory.getInstance().getConditionsList(), RootLayoutFactory.getInstance().getActionsList());
 
+    /**
+     * Construct a RowsView with default settings.
+     */
     public RowsView() {
         setPadding(new Insets(20, 20, 20, 20));
         Card tableCard = new Card("Rows Editor");
@@ -38,6 +44,13 @@ public class RowsView extends StackPane {
         //table
         rowTable.setItems(rowsList);
         tableCard.setDisplayedContent(rowTable);
+
+        //renumber rows on change
+        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> {
+            while (c.next()) {
+                renumberRows();
+            }
+        });
 
         ContextMenu contextMenu = new ContextMenu();
         var addMenuItem = new MenuItem("ADD");
@@ -67,14 +80,34 @@ public class RowsView extends StackPane {
         tableCard.setBottomContent(buttonWrapper);
     }
 
-    private void addRow(MouseEvent me) {
+    /**
+     * Add a {@link Row} to the decision table.
+     *
+     * @param mouseEvent the event calling this method.
+     */
+    private void addRow(MouseEvent mouseEvent) {
         rowsList.add(new Row());
     }
 
+    /**
+     * Remove a {@link Row} from the decision table.
+     *
+     * @param mouseEvent the event calling this method.
+     */
     private void removeRow(MouseEvent mouseEvent) {
         Row selectedItem = rowTable.getSelectionModel().getSelectedItem();
         if (rowsList.contains(selectedItem)) {
             rowsList.remove(selectedItem);
+        }
+    }
+
+    /**
+     * Rows need to be renumbered when added, removed, or re-arranged.
+     */
+    private void renumberRows() {
+        var rowNumber = 0;
+        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
+            row.setRowNumber(rowNumber++);
         }
     }
 }

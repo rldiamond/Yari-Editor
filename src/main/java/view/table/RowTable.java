@@ -42,6 +42,9 @@ public class RowTable extends YariTable<Row> {
         TableColumn conditionsCol = new TableColumn("CONDITIONS");
         TableColumn actionsCol = new TableColumn("ACTIONS");
         TableColumn<Row, Integer> rowNumCol = new TableColumn("#");
+        rowNumCol.setPrefWidth(45);
+        rowNumCol.setMaxWidth(45);
+        rowNumCol.setMinWidth(45);
         rowNumCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getRowNumber()).asObject());
 
         //conditions
