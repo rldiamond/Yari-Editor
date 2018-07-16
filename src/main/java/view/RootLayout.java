@@ -39,6 +39,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
@@ -162,19 +163,8 @@ public class RootLayout extends BorderPane {
         HBox file_open_pane = new HBox(new Label("Open"));
         file_open_pane.setAlignment(Pos.CENTER_LEFT);
         file_open_pane.setOnMouseClicked(me -> {
-            boolean success = false;
-            try {
-                success = FileUtil.openFile(getScene().getWindow());
-            } catch (Exception ex) {
-                JFXDialog failedToLoadDialog = new JFXDialog();
-                DialogPane failedToLoad = new DialogPane(failedToLoadDialog);
-                failedToLoad.setContent("Failed to load the selected file. " + ex.getMessage());
-                failedToLoadDialog.setContent(failedToLoad);
-                failedToLoadDialog.setDialogContainer(displayedContent);
-                failedToLoadDialog.setOverlayClose(false);
-                failedToLoadDialog.show();
-            }
-        });
+            FileUtil.openFile((Stage) getScene().getWindow());
+            });
         HBox file_save_pane = new HBox(new Label("Save"));
         file_save_pane.setAlignment(Pos.CENTER_LEFT);
         file_save_pane.setOnMouseClicked(me -> {

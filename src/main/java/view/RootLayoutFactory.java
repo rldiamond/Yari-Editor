@@ -21,6 +21,7 @@ public class RootLayoutFactory {
     private static RootLayout rootLayout;
     private static double xOffset = 0;
     private static double yOffset = 0;
+    private static boolean displayed = false;
 
     public static RootLayout getInstance() {
         if (rootLayout == null) {
@@ -67,8 +68,13 @@ public class RootLayoutFactory {
 
         stage.setX(oldXCenterPosition - stage.getWidth() / 2d);
         stage.setY(oldYCenterPosition - stage.getHeight() / 2d);
+        displayed = true;
         stage.show();
 
 
+    }
+
+    public static boolean isDisplayed() {
+        return displayed;
     }
 }

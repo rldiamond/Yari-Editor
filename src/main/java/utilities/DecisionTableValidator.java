@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.yari.core.TableValidator;
+import org.yari.core.YariException;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
@@ -37,6 +38,7 @@ public class DecisionTableValidator {
     private static BooleanProperty isValid = new SimpleBooleanProperty(true);
     private static BooleanProperty busy = new SimpleBooleanProperty(false);
     private static StringProperty message = new SimpleStringProperty("");
+    private static BooleanProperty enabled = new SimpleBooleanProperty(true);
 
     static {
         queue.addListener((ListChangeListener.Change<? extends ValidateRequest> c) -> {
@@ -58,14 +60,10 @@ public class DecisionTableValidator {
      * @param xml String representation of the {@link DecisionTable} XML.
      * @return true if valid, false if invalid.
      */
-    public static boolean isValidXML(String xml) {
-        boolean valid = true;
-        try {
+    public static void validateXML(String xml) throws YariException {
+
             tableValidator.validateXML(xml);
-        } catch (Exception ex) {
-            valid = false;
-        }
-        return valid;
+
     }
 
     /**
@@ -74,7 +72,9 @@ public class DecisionTableValidator {
      * @param decisionTable the DecisionTable to validate.
      */
     public static void requestValidation(DecisionTable decisionTable) {
-        queue.add(new ValidateRequest(decisionTable));
+        if (enabled.get()) {
+            queue.add(new ValidateRequest(decisionTable));
+        }
     }
 
     private static class ValidateRequest {
@@ -159,5 +159,9 @@ public class DecisionTableValidator {
 
     public static StringProperty messageProperty() {
         return message;
+    }
+
+    public static void setEnabled(boolean enabled) {
+        DecisionTableValidator.enabled.set(enabled);
     }
 }

@@ -1,9 +1,9 @@
 package utilities;
 
-import com.jfoenix.controls.JFXSnackbar;
 import com.thoughtworks.xstream.XStream;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
+import javafx.stage.Stage;
 import org.yari.core.BasicRule;
 import org.yari.core.Context;
 import org.yari.core.YariException;
@@ -12,6 +12,7 @@ import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import view.RootLayoutFactory;
+import view.WelcomeSplashFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +23,8 @@ public class FileUtil {
 
     private static File currentFile;
 
-    public static boolean openFile(Window window) throws FileNotFoundException, YariException {
+    public static void openFile(Stage stage) {
+        DecisionTableValidator.setEnabled(false);
         FileChooser fileChooser = new FileChooser();
 
         // Set the extension filter
@@ -30,12 +32,33 @@ public class FileUtil {
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Show save file dialog
-        File file = fileChooser.showOpenDialog(window);
+        File file = fileChooser.showOpenDialog(stage); //must be on fx thread
 
-        if (file != null) {
-            return importFromFile(file);
-        }
-        return false;
+        FXUtil.runAsync(() -> {
+            if (file != null) {
+                try {
+                    importFromFile(file); //want off thread
+                    if (!RootLayoutFactory.isDisplayed()) {
+                        FXUtil.runOnFXThread(() -> {
+                            RootLayoutFactory.show(stage);
+                            DecisionTableValidator.setEnabled(true);
+                        });
+
+                    }
+                } catch (Exception ex) {
+                    WelcomeSplashFactory.getInstance().busyProperty().set(false);
+                    FXUtil.runOnFXThread(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Could not load table data");
+                        alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
+                        alert.showAndWait();
+                    });
+                    DecisionTableValidator.setEnabled(true);
+                }
+            }
+        });
+        
     }
 
     public static void saveToFile(File file) {
@@ -62,9 +85,7 @@ public class FileUtil {
     private static boolean importFromFile(File file) throws FileNotFoundException, YariException {
         clearData();
 
-        if (!DecisionTableValidator.isValidXML(file.getPath())) {
-            return false;
-        }
+        DecisionTableValidator.validateXML(file.getPath());
 
         DecisionTable decisionTable;
 

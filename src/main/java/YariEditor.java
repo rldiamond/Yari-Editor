@@ -13,14 +13,17 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.yari.core.table.DecisionTable;
+import utilities.DecisionTableValidator;
 import utilities.FXUtil;
 import utilities.FileUtil;
 import utilities.ThemeUtil;
 import view.RootLayoutFactory;
 import view.WelcomeSplash;
+import view.WelcomeSplashFactory;
 
 public class YariEditor extends Application {
 
+    private static Stage primaryStage;
 
     //for dragging undecorated windows
     private double xOffset = 0;
@@ -32,8 +35,9 @@ public class YariEditor extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        YariEditor.primaryStage = primaryStage;
         //show the welcome splash screen
-        WelcomeSplash welcomeSplash = new WelcomeSplash();
+        WelcomeSplash welcomeSplash = WelcomeSplashFactory.getInstance();
         Scene splashScene = new Scene(welcomeSplash);
         ThemeUtil.setThemeOnScene(splashScene);
 
@@ -58,29 +62,42 @@ public class YariEditor extends Application {
             });
         });
 
-
         welcomeSplash.getOpenButton().setOnMouseClicked(me -> {
             welcomeSplash.busyProperty().set(true);
-            boolean success = false;
-            try {
-                success = FileUtil.openFile(primaryStage);
-            } catch (Exception ex) {
-                //TODO: Display alert
-                welcomeSplash.busyProperty().set(false);
-            }
-            if (success) {
-                FXUtil.runAsync(() -> {
-                    RootLayoutFactory.init();
-
-                    FXUtil.runOnFXThread(() -> {
-                        RootLayoutFactory.show(primaryStage);
-                        welcomeSplash.busyProperty().set(false);
-                    });
-                });
-            } else {
-                welcomeSplash.busyProperty().set(false);
-            }
+            FileUtil.openFile(primaryStage);
         });
+
+//        welcomeSplash.getOpenButton().setOnMouseClicked(me -> {
+//            welcomeSplash.busyProperty().set(true);
+//            boolean success = false;
+//            DecisionTableValidator.setEnabled(false);
+//
+//            try {
+//                success = FileUtil.openFile(primaryStage);
+//            } catch (Exception ex) {
+//                Alert alert = new Alert(Alert.AlertType.ERROR);
+//                alert.setTitle("Error");
+//                alert.setHeaderText("Could not load table data");
+//                alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
+//                alert.showAndWait();
+//                welcomeSplash.busyProperty().set(false);
+//            }
+//            if (success) {
+//                FXUtil.runAsync(() -> {
+//                    //temp disable validation
+//                    RootLayoutFactory.init();
+//
+//                    FXUtil.runOnFXThread(() -> {
+//                        RootLayoutFactory.show(primaryStage);
+//                        welcomeSplash.busyProperty().set(false);
+//                    });
+//                });
+//            } else {
+//                welcomeSplash.busyProperty().set(false);
+//            }
+//            DecisionTableValidator.setEnabled(true);
+//
+//        });
 
 
         primaryStage.show();
