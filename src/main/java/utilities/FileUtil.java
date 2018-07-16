@@ -1,7 +1,9 @@
 package utilities;
 
 import com.thoughtworks.xstream.XStream;
+import javafx.print.*;
 import javafx.scene.control.Alert;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.yari.core.BasicRule;
@@ -12,6 +14,7 @@ import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import view.RootLayoutFactory;
+import view.TablePrintView;
 import view.WelcomeSplashFactory;
 
 import java.io.File;
@@ -115,6 +118,23 @@ public class FileUtil {
 
         RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
         return true;
+    }
+
+    public static void print() {
+        TablePrintView tablePrintView = new TablePrintView();
+        Printer printer = Printer.getDefaultPrinter();
+        PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.LANDSCAPE, Printer.MarginType.HARDWARE_MINIMUM);
+        double scaleX = pageLayout.getPrintableWidth() / tablePrintView.getBoundsInParent().getWidth();
+        double scaleY = pageLayout.getPrintableHeight() / tablePrintView.getBoundsInParent().getHeight();
+        tablePrintView.getTransforms().add(new Scale(scaleX, scaleY));
+
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job != null && job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())){
+            boolean success = job.printPage(tablePrintView);
+            if (success) {
+                job.endJob();
+            }
+        }
     }
 
     public static void clearData() {
