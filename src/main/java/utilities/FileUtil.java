@@ -58,28 +58,29 @@ public class FileUtil {
                 }
             }
         });
-        
+
     }
 
     public static void saveToFile(File file) {
+        FXUtil.runAsync(() -> {
+            DecisionTableValidator.updateTable();
+            DecisionTableValidator.runValidation();
 
-        DecisionTableValidator.updateTable();
-        DecisionTableValidator.runValidation();
+            if (!DecisionTableValidator.validProperty().get()) {
+                return;
+            }
 
-        if (!DecisionTableValidator.validProperty().get()) {
-            return;
-        }
+            XStream xstream = new XStream();
+            xstream.processAnnotations(DecisionTable.class);
 
-        XStream xstream = new XStream();
-        xstream.processAnnotations(DecisionTable.class);
-
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
-            currentFile = file;
-            ToastUtil.sendToast("File saved.");
-        } catch (Exception ex) {
-            ToastUtil.sendPersistantToast("Failed to save file! " + ex.getMessage());
-        }
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
+                currentFile = file;
+                ToastUtil.sendToast("File saved.");
+            } catch (Exception ex) {
+                ToastUtil.sendPersistantToast("Failed to save file! " + ex.getMessage());
+            }
+        });
     }
 
     private static boolean importFromFile(File file) throws FileNotFoundException, YariException {

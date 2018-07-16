@@ -164,7 +164,7 @@ public class RootLayout extends BorderPane {
         file_open_pane.setAlignment(Pos.CENTER_LEFT);
         file_open_pane.setOnMouseClicked(me -> {
             FileUtil.openFile((Stage) getScene().getWindow());
-            });
+        });
         HBox file_save_pane = new HBox(new Label("Save"));
         file_save_pane.setAlignment(Pos.CENTER_LEFT);
         file_save_pane.setOnMouseClicked(me -> {
@@ -397,35 +397,35 @@ public class RootLayout extends BorderPane {
 
     }
 
-    private void save(boolean newFile) {
-        if (!DecisionTableValidator.validProperty().get()) {
-            ToastUtil.sendPersistantToast("Could not save decision table as it does not pass validation.");
-        } else if (newFile) {
-            //save as functionality
-            FileChooser fileChooser = new FileChooser();
+    public void save(boolean newFile) {
+            if (!DecisionTableValidator.validProperty().get()) {
+                ToastUtil.sendPersistantToast("Could not save decision table as it does not pass validation.");
+            } else if (newFile) {
+                //save as functionality
+                FileChooser fileChooser = new FileChooser();
 
-            // Set extension filter
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-            fileChooser.getExtensionFilters().add(extFilter);
+                // Set extension filter
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
+                fileChooser.getExtensionFilters().add(extFilter);
 
-            // Show the save file dialog
-            File file = fileChooser.showSaveDialog(getScene().getWindow());
+                // Show the save file dialog
+                File file = fileChooser.showSaveDialog(getScene().getWindow());
 
-            if (file != null) {
-                // Make sure it has the correct extension.
-                if (!file.getPath().endsWith(".xml")) {
-                    file = new File(file.getPath() + ".xml");
+                if (file != null) {
+                    // Make sure it has the correct extension.
+                    if (!file.getPath().endsWith(".xml")) {
+                        file = new File(file.getPath() + ".xml");
+                    }
+                    FileUtil.saveToFile(file);
                 }
-                FileUtil.saveToFile(file);
-            }
-        } else {
-            File tableFile = FileUtil.getCurrentFile();
-            if (tableFile != null) {
-                FileUtil.saveToFile(FileUtil.getCurrentFile());
             } else {
-                save(true); //recurse
+                File tableFile = FileUtil.getCurrentFile();
+                if (tableFile != null) {
+                    FileUtil.saveToFile(FileUtil.getCurrentFile());
+                } else {
+                    save(true); //recurse
+                }
             }
-        }
     }
 
     public Pane getMinimizeButton() {

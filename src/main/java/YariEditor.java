@@ -67,39 +67,6 @@ public class YariEditor extends Application {
             FileUtil.openFile(primaryStage);
         });
 
-//        welcomeSplash.getOpenButton().setOnMouseClicked(me -> {
-//            welcomeSplash.busyProperty().set(true);
-//            boolean success = false;
-//            DecisionTableValidator.setEnabled(false);
-//
-//            try {
-//                success = FileUtil.openFile(primaryStage);
-//            } catch (Exception ex) {
-//                Alert alert = new Alert(Alert.AlertType.ERROR);
-//                alert.setTitle("Error");
-//                alert.setHeaderText("Could not load table data");
-//                alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
-//                alert.showAndWait();
-//                welcomeSplash.busyProperty().set(false);
-//            }
-//            if (success) {
-//                FXUtil.runAsync(() -> {
-//                    //temp disable validation
-//                    RootLayoutFactory.init();
-//
-//                    FXUtil.runOnFXThread(() -> {
-//                        RootLayoutFactory.show(primaryStage);
-//                        welcomeSplash.busyProperty().set(false);
-//                    });
-//                });
-//            } else {
-//                welcomeSplash.busyProperty().set(false);
-//            }
-//            DecisionTableValidator.setEnabled(true);
-//
-//        });
-
-
         primaryStage.show();
 
     }

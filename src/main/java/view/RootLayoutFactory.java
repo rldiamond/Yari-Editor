@@ -12,6 +12,10 @@ package view;
 
 import components.UpdateEvent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import utilities.DecisionTableValidator;
 import utilities.ThemeUtil;
@@ -50,6 +54,15 @@ public class RootLayoutFactory {
         stage.setWidth(1000);
         stage.setHeight(550);
 
+        //add keyboard shortcuts
+        final KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.S,
+                KeyCombination.CONTROL_DOWN);
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+            if (keyComb1.match(event)) {
+                rootLayout.save(false);
+            }
+        });
+
         //make moveable
         getInstance().getHeader().setOnMousePressed(event -> {
             xOffset = stage.getX() - event.getScreenX();
@@ -70,7 +83,6 @@ public class RootLayoutFactory {
         stage.setY(oldYCenterPosition - stage.getHeight() / 2d);
         displayed = true;
         stage.show();
-
 
     }
 
