@@ -113,6 +113,11 @@ public class RootLayout extends BorderPane {
         actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> DecisionTableValidator.requestValidation(decisionTable));
         conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> DecisionTableValidator.requestValidation(decisionTable));
         rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> DecisionTableValidator.requestValidation(decisionTable));
+
+        StackPane getStartedPane = new StackPane(new Label("Select an option to the left to get started."));
+        displayedContent.getChildren().add(getStartedPane);
+        fadePaneOut.play();
+
     }
 
     private void prepareHeader() {
@@ -158,12 +163,19 @@ public class RootLayout extends BorderPane {
         JFXListView<HBox> fileMenuList = new JFXListView<>();
         HBox file_new_pane = new HBox(new Label("New"));
         file_new_pane.setAlignment(Pos.CENTER_LEFT);
-        file_new_pane.setOnMouseClicked(me -> fileMenuPopUp.hide());
-        //TODO action & icons
+        file_new_pane.setOnMouseClicked(me -> {
+            FileUtil.clearData();
+            DecisionTable decisionTable = new DecisionTable();
+            decisionTable.setName("MyTable");
+            decisionTable.setDescription("MyTable Description");
+            setDecisionTable(decisionTable);
+            fileMenuPopUp.hide();
+        });
         HBox file_open_pane = new HBox(new Label("Open"));
         file_open_pane.setAlignment(Pos.CENTER_LEFT);
         file_open_pane.setOnMouseClicked(me -> {
             FileUtil.openFile((Stage) getScene().getWindow());
+            fileMenuPopUp.hide();
         });
         HBox file_save_pane = new HBox(new Label("Save"));
         file_save_pane.setAlignment(Pos.CENTER_LEFT);
@@ -186,10 +198,8 @@ public class RootLayout extends BorderPane {
         file_exit_pane.setAlignment(Pos.CENTER_LEFT);
         file_exit_pane.setOnMouseClicked(me -> {
             fileMenuPopUp.hide();
-            //TODO: Popup dialog if dirty
             Platform.exit();
         });
-        //TODO action & icons
 
         fileMenuList.getItems().addAll(file_new_pane, file_open_pane, file_save_pane, file_saveAs_pane, file_print_pane, file_exit_pane);
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
@@ -398,34 +408,34 @@ public class RootLayout extends BorderPane {
     }
 
     public void save(boolean newFile) {
-            if (!DecisionTableValidator.validProperty().get()) {
-                ToastUtil.sendPersistantToast("Could not save decision table as it does not pass validation.");
-            } else if (newFile) {
-                //save as functionality
-                FileChooser fileChooser = new FileChooser();
+        if (!DecisionTableValidator.validProperty().get()) {
+            ToastUtil.sendPersistantToast("Could not save decision table as it does not pass validation.");
+        } else if (newFile) {
+            //save as functionality
+            FileChooser fileChooser = new FileChooser();
 
-                // Set extension filter
-                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
-                fileChooser.getExtensionFilters().add(extFilter);
+            // Set extension filter
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML Files (*.xml)", "*.xml");
+            fileChooser.getExtensionFilters().add(extFilter);
 
-                // Show the save file dialog
-                File file = fileChooser.showSaveDialog(getScene().getWindow());
+            // Show the save file dialog
+            File file = fileChooser.showSaveDialog(getScene().getWindow());
 
-                if (file != null) {
-                    // Make sure it has the correct extension.
-                    if (!file.getPath().endsWith(".xml")) {
-                        file = new File(file.getPath() + ".xml");
-                    }
-                    FileUtil.saveToFile(file);
+            if (file != null) {
+                // Make sure it has the correct extension.
+                if (!file.getPath().endsWith(".xml")) {
+                    file = new File(file.getPath() + ".xml");
                 }
-            } else {
-                File tableFile = FileUtil.getCurrentFile();
-                if (tableFile != null) {
-                    FileUtil.saveToFile(FileUtil.getCurrentFile());
-                } else {
-                    save(true); //recurse
-                }
+                FileUtil.saveToFile(file);
             }
+        } else {
+            File tableFile = FileUtil.getCurrentFile();
+            if (tableFile != null) {
+                FileUtil.saveToFile(FileUtil.getCurrentFile());
+            } else {
+                save(true); //recurse
+            }
+        }
     }
 
     public Pane getMinimizeButton() {

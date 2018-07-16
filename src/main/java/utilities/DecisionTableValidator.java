@@ -90,6 +90,14 @@ public class DecisionTableValidator {
                 updateTable();
                 TableValidator.validateRule(decisionTable);
                 decisionTable.convertRowData();
+                if (decisionTable.getTableName() == null || decisionTable.getTableName().equalsIgnoreCase("")){
+                    message.set("The decision table must have a table name!");
+                    return false;
+                }
+                if (decisionTable.getTableDescription() == null || decisionTable.getTableDescription().equalsIgnoreCase("")){
+                    message.set("The decision table must have a table description!");
+                    return false;
+                }
             } catch (Exception ex) {
                 message.set(ex.getMessage());
                 valid = false;

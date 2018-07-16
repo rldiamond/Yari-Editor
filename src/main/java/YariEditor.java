@@ -10,6 +10,7 @@
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.yari.core.table.DecisionTable;
@@ -35,6 +36,8 @@ public class YariEditor extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Yari Editor");
+        primaryStage.getIcons().setAll(new Image("/theme/YariLogo.png"));
         YariEditor.primaryStage = primaryStage;
         //show the welcome splash screen
         WelcomeSplash welcomeSplash = WelcomeSplashFactory.getInstance();
@@ -57,7 +60,10 @@ public class YariEditor extends Application {
         //options
         welcomeSplash.getCreateNewButton().setOnMouseClicked(me -> {
             FXUtil.runAsync(() -> {
-                RootLayoutFactory.getInstance().setDecisionTable(new DecisionTable());
+                DecisionTable decisionTable = new DecisionTable();
+                decisionTable.setName("MyTable");
+                decisionTable.setDescription("MyTable Description");
+                RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
                 FXUtil.runOnFXThread(() -> RootLayoutFactory.show(primaryStage));
             });
         });
