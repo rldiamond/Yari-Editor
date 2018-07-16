@@ -177,7 +177,7 @@ public class RootLayout extends BorderPane {
         });
         HBox file_save_pane = new HBox(new Label("Save"));
         file_save_pane.setAlignment(Pos.CENTER_LEFT);
-        file_save_pane.setOnMouseClicked(me -> DecisionTableValidator.validProperty().set(!DecisionTableValidator.validProperty().get())); //TODO: test code
+        file_save_pane.setOnMouseClicked(me -> fileMenuPopUp.hide());
         //TODO action & icons
         HBox file_print_pane = new HBox(new Label("Print"));
         file_print_pane.setAlignment(Pos.CENTER_LEFT);

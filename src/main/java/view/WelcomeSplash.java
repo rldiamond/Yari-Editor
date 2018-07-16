@@ -10,7 +10,10 @@
 
 package view;
 
+import com.jfoenix.controls.JFXSpinner;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Hyperlink;
@@ -30,6 +33,8 @@ import javax.tools.Tool;
  * or start new.
  */
 public class WelcomeSplash extends AnchorPane {
+
+    private final BooleanProperty busy = new SimpleBooleanProperty(false);
 
     @FXML
     private Pane newIcon;
@@ -66,6 +71,23 @@ public class WelcomeSplash extends AnchorPane {
         closeButton.setOnMouseClicked(me -> Platform.exit());
         closeButton.setCursor(Cursor.HAND);
 
+        //busy indicator
+        var busySpinner = new JFXSpinner();
+        busySpinner.setRadius(25);
+        busySpinner.visibleProperty().bind(busy);
+        busySpinner.managedProperty().bind(busy);
+
+        double centerX = getWidth() / 2;
+        AnchorPane.setLeftAnchor(busySpinner, centerX);
+        AnchorPane.setRightAnchor(busySpinner, centerX);
+        AnchorPane.setTopAnchor(busySpinner, 265D);
+
+        getChildren().add(busySpinner);
+
+        openButton.disableProperty().bind(busy);
+        closeButton.disableProperty().bind(busy);
+        createNewButton.disableProperty().bind(busy);
+
     }
 
     /**
@@ -93,5 +115,13 @@ public class WelcomeSplash extends AnchorPane {
      */
     public Label getOpenButton() {
         return openButton;
+    }
+
+    public boolean isBusy() {
+        return busy.get();
+    }
+
+    public BooleanProperty busyProperty() {
+        return busy;
     }
 }

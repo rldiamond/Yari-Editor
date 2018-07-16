@@ -50,23 +50,35 @@ public class YariEditor extends Application {
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(splashScene);
 
+        //options
         welcomeSplash.getCreateNewButton().setOnMouseClicked(me -> {
-            RootLayoutFactory.getInstance().setDecisionTable(new DecisionTable());
-            RootLayoutFactory.show(primaryStage);
+            FXUtil.runAsync(() -> {
+                RootLayoutFactory.getInstance().setDecisionTable(new DecisionTable());
+                FXUtil.runOnFXThread(() -> RootLayoutFactory.show(primaryStage));
+            });
         });
+
+
         welcomeSplash.getOpenButton().setOnMouseClicked(me -> {
+            welcomeSplash.busyProperty().set(true);
             boolean success = false;
             try {
                 success = FileUtil.openFile(primaryStage);
             } catch (Exception ex) {
                 //TODO: Display alert
+                welcomeSplash.busyProperty().set(false);
             }
             if (success) {
                 FXUtil.runAsync(() -> {
                     RootLayoutFactory.init();
 
-                    FXUtil.runOnFXThread(() -> RootLayoutFactory.show(primaryStage));
+                    FXUtil.runOnFXThread(() -> {
+                        RootLayoutFactory.show(primaryStage);
+                        welcomeSplash.busyProperty().set(false);
+                    });
                 });
+            } else {
+                welcomeSplash.busyProperty().set(false);
             }
         });
 
