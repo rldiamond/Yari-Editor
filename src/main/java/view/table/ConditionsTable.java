@@ -26,16 +26,93 @@ import components.YariTable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.util.converter.DefaultStringConverter;
 import org.yari.core.table.Condition;
+import utilities.DecisionTableValidator;
 
 import java.util.List;
 
 public class ConditionsTable extends YariTable<Condition> {
 
+    private static final DataFormat CONDITION_EDITOR = new DataFormat("application/x-java-serialized-object-condition-editor");
+
     public ConditionsTable() {
         setPlaceholder(new Label("Add one or more conditions to continue"));
+
+        setRowFactory(tv -> {
+            TableRow<Condition> row = new TableRow<>();
+
+            row.setOnDragDetected(event -> {
+                if (!row.isEmpty()) {
+                    Integer index = row.getIndex();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(row.snapshot(null, null));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.put(CONDITION_EDITOR, index);
+                    db.setContent(cc);
+                    event.consume();
+                }
+            });
+
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(CONDITION_EDITOR)) {
+                    if (row.getIndex() != ((Integer) db.getContent(CONDITION_EDITOR)).intValue()) {
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        event.consume();
+                    }
+                }
+            });
+
+            row.setOnDragEntered(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(CONDITION_EDITOR)) {
+                    row.getStyleClass().add("drag");
+                    event.consume();
+                }
+            });
+
+            row.setOnDragExited(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(CONDITION_EDITOR)) {
+                    row.getStyleClass().remove("drag");
+                    event.consume();
+                }
+            });
+
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(CONDITION_EDITOR)) {
+                    int draggedIndex = (Integer) db.getContent(CONDITION_EDITOR);
+                    Condition draggedRow = getItems().remove(draggedIndex);
+
+                    int dropIndex;
+
+                    if (row.isEmpty()) {
+                        dropIndex = getItems().size();
+                    } else {
+                        dropIndex = row.getIndex();
+                    }
+
+                    getItems().add(dropIndex, draggedRow);
+
+                    event.setDropCompleted(true);
+                    getSelectionModel().select(dropIndex);
+
+                    DecisionTableValidator.reorderConditions(draggedIndex, dropIndex);
+
+                    event.consume();
+                }
+            });
+
+            return row;
+        });
     }
 
     @Override

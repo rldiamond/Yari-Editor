@@ -15,11 +15,15 @@ import components.YariTable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import org.yari.core.table.Action;
@@ -31,8 +35,75 @@ import java.util.List;
 
 public class RowTable extends YariTable<Row> {
 
-    public RowTable(ObservableList<Condition> conditions, ObservableList<Action> actions) {
+    private static final DataFormat ROW_EDITOR = new DataFormat("application/x-java-serialized-object");
+
+    public RowTable() {
         setPlaceholder(new Label("Add one or more rows to continue"));
+
+        setRowFactory(tv -> {
+            TableRow<Row> row = new TableRow<>();
+            row.setOnDragDetected(event -> {
+                if (!row.isEmpty()) {
+                    Integer index = row.getIndex();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(row.snapshot(null, null));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.put(ROW_EDITOR, index);
+                    db.setContent(cc);
+                    event.consume();
+                }
+            });
+
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ROW_EDITOR)) {
+                    if (row.getIndex() != ((Integer) db.getContent(ROW_EDITOR)).intValue()) {
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        event.consume();
+                    }
+                }
+            });
+
+            row.setOnDragEntered(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ROW_EDITOR)) {
+                    row.getStyleClass().add("drag");
+                    event.consume();
+                }
+            });
+
+            row.setOnDragExited(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ROW_EDITOR)) {
+                    row.getStyleClass().remove("drag");
+                    event.consume();
+                }
+            });
+
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ROW_EDITOR)) {
+                    int draggedIndex = (Integer) db.getContent(ROW_EDITOR);
+                    Row draggedRow = getItems().remove(draggedIndex);
+
+                    int dropIndex;
+
+                    if (row.isEmpty()) {
+                        dropIndex = getItems().size();
+                    } else {
+                        dropIndex = row.getIndex();
+                    }
+
+                    getItems().add(dropIndex, draggedRow);
+
+                    event.setDropCompleted(true);
+                    getSelectionModel().select(dropIndex);
+                    event.consume();
+                }
+            });
+
+            return row;
+        });
     }
 
     @Override

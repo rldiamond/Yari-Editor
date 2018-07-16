@@ -31,7 +31,7 @@ import view.table.RowTable;
 public class RowsView extends StackPane {
 
     private ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
-    private RowTable rowTable = new RowTable(RootLayoutFactory.getInstance().getConditionsList(), RootLayoutFactory.getInstance().getActionsList());
+    private RowTable rowTable = new RowTable();
 
     /**
      * Construct a RowsView with default settings.
