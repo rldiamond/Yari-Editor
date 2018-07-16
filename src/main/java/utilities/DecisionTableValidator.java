@@ -112,6 +112,24 @@ public class DecisionTableValidator {
         RootLayoutFactory.getInstance().getDecisionTable().setActions(updatedActions);
     }
 
+    public static void reorderActions(int draggedIndex, int dropIndex) {
+
+        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
+            String dragged = row.getResults().get(draggedIndex);
+            row.getResults().remove(draggedIndex);
+            row.getResults().add(dropIndex, dragged);
+        }
+    }
+
+    public static void reorderConditions(int draggedIndex /*from*/, int dropIndex /*to*/) {
+
+        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
+            String dragged = row.getValues().get(draggedIndex);
+            row.getValues().remove(draggedIndex);
+            row.getValues().add(dropIndex, dragged);
+        }
+    }
+
     /**
      * The valid property for the validator.
      *

@@ -26,18 +26,93 @@ import components.YariTable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.util.converter.DefaultStringConverter;
 import org.yari.core.table.Action;
+import utilities.DecisionTableValidator;
 
 import java.util.List;
 
 public class ActionsTable extends YariTable<Action> {
 
+    private static final DataFormat ACTION_EDITOR = new DataFormat("application/x-java-serialized-object-action-editor");
+
     public ActionsTable() {
         setPlaceholder(new Label("Add one or more actions to continue"));
 
-        }
+        setRowFactory(tv -> {
+            TableRow<Action> row = new TableRow<>();
+
+            row.setOnDragDetected(event -> {
+                if (!row.isEmpty()) {
+                    Integer index = row.getIndex();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(row.snapshot(null, null));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.put(ACTION_EDITOR, index);
+                    db.setContent(cc);
+                    event.consume();
+                }
+            });
+
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ACTION_EDITOR)) {
+                    if (row.getIndex() != ((Integer) db.getContent(ACTION_EDITOR)).intValue()) {
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        event.consume();
+                    }
+                }
+            });
+
+            row.setOnDragEntered(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ACTION_EDITOR)) {
+                    row.getStyleClass().add("drag");
+                    event.consume();
+                }
+            });
+
+            row.setOnDragExited(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ACTION_EDITOR)) {
+                    row.getStyleClass().remove("drag");
+                    event.consume();
+                }
+            });
+
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(ACTION_EDITOR)) {
+                    int draggedIndex = (Integer) db.getContent(ACTION_EDITOR);
+                    Action draggedRow = getItems().remove(draggedIndex);
+
+                    int dropIndex;
+
+                    if (row.isEmpty()) {
+                        dropIndex = getItems().size();
+                    } else {
+                        dropIndex = row.getIndex();
+                    }
+
+                    getItems().add(dropIndex, draggedRow);
+
+                    event.setDropCompleted(true);
+                    getSelectionModel().select(dropIndex);
+
+                    DecisionTableValidator.reorderActions(draggedIndex, dropIndex);
+                    event.consume();
+                }
+            });
+
+            return row;
+        });
+    }
 
     @Override
     protected List<TableColumn<Action, ?>> buildColumns() {
