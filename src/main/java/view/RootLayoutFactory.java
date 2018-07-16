@@ -30,6 +30,13 @@ public class RootLayoutFactory {
         return rootLayout;
     }
 
+    public static void init() {
+        if (rootLayout == null) {
+            rootLayout = new RootLayout();
+            rootLayout.addEventHandler(UpdateEvent.UPDATE, e -> DecisionTableValidator.requestValidation(rootLayout.getDecisionTable()));
+        }
+    }
+
     public static void show(Stage stage) {
         Scene scene = new Scene(getInstance());
         ThemeUtil.setThemeOnScene(scene);
