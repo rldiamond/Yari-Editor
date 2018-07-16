@@ -12,12 +12,14 @@ import org.yari.core.table.Row;
 import view.RootLayoutFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
+//TODO: Save. Print. Shortcuts to open, save, print. On save show a toast notification.
 public class FileUtil {
 
     private static File currentFile;
 
-    public static boolean openFile(Window window) {
+    public static boolean openFile(Window window) throws FileNotFoundException, YariException {
         FileChooser fileChooser = new FileChooser();
 
         // Set the extension filter
@@ -33,7 +35,7 @@ public class FileUtil {
         return false;
     }
 
-    private static boolean importFromFile(File file) {
+    private static boolean importFromFile(File file) throws FileNotFoundException, YariException {
         clearData();
 
         if (!DecisionTableValidator.isValidXML(file.getPath())) {
@@ -51,34 +53,25 @@ public class FileUtil {
 
         currentFile = file;
 
-        try {
-            decisionTable = basicRule.createDecisionTable(file.getPath());
-            for (Condition condition : decisionTable.getConditions()) {
-                RootLayoutFactory.getInstance().getConditionsList().add(condition);
-            }
-            for (Action action : decisionTable.getActions()) {
-                RootLayoutFactory.getInstance().getActionsList().add(action);
-            }
-            var rowNumber = 0;
-            for (Row row : decisionTable.getRawRowData()) {
-                row.setRowNumber(rowNumber++);
-                RootLayoutFactory.getInstance().getRowsList().add(row);
-            }
-        } catch (YariException ex) {
-            //TODO: Didnt validate.. show an error
-            ex.printStackTrace();
-            return false;
-        } catch (Exception ex) {
-            //TODO: other loading issue.. show a diff error
-            ex.printStackTrace();
-            return false;
+        decisionTable = basicRule.createDecisionTable(file.getPath());
+        for (Condition condition : decisionTable.getConditions()) {
+            RootLayoutFactory.getInstance().getConditionsList().add(condition);
         }
+        for (Action action : decisionTable.getActions()) {
+            RootLayoutFactory.getInstance().getActionsList().add(action);
+        }
+        var rowNumber = 0;
+        for (Row row : decisionTable.getRawRowData()) {
+            row.setRowNumber(rowNumber++);
+            RootLayoutFactory.getInstance().getRowsList().add(row);
+        }
+
 
         RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
         return true;
     }
 
-    private static void clearData() {
+    public static void clearData() {
         RootLayoutFactory.getInstance().getRowsList().clear();
         RootLayoutFactory.getInstance().getActionsList().clear();
         RootLayoutFactory.getInstance().getConditionsList().clear();

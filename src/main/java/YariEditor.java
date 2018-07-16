@@ -55,7 +55,12 @@ public class YariEditor extends Application {
             RootLayoutFactory.show(primaryStage);
         });
         welcomeSplash.getOpenButton().setOnMouseClicked(me -> {
-            boolean success = FileUtil.openFile(primaryStage);
+            boolean success = false;
+            try {
+                success = FileUtil.openFile(primaryStage);
+            } catch (Exception ex) {
+                //TODO: Display alert
+            }
             if (success) {
                 FXUtil.runAsync(() -> {
                     RootLayoutFactory.init();

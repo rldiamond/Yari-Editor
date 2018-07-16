@@ -36,6 +36,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -47,7 +48,10 @@ import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import utilities.DecisionTableValidator;
 import utilities.FXUtil;
+import utilities.FileUtil;
 import utilities.ThemeUtil;
+
+import java.io.File;
 
 //TODO: Only loadd each view once
 public class RootLayout extends BorderPane {
@@ -152,8 +156,20 @@ public class RootLayout extends BorderPane {
         //TODO action & icons
         HBox file_open_pane = new HBox(new Label("Open"));
         file_open_pane.setAlignment(Pos.CENTER_LEFT);
-        file_open_pane.setOnMouseClicked(me -> fileMenuPopUp.hide());
-        //TODO action & icons
+        file_open_pane.setOnMouseClicked(me -> {
+            boolean success = false;
+            try {
+                success = FileUtil.openFile(getScene().getWindow());
+            } catch (Exception ex){
+                JFXDialog failedToLoadDialog = new JFXDialog();
+                DialogPane failedToLoad = new DialogPane(failedToLoadDialog);
+                failedToLoad.setContent("Failed to load the selected file. " + ex.getMessage());
+                failedToLoadDialog.setContent(failedToLoad);
+                failedToLoadDialog.setDialogContainer(displayedContent);
+                failedToLoadDialog.setOverlayClose(false);
+                failedToLoadDialog.show();
+            }
+        });
         HBox file_save_pane = new HBox(new Label("Save"));
         file_save_pane.setAlignment(Pos.CENTER_LEFT);
         file_save_pane.setOnMouseClicked(me -> fileMenuPopUp.hide());
