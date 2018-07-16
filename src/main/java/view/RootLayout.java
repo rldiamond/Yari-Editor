@@ -20,10 +20,7 @@
 
 package view;
 
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXPopup;
-import com.jfoenix.controls.JFXSpinner;
+import com.jfoenix.controls.*;
 import components.DialogPane;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -36,7 +33,6 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -51,9 +47,6 @@ import utilities.FXUtil;
 import utilities.FileUtil;
 import utilities.ThemeUtil;
 
-import java.io.File;
-
-//TODO: Only loadd each view once
 public class RootLayout extends BorderPane {
 
     private DecisionTable decisionTable;
@@ -61,12 +54,12 @@ public class RootLayout extends BorderPane {
     private final ObservableList<Condition> conditionsList = FXCollections.observableArrayList();
     private final ObservableList<Row> rowsList = FXCollections.observableArrayList();
     private final StringProperty ruleName = new SimpleStringProperty("MyTableRule");
-
     private final ObservableList<MenuOption> menuOptions = FXCollections.observableArrayList();
     private final BooleanProperty loadingContent = new SimpleBooleanProperty(false);
     private final StackPane displayedContent = new StackPane();
     private final AnchorPane header = new AnchorPane();
     private Pane minimizeButton;
+    private JFXSnackbar toastBar;
 
     public RootLayout() {
 
@@ -97,6 +90,18 @@ public class RootLayout extends BorderPane {
         //encapsulate the displayedContent so that the loadingSpinner may always appear on top.
         var mainPanel = new StackPane();
         mainPanel.getChildren().setAll(displayedContent, loadingPane, loadingSpinner);
+
+        toastBar = new JFXSnackbar(mainPanel);
+        toastBar.setPrefWidth(350);
+        DecisionTableValidator.validProperty().addListener((obs, ov, isValid) -> {
+            if (!isValid) {
+                toastBar.enqueue(new JFXSnackbar.SnackbarEvent("Decision table no longer validates! " + DecisionTableValidator.getMessage(),
+                        "DISMISS",
+                        3000,
+                        true,
+                        b -> toastBar.close()));
+            }
+        });
 
         //initial (minimal loading required)
         prepareOptions();
@@ -160,7 +165,7 @@ public class RootLayout extends BorderPane {
             boolean success = false;
             try {
                 success = FileUtil.openFile(getScene().getWindow());
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 JFXDialog failedToLoadDialog = new JFXDialog();
                 DialogPane failedToLoad = new DialogPane(failedToLoadDialog);
                 failedToLoad.setContent("Failed to load the selected file. " + ex.getMessage());
@@ -172,7 +177,7 @@ public class RootLayout extends BorderPane {
         });
         HBox file_save_pane = new HBox(new Label("Save"));
         file_save_pane.setAlignment(Pos.CENTER_LEFT);
-        file_save_pane.setOnMouseClicked(me -> fileMenuPopUp.hide());
+        file_save_pane.setOnMouseClicked(me -> DecisionTableValidator.validProperty().set(!DecisionTableValidator.validProperty().get())); //TODO: test code
         //TODO action & icons
         HBox file_print_pane = new HBox(new Label("Print"));
         file_print_pane.setAlignment(Pos.CENTER_LEFT);
@@ -431,5 +436,9 @@ public class RootLayout extends BorderPane {
 
     public void setDecisionTable(DecisionTable decisionTable) {
         this.decisionTable = decisionTable;
+    }
+
+    public JFXSnackbar getToastBar() {
+        return toastBar;
     }
 }
