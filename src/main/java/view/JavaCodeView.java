@@ -84,15 +84,9 @@ public class JavaCodeView extends StackPane {
         List<String> conditionNames = new ArrayList<>();
         for (Condition condition : dt.getConditions()) {
 
-            if (!conditionNames.contains(condition.getMethodName())) {
-                conditionNames.add(condition.getMethodName());
-            }
-        }
-        for (String methodName : conditionNames) {
-
-            sb.append("    @Condition(\"").append(methodName).append("\")\n");
-            sb.append("    public ").append(convertTypeToJava(methodName)).append(" ").append(methodName).append("(Context localContext){\n");
-            sb.append("        return; // TODO: return a ").append(methodName).append("\n    }\n\n");
+            sb.append("    @Condition(\"").append(condition.getMethodName()).append("\")\n");
+            sb.append("    public ").append(convertTypeToJava(condition.getDataType())).append(" ").append(condition.getMethodName()).append("(Context localContext){\n");
+            sb.append("        return; // TODO: return a ").append(condition.getDataType()).append("\n    }\n\n");
         }
         // Create action methods
         for (Action action : dt.getActions()) {
