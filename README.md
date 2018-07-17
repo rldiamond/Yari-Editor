@@ -25,8 +25,6 @@ Yari Editor, in it's simplest form, is an XML editor developed specifically for 
   * CTRL + O to open
 * Printing of table data  
 
-### Usage
-To get further assistance using the application, see the wiki guide.
 
 ## Project
 
