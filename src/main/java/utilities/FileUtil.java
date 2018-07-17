@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-//TODO: Print. Shortcuts to open, save, print. On save show a toast notification.
 public class FileUtil {
 
     private static File currentFile;
@@ -132,6 +131,8 @@ public class FileUtil {
 
 
         RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
+        setDirty(false);
+        DecisionTableValidator.getInstance().validProperty().set(true); //sucessful loading means successful validation
         return true;
     }
 

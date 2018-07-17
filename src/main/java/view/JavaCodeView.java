@@ -63,7 +63,6 @@ public class JavaCodeView extends StackPane {
 
     }
 
-    //TODO: Verify this output
     private String generateSkeletonCode(){
         StringBuilder sb = new StringBuilder();
 

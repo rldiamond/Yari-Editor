@@ -254,7 +254,6 @@ public class RootLayout extends BorderPane {
     }
 
     private void prepareOptions() {
-        //TODO: on select of any option, load the appropriate view
         var actionsOption = new MenuOption("Actions", "mdTab-actions");
         Tooltip.install(actionsOption, new Tooltip("Open the Actions Editor"));
         actionsOption.setOnMouseClicked(me -> selectTab("actions"));
