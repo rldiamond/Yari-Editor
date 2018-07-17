@@ -76,5 +76,11 @@ public class YariEditor extends Application {
         primaryStage.show();
 
     }
+    @Override
+    public void stop(){
+        if (FileUtil.isDirty()){
+            RootLayoutFactory.getInstance().handleDirty();
+        }
+    }
 
 }

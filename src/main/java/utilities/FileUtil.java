@@ -1,6 +1,8 @@
 package utilities;
 
 import com.thoughtworks.xstream.XStream;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.print.*;
 import javafx.scene.control.Alert;
 import javafx.scene.transform.Scale;
@@ -25,6 +27,7 @@ import java.io.FileOutputStream;
 public class FileUtil {
 
     private static File currentFile;
+    private static BooleanProperty dirty = new SimpleBooleanProperty(false);
 
     public static void openFile(Stage stage) {
         DecisionTableValidator.getInstance().setEnabled(false);
@@ -90,6 +93,7 @@ public class FileUtil {
             try (FileOutputStream out = new FileOutputStream(file)) {
                 xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
                 currentFile = file;
+                setDirty(false);
                 ToastUtil.sendToast("File saved.");
             } catch (Exception ex) {
                 ToastUtil.sendPersistantToast("Failed to save file! " + ex.getMessage());
@@ -158,5 +162,17 @@ public class FileUtil {
 
     public static File getCurrentFile() {
         return currentFile;
+    }
+
+    public static boolean isDirty() {
+        return dirty.get();
+    }
+
+    public static BooleanProperty dirtyProperty() {
+        return dirty;
+    }
+
+    public static void setDirty(boolean dirty) {
+        FileUtil.dirty.set(dirty);
     }
 }

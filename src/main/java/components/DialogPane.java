@@ -27,12 +27,7 @@ public class DialogPane extends AnchorPane {
 
     private final StringProperty content = new SimpleStringProperty("");
 
-    /**
-     * Construct a dialog pane with a button that will dismiss the provided JFXDialog.
-     *
-     * @param jfxDialog the JFXDialog to dismiss.
-     */
-    public DialogPane(JFXDialog jfxDialog) {
+    public DialogPane(){
         //styling
         setPrefSize(450, 300);
         setPadding(new Insets(15, 15, 15, 15));
@@ -47,7 +42,15 @@ public class DialogPane extends AnchorPane {
         AnchorPane.setLeftAnchor(textArea, 0D);
         AnchorPane.setRightAnchor(textArea, 0D);
         getChildren().setAll(textArea);
+    }
 
+    /**
+     * Construct a dialog pane with a button that will dismiss the provided JFXDialog.
+     *
+     * @param jfxDialog the JFXDialog to dismiss.
+     */
+    public DialogPane(JFXDialog jfxDialog) {
+        this();
         //dismiss button
         HBox buttonBar = new HBox();
         JFXButton dismiss = new JFXButton("DISMISS");
@@ -60,7 +63,25 @@ public class DialogPane extends AnchorPane {
         AnchorPane.setBottomAnchor(buttonBar, 0D);
         getChildren().add(buttonBar);
 
+    }
 
+    /**
+     * Construct a dialog pane with a customizable button.
+     * @param jfxDialog
+     * @param runButtonLabel
+     * @param runnable
+     */
+    public DialogPane(JFXDialog jfxDialog, String runButtonLabel, Runnable runnable){
+        this();
+        HBox buttonBar = new HBox(10);
+        JFXButton runButton = new JFXButton(runButtonLabel.trim().toUpperCase());
+        runButton.setOnMouseClicked(me -> runnable.run());
+        runButton.getStyleClass().add("button-flat-gray");
+        JFXButton continueButton = new JFXButton("CONTINUE");
+        continueButton.getStyleClass().add("button-flat-gray");
+        continueButton.setOnMouseClicked(me -> jfxDialog.close());
+        buttonBar.getChildren().addAll(runButton, continueButton);
+        getChildren().add(buttonBar);
     }
 
     /**

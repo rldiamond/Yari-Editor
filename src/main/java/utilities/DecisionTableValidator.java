@@ -110,6 +110,7 @@ public class DecisionTableValidator {
                 message.set(ex.getMessage());
                 valid = false;
             }
+            FileUtil.setDirty(true);
             return valid;
         }
     }

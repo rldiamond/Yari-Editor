@@ -20,6 +20,7 @@
 
 package view;
 
+import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
 import components.DialogPane;
 import components.PopupMenuEntry;
@@ -41,6 +42,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
@@ -167,6 +169,9 @@ public class RootLayout extends BorderPane {
         //file menu
         PopupMenuEntry file_new_pane = new PopupMenuEntry("New", KeyboardShortcut.NEW);
         file_new_pane.setOnMouseClicked(me -> {
+            if (FileUtil.isDirty()){
+                handleDirty();
+            }
             FileUtil.clearData();
             DecisionTable decisionTable = new DecisionTable();
             decisionTable.setName("MyTable");
@@ -406,7 +411,36 @@ public class RootLayout extends BorderPane {
 
     }
 
+    public void handleDirty(){
+        JFXDialogLayout layout = new JFXDialogLayout();
+        layout.setBody(new Label("You have unsaved changes. Do you want to save before continuing?"));
+
+        JFXAlert<Void> alert = new JFXAlert<>((Stage) getScene().getWindow());
+
+        JFXButton saveButton = new JFXButton("SAVE");
+        saveButton.getStyleClass().add("button-flat-gray");
+        saveButton.setOnMouseClicked(me -> {
+            alert.hide();
+            save(false);
+        });
+        JFXButton dismissButton = new JFXButton("DISMISS");
+        dismissButton.getStyleClass().add("button-flat-gray");
+        dismissButton.setOnMouseClicked(me -> {
+            alert.hideWithAnimation();
+        });
+        layout.setActions(saveButton, dismissButton);
+        alert.setOverlayClose(false);
+        alert.setAnimation(JFXAlertAnimation.CENTER_ANIMATION);
+        alert.setContent(layout);
+        alert.initModality(Modality.APPLICATION_MODAL);
+
+        alert.showAndWait();
+    }
+
     public void open(){
+        if (FileUtil.isDirty()){
+            handleDirty();
+        }
         FileUtil.openFile((Stage) getScene().getWindow());
     }
 
