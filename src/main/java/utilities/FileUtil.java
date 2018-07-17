@@ -21,13 +21,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-//TODO: Save. Print. Shortcuts to open, save, print. On save show a toast notification.
+//TODO: Print. Shortcuts to open, save, print. On save show a toast notification.
 public class FileUtil {
 
     private static File currentFile;
 
     public static void openFile(Stage stage) {
-        DecisionTableValidator.setEnabled(false);
+        DecisionTableValidator.getInstance().setEnabled(false);
         FileChooser fileChooser = new FileChooser();
 
         // Set the extension filter
@@ -44,7 +44,7 @@ public class FileUtil {
                     if (!RootLayoutFactory.isDisplayed()) {
                         FXUtil.runOnFXThread(() -> {
                             RootLayoutFactory.show(stage);
-                            DecisionTableValidator.setEnabled(true);
+                            DecisionTableValidator.getInstance().setEnabled(true);
                         });
 
                     }
@@ -57,7 +57,7 @@ public class FileUtil {
                         alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
                         alert.showAndWait();
                     });
-                    DecisionTableValidator.setEnabled(true);
+                    DecisionTableValidator.getInstance().setEnabled(true);
                 }
             }
         });
@@ -66,10 +66,10 @@ public class FileUtil {
 
     public static void saveToFile(File file) {
         FXUtil.runAsync(() -> {
-            DecisionTableValidator.updateTable();
-            DecisionTableValidator.runValidation();
+            DecisionTableValidator.getInstance().updateTable();
+            DecisionTableValidator.getInstance().runValidation();
 
-            if (!DecisionTableValidator.validProperty().get()) {
+            if (!DecisionTableValidator.getInstance().validProperty().get()) {
                 return;
             }
 
@@ -89,7 +89,7 @@ public class FileUtil {
     private static boolean importFromFile(File file) throws FileNotFoundException, YariException {
         clearData();
 
-        DecisionTableValidator.validateXML(file.getPath());
+        DecisionTableValidator.getInstance().validateXML(file.getPath());
 
         DecisionTable decisionTable;
 

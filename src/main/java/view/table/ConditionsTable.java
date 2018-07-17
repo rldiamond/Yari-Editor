@@ -105,7 +105,7 @@ public class ConditionsTable extends YariTable<Condition> {
                     event.setDropCompleted(true);
                     getSelectionModel().select(dropIndex);
 
-                    DecisionTableValidator.reorderConditions(draggedIndex, dropIndex);
+                    DecisionTableValidator.getInstance().reorderConditions(draggedIndex, dropIndex);
 
                     event.consume();
                 }

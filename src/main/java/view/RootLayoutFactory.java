@@ -10,14 +10,12 @@
 
 package view;
 
-import components.UpdateEvent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import utilities.DecisionTableValidator;
 import utilities.ThemeUtil;
 
 public class RootLayoutFactory {
@@ -30,16 +28,8 @@ public class RootLayoutFactory {
     public static RootLayout getInstance() {
         if (rootLayout == null) {
             rootLayout = new RootLayout();
-            rootLayout.addEventHandler(UpdateEvent.UPDATE, e -> DecisionTableValidator.requestValidation(rootLayout.getDecisionTable()));
         }
         return rootLayout;
-    }
-
-    public static void init() {
-        if (rootLayout == null) {
-            rootLayout = new RootLayout();
-            rootLayout.addEventHandler(UpdateEvent.UPDATE, e -> DecisionTableValidator.requestValidation(rootLayout.getDecisionTable()));
-        }
     }
 
     public static void show(Stage stage) {

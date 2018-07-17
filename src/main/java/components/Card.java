@@ -27,22 +27,17 @@ import javafx.scene.paint.Color;
  */
 public class Card extends StackPane {
 
-    private StackPane displayedContent = new StackPane();
+    private final StackPane displayedContent = new StackPane();
+    private final VBox cardContent = new VBox(10);
     private StackPane bottomContent;
-    private VBox cardContent = new VBox(10);
 
-    public Card(String title) {
-
-        //title
-        Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 16px;");
-        HBox titleWrapper = new HBox(titleLabel);
-        titleWrapper.setAlignment(Pos.CENTER);
-
+    /**
+     * Construct a card with no title.
+     */
+    public Card() {
         //content
-        cardContent = new VBox(10);
         VBox.setVgrow(displayedContent, Priority.ALWAYS);
-        cardContent.getChildren().setAll(titleWrapper, displayedContent);
+        cardContent.getChildren().setAll(displayedContent);
         getChildren().setAll(cardContent);
 
         //styling
@@ -55,10 +50,36 @@ public class Card extends StackPane {
         setStyle("-fx-background-color: ghostwhite;");
     }
 
+    /**
+     * Construct a Card with the provided title displayed.
+     *
+     * @param title the title to display.
+     */
+    public Card(String title) {
+        this();
+        //title
+        Label titleLabel = new Label(title);
+        titleLabel.setStyle("-fx-font-size: 16px;");
+        HBox titleWrapper = new HBox(titleLabel);
+        titleWrapper.setAlignment(Pos.CENTER);
+
+        cardContent.getChildren().add(0, titleWrapper);
+    }
+
+    /**
+     * Set the content to be displayed on the card.
+     *
+     * @param node Node of the content to display.
+     */
     public void setDisplayedContent(Node node) {
         displayedContent.getChildren().setAll(node);
     }
 
+    /**
+     * Set content to display at the bottom of the card such as buttons.
+     *
+     * @param node Node of the content to display.
+     */
     public void setBottomContent(Node node) {
         if (bottomContent == null) {
             bottomContent = new StackPane();

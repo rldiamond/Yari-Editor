@@ -14,6 +14,9 @@ import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 
+/**
+ * Custom Event used to send the call to the Validator to request validation be run.
+ */
 public class UpdateEvent extends Event {
 
     public static final EventType<UpdateEvent> UPDATE =

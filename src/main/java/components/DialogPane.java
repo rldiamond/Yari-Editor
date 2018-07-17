@@ -27,10 +27,18 @@ public class DialogPane extends AnchorPane {
 
     private final StringProperty content = new SimpleStringProperty("");
 
+    /**
+     * Construct a dialog pane with a button that will dismiss the provided JFXDialog.
+     *
+     * @param jfxDialog the JFXDialog to dismiss.
+     */
     public DialogPane(JFXDialog jfxDialog) {
+        //styling
         setPrefSize(450, 300);
         setPadding(new Insets(15, 15, 15, 15));
         setStyle("-fx-background-color: ghostwhite;");
+
+        //text content
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
         textArea.setWrapText(true);
@@ -38,9 +46,9 @@ public class DialogPane extends AnchorPane {
         AnchorPane.setTopAnchor(textArea, 0D);
         AnchorPane.setLeftAnchor(textArea, 0D);
         AnchorPane.setRightAnchor(textArea, 0D);
-
         getChildren().setAll(textArea);
 
+        //dismiss button
         HBox buttonBar = new HBox();
         JFXButton dismiss = new JFXButton("DISMISS");
         dismiss.getStyleClass().add("button-flat-gray");
@@ -55,15 +63,13 @@ public class DialogPane extends AnchorPane {
 
     }
 
-    public String getContent() {
-        return content.get();
-    }
-
+    /**
+     * Returns the property of the displayed content.
+     *
+     * @return the text property of the displayed content.
+     */
     public StringProperty contentProperty() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content.set(content);
-    }
 }

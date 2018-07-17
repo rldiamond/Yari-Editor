@@ -105,7 +105,7 @@ public class ActionsTable extends YariTable<Action> {
                     event.setDropCompleted(true);
                     getSelectionModel().select(dropIndex);
 
-                    DecisionTableValidator.reorderActions(draggedIndex, dropIndex);
+                    DecisionTableValidator.getInstance().reorderActions(draggedIndex, dropIndex);
                     event.consume();
                 }
             });

@@ -31,9 +31,15 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
 
     private TextField textField;
 
+    /**
+     * Construct the cell with default settings.
+     */
     public EditableTextFieldCell() {
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void startEdit() {
         if (!isEmpty()) {
@@ -51,14 +57,20 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void cancelEdit() {
         super.cancelEdit();
 
-        setText((String) getItem());
+        setText(getItem());
         setGraphic(null);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -80,12 +92,18 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void commitEdit(String newValue) {
         super.commitEdit(newValue);
         fireEvent(new UpdateEvent());
     }
 
+    /**
+     * Creates the text field and applied listeners to it which allow for our custom editing.
+     */
     private void createTextField() {
         textField = new TextField(getString());
         textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()
@@ -107,18 +125,29 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
                 commitEdit(textField.getText());
                 TableColumn nextColumn = getNextColumn(!t.isShiftDown());
                 if (nextColumn != null) {
-                    getTableView().edit(getTableRow().getIndex(),
-                            nextColumn);
+                    getTableView().edit(getTableRow().getIndex(), nextColumn);
                 }
 
             }
         });
     }
 
+    /**
+     * Convenience method to return a non-null String from the item.
+     *
+     * @return a non-null String from the item.
+     */
     private String getString() {
-        return getItem() == null ? "" : getItem().toString();
+        return getItem() == null ? "" : getItem();
     }
 
+    /**
+     * Returns the next column forward or backward, depending on the supplied value.
+     *
+     * @param forward true to get the next column forward (to the right), or false to get the next column backward (to
+     *                the left).
+     * @return the next column forward or backward, depending on the supplied value.
+     */
     private TableColumn<T, ?> getNextColumn(boolean forward) {
         List<TableColumn<T, ?>> columns = new ArrayList<>();
         for (TableColumn<T, ?> column : getTableView().getColumns()) {
@@ -128,8 +157,7 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
         if (columns.size() < 2) {
             return null;
         }
-        int currentIndex = columns.indexOf(getTableColumn());
-        int nextIndex = currentIndex;
+        int nextIndex = columns.indexOf(getTableColumn());
         if (forward) {
             nextIndex++;
             if (nextIndex > columns.size() - 1) {
@@ -144,8 +172,13 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
         return columns.get(nextIndex);
     }
 
-    private List<TableColumn<T, ?>> getLeaves(
-            TableColumn<T, ?> root) {
+    /**
+     * Used in the getNextColumn method to provide leaves of the column
+     *
+     * @param root the column to get the leaves from
+     * @return all (editable) leaves of the supplied table column.
+     */
+    private List<TableColumn<T, ?>> getLeaves(TableColumn<T, ?> root) {
         List<TableColumn<T, ?>> columns = new ArrayList<>();
         if (root.getColumns().isEmpty()) {
             // We only want the leaves that are editable.

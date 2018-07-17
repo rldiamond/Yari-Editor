@@ -20,6 +20,11 @@ import view.RootLayoutFactory;
 
 import java.util.List;
 
+/**
+ * Abstract TableView to provide common formatting options throughout the application.
+ *
+ * @param <T> the object the tableview is based upon.
+ */
 public abstract class YariTable<T extends Object> extends TableView<T> {
 
     public static final ObservableList<String> dataTypeValues = FXCollections.observableArrayList("boolean", "byte", "char", "double", "float", "integer", "long", "short", "string");

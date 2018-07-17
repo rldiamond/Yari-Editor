@@ -33,14 +33,23 @@ import java.util.List;
  */
 public class DecisionTableValidator {
 
-    private static TableValidator tableValidator = new TableValidator();
-    private static ObservableList<ValidateRequest> queue = FXCollections.observableArrayList();
-    private static BooleanProperty isValid = new SimpleBooleanProperty(true);
-    private static BooleanProperty busy = new SimpleBooleanProperty(false);
-    private static StringProperty message = new SimpleStringProperty("");
-    private static BooleanProperty enabled = new SimpleBooleanProperty(true);
+    private TableValidator tableValidator = new TableValidator();
+    private ObservableList<ValidateRequest> queue = FXCollections.observableArrayList();
+    private BooleanProperty isValid = new SimpleBooleanProperty(true);
+    private BooleanProperty busy = new SimpleBooleanProperty(false);
+    private StringProperty message = new SimpleStringProperty("");
+    private BooleanProperty enabled = new SimpleBooleanProperty(true);
 
-    static {
+    private static DecisionTableValidator decisionTableValidator;
+
+    public static DecisionTableValidator getInstance() {
+        if (decisionTableValidator == null) {
+            decisionTableValidator = new DecisionTableValidator();
+        }
+        return decisionTableValidator;
+    }
+
+    private DecisionTableValidator() {
         queue.addListener((ListChangeListener.Change<? extends ValidateRequest> c) -> {
             busy.set(true);
             while (c.next()) {
@@ -54,15 +63,16 @@ public class DecisionTableValidator {
         });
     }
 
+
     /**
      * Runs the supplied XML String through Yari's validation processes. Returns true if valid, false if not.
      *
      * @param xml String representation of the {@link DecisionTable} XML.
      * @return true if valid, false if invalid.
      */
-    public static void validateXML(String xml) throws YariException {
+    public void validateXML(String xml) throws YariException {
 
-            tableValidator.validateXML(xml);
+        tableValidator.validateXML(xml);
 
     }
 
@@ -71,13 +81,13 @@ public class DecisionTableValidator {
      *
      * @param decisionTable the DecisionTable to validate.
      */
-    public static void requestValidation(DecisionTable decisionTable) {
+    public void requestValidation(DecisionTable decisionTable) {
         if (enabled.get()) {
             queue.add(new ValidateRequest(decisionTable));
         }
     }
 
-    private static class ValidateRequest {
+    private class ValidateRequest {
         private final DecisionTable decisionTable;
 
         ValidateRequest(DecisionTable decisionTable) {
@@ -90,11 +100,11 @@ public class DecisionTableValidator {
                 updateTable();
                 TableValidator.validateRule(decisionTable);
                 decisionTable.convertRowData();
-                if (decisionTable.getTableName() == null || decisionTable.getTableName().equalsIgnoreCase("")){
+                if (decisionTable.getTableName() == null || decisionTable.getTableName().equalsIgnoreCase("")) {
                     message.set("The decision table must have a table name!");
                     return false;
                 }
-                if (decisionTable.getTableDescription() == null || decisionTable.getTableDescription().equalsIgnoreCase("")){
+                if (decisionTable.getTableDescription() == null || decisionTable.getTableDescription().equalsIgnoreCase("")) {
                     message.set("The decision table must have a table description!");
                     return false;
                 }
@@ -106,12 +116,12 @@ public class DecisionTableValidator {
         }
     }
 
-    public static void runValidation(){
+    public void runValidation() {
         ValidateRequest validateRequest = new ValidateRequest(RootLayoutFactory.getInstance().getDecisionTable());
         validateRequest.runValidation();
     }
 
-    public static void updateTable() {
+    public void updateTable() {
         List<Row> updatedRows = new ArrayList<>();
         updatedRows.addAll(RootLayoutFactory.getInstance().getRowsList());
         RootLayoutFactory.getInstance().getDecisionTable().setRows(updatedRows);
@@ -125,7 +135,7 @@ public class DecisionTableValidator {
         RootLayoutFactory.getInstance().getDecisionTable().setActions(updatedActions);
     }
 
-    public static void reorderActions(int draggedIndex, int dropIndex) {
+    public void reorderActions(int draggedIndex, int dropIndex) {
 
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
             String dragged = row.getResults().get(draggedIndex);
@@ -134,7 +144,7 @@ public class DecisionTableValidator {
         }
     }
 
-    public static void reorderConditions(int draggedIndex /*from*/, int dropIndex /*to*/) {
+    public void reorderConditions(int draggedIndex /*from*/, int dropIndex /*to*/) {
 
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
             String dragged = row.getValues().get(draggedIndex);
@@ -148,7 +158,7 @@ public class DecisionTableValidator {
      *
      * @return changes to true if valid, false if invalid.
      */
-    public static BooleanProperty validProperty() {
+    public BooleanProperty validProperty() {
         return isValid;
     }
 
@@ -157,19 +167,19 @@ public class DecisionTableValidator {
      *
      * @return changes to true if busy, false if resting.
      */
-    public static BooleanProperty busyProperty() {
+    public BooleanProperty busyProperty() {
         return busy;
     }
 
-    public static String getMessage() {
+    public String getMessage() {
         return message.get();
     }
 
-    public static StringProperty messageProperty() {
+    public StringProperty messageProperty() {
         return message;
     }
 
-    public static void setEnabled(boolean enabled) {
-        DecisionTableValidator.enabled.set(enabled);
+    public void setEnabled(boolean enabled) {
+        this.enabled.set(enabled);
     }
 }

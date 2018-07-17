@@ -22,6 +22,7 @@ package view;
 
 import com.jfoenix.controls.*;
 import components.DialogPane;
+import components.UpdateEvent;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -59,6 +60,7 @@ public class RootLayout extends BorderPane {
     private final BooleanProperty loadingContent = new SimpleBooleanProperty(false);
     private final StackPane displayedContent = new StackPane();
     private final AnchorPane header = new AnchorPane();
+    private final DecisionTableValidator decisionTableValidator = DecisionTableValidator.getInstance();
     private Pane minimizeButton;
     private JFXSnackbar toastBar;
 
@@ -94,9 +96,9 @@ public class RootLayout extends BorderPane {
 
         toastBar = new JFXSnackbar(mainPanel);
         toastBar.setPrefWidth(350);
-        DecisionTableValidator.validProperty().addListener((obs, ov, isValid) -> {
+        DecisionTableValidator.getInstance().validProperty().addListener((obs, ov, isValid) -> {
             if (!isValid) {
-                toastBar.enqueue(new JFXSnackbar.SnackbarEvent("Decision table no longer validates! " + DecisionTableValidator.getMessage(),
+                toastBar.enqueue(new JFXSnackbar.SnackbarEvent("Decision table no longer validates! " + decisionTableValidator.getMessage(),
                         "DISMISS",
                         3000,
                         true,
@@ -110,9 +112,10 @@ public class RootLayout extends BorderPane {
         setCenter(mainPanel);
 
         //validate table anytime changes are made to the lists
-        actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> DecisionTableValidator.requestValidation(decisionTable));
-        conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> DecisionTableValidator.requestValidation(decisionTable));
-        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> DecisionTableValidator.requestValidation(decisionTable));
+        actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> decisionTableValidator.requestValidation(decisionTable));
+        conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> decisionTableValidator.requestValidation(decisionTable));
+        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> decisionTableValidator.requestValidation(decisionTable));
+        addEventHandler(UpdateEvent.UPDATE, e -> decisionTableValidator.requestValidation(getDecisionTable()));
 
         StackPane getStartedPane = new StackPane(new Label("Select an option to the left to get started."));
         displayedContent.getChildren().add(getStartedPane);
@@ -353,8 +356,8 @@ public class RootLayout extends BorderPane {
 
         JFXSpinner backgroundBusyIndicator = new JFXSpinner();
         backgroundBusyIndicator.setRadius(5);
-        backgroundBusyIndicator.managedProperty().bind(DecisionTableValidator.busyProperty());
-        backgroundBusyIndicator.visibleProperty().bind(DecisionTableValidator.busyProperty());
+        backgroundBusyIndicator.managedProperty().bind(decisionTableValidator.busyProperty());
+        backgroundBusyIndicator.visibleProperty().bind(decisionTableValidator.busyProperty());
         AnchorPane.setRightAnchor(backgroundBusyIndicator, 5D);
         AnchorPane.setBottomAnchor(backgroundBusyIndicator, 5D);
         leftMenu.getChildren().add(backgroundBusyIndicator);
@@ -364,14 +367,14 @@ public class RootLayout extends BorderPane {
         JFXDialog messageDialog = new JFXDialog();
 
         DialogPane dialogPane = new DialogPane(messageDialog);
-        dialogPane.contentProperty().bind(DecisionTableValidator.messageProperty());
+        dialogPane.contentProperty().bind(decisionTableValidator.messageProperty());
         messageDialog.setContent(dialogPane);
         messageDialog.setTransitionType(JFXDialog.DialogTransition.BOTTOM);
         messageDialog.setDialogContainer(displayedContent);
 
 
-        validIndicator.managedProperty().bind((DecisionTableValidator.busyProperty().not()));
-        validIndicator.visibleProperty().bind((DecisionTableValidator.busyProperty().not()));
+        validIndicator.managedProperty().bind((decisionTableValidator.busyProperty().not()));
+        validIndicator.visibleProperty().bind((decisionTableValidator.busyProperty().not()));
         Tooltip validTip = new Tooltip();
         Tooltip.install(validIndicator, validTip);
         AnchorPane.setRightAnchor(validIndicator, 5D);
@@ -381,16 +384,16 @@ public class RootLayout extends BorderPane {
         leftMenu.getChildren().add(validIndicator);
 
         PseudoClass success = PseudoClass.getPseudoClass("success");
-        validIndicator.pseudoClassStateChanged(success, DecisionTableValidator.validProperty().get());//trigger at load
+        validIndicator.pseudoClassStateChanged(success, decisionTableValidator.validProperty().get());//trigger at load
         final String validTipText = "Data passes validation!";
         final String invalidTipText = "Data fails validation! Click to see message.";
-        validTip.setText(DecisionTableValidator.validProperty().get() ? validTipText : invalidTipText);
-        DecisionTableValidator.validProperty().addListener((obs, ov, isValid) -> {
+        validTip.setText(decisionTableValidator.validProperty().get() ? validTipText : invalidTipText);
+        decisionTableValidator.validProperty().addListener((obs, ov, isValid) -> {
             validIndicator.pseudoClassStateChanged(success, isValid);
             validTip.setText(isValid ? validTipText : invalidTipText);
         });
 
-        DecisionTableValidator.validProperty().addListener((obs, ov, valid) -> {
+        decisionTableValidator.validProperty().addListener((obs, ov, valid) -> {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {
                     if (me.getButton() == MouseButton.PRIMARY) {
@@ -411,7 +414,7 @@ public class RootLayout extends BorderPane {
     }
 
     public void save(boolean newFile) {
-        if (!DecisionTableValidator.validProperty().get()) {
+        if (!decisionTableValidator.validProperty().get()) {
             ToastUtil.sendPersistantToast("Could not save decision table as it does not pass validation.");
         } else if (newFile) {
             //save as functionality
