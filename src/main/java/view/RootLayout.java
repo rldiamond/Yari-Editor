@@ -192,7 +192,10 @@ public class RootLayout extends BorderPane {
         //TODO action & icons
         HBox file_print_pane = new HBox(new Label("Print"));
         file_print_pane.setAlignment(Pos.CENTER_LEFT);
-        file_print_pane.setOnMouseClicked(me -> fileMenuPopUp.hide());
+        file_print_pane.setOnMouseClicked(me -> {
+            FileUtil.print();
+            fileMenuPopUp.hide();
+        });
         //TODO action & icons
         HBox file_exit_pane = new HBox(new Label("Exit"));
         file_exit_pane.setAlignment(Pos.CENTER_LEFT);
