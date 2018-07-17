@@ -36,29 +36,31 @@ public class FileUtil {
 
         // Show save file dialog
         File file = fileChooser.showOpenDialog(stage); //must be on fx thread
+        if (file == null) {
+            WelcomeSplashFactory.getInstance().busyProperty().set(false);
+            return;
+        }
 
         FXUtil.runAsync(() -> {
-            if (file != null) {
-                try {
-                    importFromFile(file); //want off thread
-                    if (!RootLayoutFactory.isDisplayed()) {
-                        FXUtil.runOnFXThread(() -> {
-                            RootLayoutFactory.show(stage);
-                            DecisionTableValidator.getInstance().setEnabled(true);
-                        });
-
-                    }
-                } catch (Exception ex) {
-                    WelcomeSplashFactory.getInstance().busyProperty().set(false);
+            try {
+                importFromFile(file); //want off thread
+                if (!RootLayoutFactory.isDisplayed()) {
                     FXUtil.runOnFXThread(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText("Could not load table data");
-                        alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
-                        alert.showAndWait();
+                        RootLayoutFactory.show(stage);
+                        DecisionTableValidator.getInstance().setEnabled(true);
                     });
-                    DecisionTableValidator.getInstance().setEnabled(true);
+
                 }
+            } catch (Exception ex) {
+                WelcomeSplashFactory.getInstance().busyProperty().set(false);
+                FXUtil.runOnFXThread(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Could not load table data");
+                    alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
+                    alert.showAndWait();
+                });
+                DecisionTableValidator.getInstance().setEnabled(true);
             }
         });
 
@@ -129,7 +131,7 @@ public class FileUtil {
         tablePrintView.getTransforms().add(new Scale(scaleX, scaleY));
 
         PrinterJob job = PrinterJob.createPrinterJob();
-        if (job != null && job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())){
+        if (job != null && job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())) {
             boolean success = job.printPage(tablePrintView);
             if (success) {
                 job.endJob();
