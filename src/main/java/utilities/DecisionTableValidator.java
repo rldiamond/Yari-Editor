@@ -78,12 +78,10 @@ public class DecisionTableValidator {
 
     /**
      * Place a request for table validation to occur. Validation occurs on an async thread.
-     *
-     * @param decisionTable the DecisionTable to validate.
      */
-    public void requestValidation(DecisionTable decisionTable) {
+    public void requestValidation() {
         if (enabled.get()) {
-            queue.add(new ValidateRequest(decisionTable));
+            queue.add(new ValidateRequest(RootLayoutFactory.getInstance().getDecisionTable()));
         }
     }
 

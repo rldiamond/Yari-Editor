@@ -22,6 +22,7 @@ package view;
 
 import com.jfoenix.controls.*;
 import components.DialogPane;
+import components.PopupMenuEntry;
 import components.UpdateEvent;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -112,10 +113,10 @@ public class RootLayout extends BorderPane {
         setCenter(mainPanel);
 
         //validate table anytime changes are made to the lists
-        actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> decisionTableValidator.requestValidation(decisionTable));
-        conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> decisionTableValidator.requestValidation(decisionTable));
-        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> decisionTableValidator.requestValidation(decisionTable));
-        addEventHandler(UpdateEvent.UPDATE, e -> decisionTableValidator.requestValidation(getDecisionTable()));
+        actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> decisionTableValidator.requestValidation());
+        conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> decisionTableValidator.requestValidation());
+        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> decisionTableValidator.requestValidation());
+        addEventHandler(UpdateEvent.UPDATE, e -> decisionTableValidator.requestValidation());
 
         StackPane getStartedPane = new StackPane(new Label("Select an option to the left to get started."));
         displayedContent.getChildren().add(getStartedPane);
@@ -160,12 +161,11 @@ public class RootLayout extends BorderPane {
         AnchorPane.setTopAnchor(menuWrapper, 0D);
         AnchorPane.setBottomAnchor(menuWrapper, 0D);
 
-        //file menu
         JFXPopup fileMenuPopUp = new JFXPopup();
         fileMenuPopUp.setAutoHide(true);
         JFXListView<HBox> fileMenuList = new JFXListView<>();
-        HBox file_new_pane = new HBox(new Label("New"));
-        file_new_pane.setAlignment(Pos.CENTER_LEFT);
+        //file menu
+        PopupMenuEntry file_new_pane = new PopupMenuEntry("New", KeyboardShortcut.NEW);
         file_new_pane.setOnMouseClicked(me -> {
             FileUtil.clearData();
             DecisionTable decisionTable = new DecisionTable();
@@ -174,32 +174,27 @@ public class RootLayout extends BorderPane {
             setDecisionTable(decisionTable);
             fileMenuPopUp.hide();
         });
-        HBox file_open_pane = new HBox(new Label("Open"));
-        file_open_pane.setAlignment(Pos.CENTER_LEFT);
+        PopupMenuEntry file_open_pane = new PopupMenuEntry("Open", KeyboardShortcut.OPEN);
         file_open_pane.setOnMouseClicked(me -> {
-            FileUtil.openFile((Stage) getScene().getWindow());
+            open();
             fileMenuPopUp.hide();
         });
-        HBox file_save_pane = new HBox(new Label("Save"));
-        file_save_pane.setAlignment(Pos.CENTER_LEFT);
+        PopupMenuEntry file_save_pane = new PopupMenuEntry("Save", KeyboardShortcut.SAVE);
         file_save_pane.setOnMouseClicked(me -> {
             save(false);
             fileMenuPopUp.hide();
         });
-        HBox file_saveAs_pane = new HBox(new Label("Save As.."));
-        file_saveAs_pane.setAlignment(Pos.CENTER_LEFT);
+        PopupMenuEntry file_saveAs_pane = new PopupMenuEntry("Save As..", null);
         file_saveAs_pane.setOnMouseClicked(me -> {
             save(true);
             fileMenuPopUp.hide();
         });
-        HBox file_print_pane = new HBox(new Label("Print"));
-        file_print_pane.setAlignment(Pos.CENTER_LEFT);
+        PopupMenuEntry file_print_pane = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
         file_print_pane.setOnMouseClicked(me -> {
             FileUtil.print();
             fileMenuPopUp.hide();
         });
-        HBox file_exit_pane = new HBox(new Label("Exit"));
-        file_exit_pane.setAlignment(Pos.CENTER_LEFT);
+        PopupMenuEntry file_exit_pane = new PopupMenuEntry("Exit", null);
         file_exit_pane.setOnMouseClicked(me -> {
             fileMenuPopUp.hide();
             Platform.exit();
@@ -409,6 +404,10 @@ public class RootLayout extends BorderPane {
 
         setLeft(leftMenu);
 
+    }
+
+    public void open(){
+        FileUtil.openFile((Stage) getScene().getWindow());
     }
 
     public void save(boolean newFile) {

@@ -11,12 +11,12 @@
 package view;
 
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import utilities.KeyboardShortcut;
 import utilities.ThemeUtil;
+
+import java.util.Arrays;
 
 public class RootLayoutFactory {
 
@@ -45,12 +45,11 @@ public class RootLayoutFactory {
         stage.setHeight(550);
 
         //add keyboard shortcuts
-        final KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.S,
-                KeyCombination.CONTROL_DOWN);
         scene.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-            if (keyComb1.match(event)) {
-                rootLayout.save(false);
-            }
+            Arrays.stream(KeyboardShortcut.values())
+                    .filter(value -> value.getKeyCombination().match(event))
+                    .findFirst()
+                    .ifPresent(KeyboardShortcut::run);
         });
 
         //make moveable

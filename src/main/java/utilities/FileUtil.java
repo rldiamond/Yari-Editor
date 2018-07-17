@@ -66,6 +66,15 @@ public class FileUtil {
 
     }
 
+    public static void newFile(){
+        currentFile = null;
+        clearData();
+        DecisionTable decisionTable = new DecisionTable();
+        decisionTable.setDescription("MyTable Description");
+        decisionTable.setName("MyTable");
+
+    }
+
     public static void saveToFile(File file) {
         FXUtil.runAsync(() -> {
             DecisionTableValidator.getInstance().updateTable();
