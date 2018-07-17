@@ -126,11 +126,12 @@ public class FileUtil {
         TablePrintView tablePrintView = new TablePrintView();
         Printer printer = Printer.getDefaultPrinter();
         PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.LANDSCAPE, Printer.MarginType.HARDWARE_MINIMUM);
-        double scaleX = pageLayout.getPrintableWidth() / tablePrintView.getBoundsInParent().getWidth();
-        double scaleY = pageLayout.getPrintableHeight() / tablePrintView.getBoundsInParent().getHeight();
+        double scaleX = pageLayout.getPrintableWidth() / 1920;
+        double scaleY = pageLayout.getPrintableHeight() / 1080;
         tablePrintView.getTransforms().add(new Scale(scaleX, scaleY));
 
         PrinterJob job = PrinterJob.createPrinterJob();
+        job.getJobSettings().setPageLayout(pageLayout);
         if (job != null && job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())) {
             boolean success = job.printPage(tablePrintView);
             if (success) {

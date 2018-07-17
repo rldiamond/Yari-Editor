@@ -6,6 +6,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.yari.core.table.DecisionTable;
+import utilities.ThemeUtil;
 import view.table.RowTable;
 
 public class TablePrintView extends StackPane {
@@ -32,6 +33,8 @@ public class TablePrintView extends StackPane {
         VBox vBox = new VBox(10);
         vBox.getChildren().addAll(nameWrapper, descriptionWrapper, rowTable);
         getChildren().setAll(vBox);
+
+        getStylesheets().setAll(ThemeUtil.getActiveTheme().getCss());
     }
 
 }
