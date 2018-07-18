@@ -27,6 +27,8 @@ import view.RootLayoutFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Performs validation on the currently active decision table. If validation fails, the validProperty is set to false.
@@ -39,6 +41,7 @@ public class DecisionTableValidator {
     private BooleanProperty busy = new SimpleBooleanProperty(false);
     private StringProperty message = new SimpleStringProperty("");
     private BooleanProperty enabled = new SimpleBooleanProperty(true);
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private static DecisionTableValidator decisionTableValidator;
 
@@ -51,15 +54,14 @@ public class DecisionTableValidator {
 
     private DecisionTableValidator() {
         queue.addListener((ListChangeListener.Change<? extends ValidateRequest> c) -> {
-            busy.set(true);
-            while (c.next()) {
-                c.getAddedSubList().forEach(request -> {
-                    FXUtil.runAsync(() -> {
-                        isValid.set(request.runValidation());
-                        busy.set(false);
-                    });
-                });
-            }
+            c.next();
+            c.getAddedSubList().forEach(request -> {
+               executorService.submit(() -> {
+                   busy.set(true);
+                   isValid.set(request.runValidation());
+                   busy.set(false);
+               }) ;
+            });
         });
     }
 
@@ -71,9 +73,7 @@ public class DecisionTableValidator {
      * @return true if valid, false if invalid.
      */
     public void validateXML(String xml) throws YariException {
-
         tableValidator.validateXML(xml);
-
     }
 
     /**
