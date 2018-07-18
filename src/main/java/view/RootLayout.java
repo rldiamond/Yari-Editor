@@ -120,6 +120,13 @@ public class RootLayout extends BorderPane {
         rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> decisionTableValidator.requestValidation());
         addEventHandler(UpdateEvent.UPDATE, e -> decisionTableValidator.requestValidation());
 
+        //change toast on valid
+        decisionTableValidator.validProperty().addListener((obs, ov, nv) -> {
+            if (!ov && nv){
+                ToastUtil.sendToast("Table now validates!");
+            }
+        });
+
         StackPane getStartedPane = new StackPane(new Label("Select an option to the left to get started."));
         displayedContent.getChildren().add(getStartedPane);
         fadePaneOut.play();
