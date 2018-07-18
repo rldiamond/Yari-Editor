@@ -9,7 +9,7 @@ public class ToastUtil {
         RootLayoutFactory.getInstance().getToastBar().enqueue(new JFXSnackbar.SnackbarEvent(message,
                 "DISMISS",
                 3000,
-                true,
+                false,
                 b -> RootLayoutFactory.getInstance().getToastBar().close()));
     }
 
