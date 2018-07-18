@@ -169,14 +169,10 @@ public class RootLayout extends BorderPane {
         //file menu
         PopupMenuEntry file_new_pane = new PopupMenuEntry("New", KeyboardShortcut.NEW);
         file_new_pane.setOnMouseClicked(me -> {
-            if (FileUtil.isDirty()){
+            if (FileUtil.isDirty()) {
                 handleDirty();
             }
-            FileUtil.clearData();
-            DecisionTable decisionTable = new DecisionTable();
-            decisionTable.setName("MyTable");
-            decisionTable.setDescription("MyTable Description");
-            setDecisionTable(decisionTable);
+            FileUtil.newFile();
             fileMenuPopUp.hide();
         });
         PopupMenuEntry file_open_pane = new PopupMenuEntry("Open", KeyboardShortcut.OPEN);
@@ -410,7 +406,7 @@ public class RootLayout extends BorderPane {
 
     }
 
-    public void handleDirty(){
+    public void handleDirty() {
         JFXDialogLayout layout = new JFXDialogLayout();
         layout.setBody(new Label("You have unsaved changes. Do you want to save before continuing?"));
 
@@ -436,8 +432,8 @@ public class RootLayout extends BorderPane {
         alert.showAndWait();
     }
 
-    public void open(){
-        if (FileUtil.isDirty()){
+    public void open() {
+        if (FileUtil.isDirty()) {
             handleDirty();
         }
         FileUtil.openFile((Stage) getScene().getWindow());
