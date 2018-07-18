@@ -22,6 +22,7 @@ import javafx.scene.layout.StackPane;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
+import utilities.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,9 @@ public class JavaCodeView extends StackPane {
     }
 
     private String convertTypeToJava(String dataType) {
+        if (dataType == null){
+            return "";
+        }
         switch (dataType) {
             case "boolean":
                 return "boolean";
@@ -120,7 +124,7 @@ public class JavaCodeView extends StackPane {
             case "float":
                 return "float";
             default:
-                return null;
+                return "";
         }
     }
 
@@ -129,5 +133,6 @@ public class JavaCodeView extends StackPane {
         final ClipboardContent content = new ClipboardContent();
         content.putString(code);
         cb.setContent(content);
+        ToastUtil.sendToast("Code copied to clipboard.");
     }
 }

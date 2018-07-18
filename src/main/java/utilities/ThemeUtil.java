@@ -23,7 +23,6 @@ public class ThemeUtil {
     private static final Image LOGO = new Image("/theme/YariLogo.png");
 
     public enum Theme {
-        LIGHT(""),
         DARK("theme/dark.css");
 
         final String css;
