@@ -10,7 +10,6 @@
         <version>0.3.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.yari</groupId>
     <artifactId>editor</artifactId>
     <version>2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -44,8 +43,7 @@
                         <configuration>
                             <!--<shadedArtifactAttached>true</shadedArtifactAttached>-->
                             <transformers>
-                                <transformer implementation=
-                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>YariEditor</mainClass>
                                 </transformer>
                             </transformers>
@@ -55,6 +53,7 @@
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>org.yari</groupId>

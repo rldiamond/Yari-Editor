@@ -19,6 +19,9 @@ public class TextUtil {
      * @return a String formatted in Title Case.
      */
     public static String toTitleCase(String input) {
+        if (input == null){
+            return "";
+        }
         StringBuilder titleCase = new StringBuilder();
         boolean nextTitleCase = true;
         input = input.toLowerCase();

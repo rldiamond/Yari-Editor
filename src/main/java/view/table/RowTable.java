@@ -134,7 +134,7 @@ public class RowTable extends YariTable<Row> {
                 return new SimpleStringProperty(rowValues.get(column));
             });
             //edit
-            if (condition.getDataType().equalsIgnoreCase("boolean")) {
+            if (condition.getDataType() != null && condition.getDataType().equalsIgnoreCase("boolean")) {
                 conditionCol.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), boolOptions));
             } else {
                 conditionCol.setCellFactory(c -> new EditableTextFieldCell<>());
@@ -170,7 +170,7 @@ public class RowTable extends YariTable<Row> {
             });
 
             // Enables table editing
-            if (action.getDataType().equalsIgnoreCase("boolean")) {
+            if (action.getDataType() != null && action.getDataType().equalsIgnoreCase("boolean")) {
                 col.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), boolOptions));
             } else {
                 col.setCellFactory(c -> new EditableTextFieldCell<>());
