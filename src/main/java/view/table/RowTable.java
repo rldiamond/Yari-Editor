@@ -10,7 +10,9 @@
 
 package view.table;
 
+import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
+import components.UpdateEvent;
 import components.YariTable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -135,7 +137,7 @@ public class RowTable extends YariTable<Row> {
             });
             //edit
             if (condition.getDataType() != null && condition.getDataType().equalsIgnoreCase("boolean")) {
-                conditionCol.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), boolOptions));
+                conditionCol.setCellFactory(c -> new EditableComboBoxCell<>(boolOptions));
             } else {
                 conditionCol.setCellFactory(c -> new EditableTextFieldCell<>());
             }
@@ -146,6 +148,7 @@ public class RowTable extends YariTable<Row> {
                     row.getValues().add("");
                 }
                 row.getValues().set(column, s);
+
                 refresh();
             });
             conditionsCol.getColumns().addAll(conditionCol);
@@ -171,7 +174,7 @@ public class RowTable extends YariTable<Row> {
 
             // Enables table editing
             if (action.getDataType() != null && action.getDataType().equalsIgnoreCase("boolean")) {
-                col.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), boolOptions));
+                col.setCellFactory(c -> new EditableComboBoxCell<>(boolOptions));
             } else {
                 col.setCellFactory(c -> new EditableTextFieldCell<>());
             }
