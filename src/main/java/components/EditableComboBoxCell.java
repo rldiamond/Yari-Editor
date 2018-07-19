@@ -43,9 +43,6 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
             setGraphic(null);
         } else {
             if (isEditing()) {
-//                if (comboBox != null) {
-//                    comboBox.setValue(getString());
-//                }
                 setText(getString());
                 setGraphic(comboBox);
             } else {

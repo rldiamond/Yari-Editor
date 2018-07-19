@@ -20,6 +20,7 @@
 
 package view.table;
 
+import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
 import components.UpdateEvent;
 import components.YariTable;
@@ -153,7 +154,7 @@ public class ConditionsTable extends YariTable<Condition> {
         });
 
         TableColumn<Condition, String> comparatorCol = new TableColumn<>("COMPARATOR");
-        comparatorCol.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), comparatorValues));
+        comparatorCol.setCellFactory(c -> new EditableComboBoxCell<>(comparatorValues));
         comparatorCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT COMPARATOR" : cellData.getValue().getComparator();
             return new SimpleStringProperty(content);

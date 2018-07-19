@@ -20,6 +20,7 @@
 
 package view.table;
 
+import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
 import components.UpdateEvent;
 import components.YariTable;
@@ -140,7 +141,7 @@ public class ActionsTable extends YariTable<Action> {
         });
 
         TableColumn<Action, String> dataTypeCol = new TableColumn<>("DATA TYPE");
-        dataTypeCol.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), dataTypeValues));
+        dataTypeCol.setCellFactory(c -> new EditableComboBoxCell<>(dataTypeValues));
         dataTypeCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT DATA TYPE" : cellData.getValue().getDataType();
             return new SimpleStringProperty(content);
