@@ -15,7 +15,7 @@ public class PopupMenuEntry extends HBox {
         final Label titleLabel = new Label(title);
         getChildren().setAll(titleLabel);
         if (keyboardShortcut != null) {
-            final Label shortCutLabel = new Label(keyboardShortcut.getLabel());
+            final Label shortCutLabel = new Label(keyboardShortcut.getDisplayLabel());
             shortCutLabel.setStyle("-fx-font-size: 11px");
             shortCutLabel.setAlignment(Pos.CENTER_RIGHT);
             shortCutLabel.setTextAlignment(TextAlignment.RIGHT);
