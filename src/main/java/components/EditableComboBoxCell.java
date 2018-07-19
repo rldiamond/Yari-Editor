@@ -43,9 +43,9 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
             setGraphic(null);
         } else {
             if (isEditing()) {
-                if (comboBox != null) {
-                    comboBox.setValue(getString());
-                }
+//                if (comboBox != null) {
+//                    comboBox.setValue(getString());
+//                }
                 setText(getString());
                 setGraphic(comboBox);
             } else {
@@ -60,8 +60,8 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
         comboBox.setItems(contents);
         comboBox.valueProperty().set(getString());
         comboBox.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-        comboBox.setOnAction((e) -> {
-            commitEdit(comboBox.getSelectionModel().getSelectedItem());
+        comboBox.getSelectionModel().selectedItemProperty().addListener((obs, ov, selected) -> {
+            commitEdit(selected);
         });
     }
 
