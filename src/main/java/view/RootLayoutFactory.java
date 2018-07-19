@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import utilities.KeyboardShortcut;
+import utilities.ResizeHelper;
 import utilities.ThemeUtil;
 
 import java.util.Arrays;
@@ -67,6 +68,9 @@ public class RootLayoutFactory {
         getInstance().getMinimizeButton().setOnMouseClicked(me -> {
             stage.setIconified(true);
         });
+
+        //allow resize
+        ResizeHelper.addResizeListener(stage);
 
         stage.setX(oldXCenterPosition - stage.getWidth() / 2d);
         stage.setY(oldYCenterPosition - stage.getHeight() / 2d);
