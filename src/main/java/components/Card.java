@@ -24,12 +24,17 @@ import javafx.scene.paint.Color;
 
 /**
  * Simple Pane designed to appear as a material design 'card'.
+ *
+ * StyleClasses:
+ * - Card = card
+ * - Card title = title
+ * - Card footer = footer
  */
 public class Card extends StackPane {
 
     private final StackPane displayedContent = new StackPane();
     private final VBox cardContent = new VBox(10);
-    private StackPane bottomContent;
+    private StackPane footerContent;
 
     /**
      * Construct a card with no title.
@@ -47,7 +52,7 @@ public class Card extends StackPane {
         shadow.setOffsetX(2);
         shadow.setOffsetY(2);
         setEffect(shadow);
-        setStyle("-fx-background-color: ghostwhite;");
+        getStyleClass().add("card");
     }
 
     /**
@@ -57,9 +62,10 @@ public class Card extends StackPane {
      */
     public Card(String title) {
         this();
+
         //title
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 16px;");
+        titleLabel.getStyleClass().add("title");
         HBox titleWrapper = new HBox(titleLabel);
         titleWrapper.setAlignment(Pos.CENTER);
 
@@ -80,13 +86,15 @@ public class Card extends StackPane {
      *
      * @param node Node of the content to display.
      */
-    public void setBottomContent(Node node) {
-        if (bottomContent == null) {
-            bottomContent = new StackPane();
-            bottomContent.setMaxHeight(35);
-            cardContent.getChildren().add(bottomContent);
+    public void setFooterContent(Node node) {
+        //lazy load
+        if (footerContent == null) {
+            footerContent = new StackPane();
+            footerContent.setMaxHeight(35);
+            footerContent.getStyleClass().add("footer");
+            cardContent.getChildren().add(footerContent);
         }
-        bottomContent.getChildren().setAll(node);
+        footerContent.getChildren().setAll(node);
     }
 
 }

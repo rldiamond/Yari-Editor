@@ -13,7 +13,6 @@ package view;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import utilities.FileUtil;
 import utilities.KeyboardShortcut;
 import utilities.ThemeUtil;
 
@@ -50,7 +49,7 @@ public class RootLayoutFactory {
             Arrays.stream(KeyboardShortcut.values())
                     .filter(value -> value.getKeyCombination().match(event))
                     .findFirst()
-                    .ifPresent(KeyboardShortcut::run);
+                    .ifPresent(KeyboardShortcut::runShortcutAction);
         });
 
         //make moveable

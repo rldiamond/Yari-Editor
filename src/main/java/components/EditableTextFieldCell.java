@@ -102,7 +102,7 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
     }
 
     /**
-     * Creates the text field and applied listeners to it which allow for our custom editing.
+     * Creates the text field and applies listeners to it which allow for our custom editing.
      */
     private void createTextField() {
         textField = new TextField(getString());

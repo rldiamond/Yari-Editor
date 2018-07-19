@@ -22,7 +22,7 @@ package view;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
-import components.DialogPane;
+import components.Dialog;
 import components.PopupMenuEntry;
 import components.UpdateEvent;
 import javafx.application.Platform;
@@ -101,11 +101,7 @@ public class RootLayout extends BorderPane {
         toastBar.setPrefWidth(350);
         DecisionTableValidator.getInstance().validProperty().addListener((obs, ov, isValid) -> {
             if (!isValid) {
-                toastBar.enqueue(new JFXSnackbar.SnackbarEvent("Decision table no longer validates! " + decisionTableValidator.getMessage(),
-                        "DISMISS",
-                        3000,
-                        true,
-                        b -> toastBar.close()));
+                ToastUtil.sendPersistantToast("Workspace no longer validates! " + decisionTableValidator.getMessage());
             }
         });
 
@@ -119,6 +115,14 @@ public class RootLayout extends BorderPane {
         conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> decisionTableValidator.requestValidation());
         rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> decisionTableValidator.requestValidation());
         addEventHandler(UpdateEvent.UPDATE, e -> decisionTableValidator.requestValidation());
+
+        //change toast on valid
+        decisionTableValidator.validProperty().addListener((obs, ov, nv) -> {
+            if (!ov && nv) {
+                toastBar.close();
+                ToastUtil.sendToast("Workspace now validates!");
+            }
+        });
 
         StackPane getStartedPane = new StackPane(new Label("Select an option to the left to get started."));
         displayedContent.getChildren().add(getStartedPane);
@@ -185,7 +189,7 @@ public class RootLayout extends BorderPane {
             save(false);
             fileMenuPopUp.hide();
         });
-        PopupMenuEntry file_saveAs_pane = new PopupMenuEntry("Save As..", null);
+        PopupMenuEntry file_saveAs_pane = new PopupMenuEntry("Save As..");
         file_saveAs_pane.setOnMouseClicked(me -> {
             save(true);
             fileMenuPopUp.hide();
@@ -195,7 +199,7 @@ public class RootLayout extends BorderPane {
             FileUtil.print();
             fileMenuPopUp.hide();
         });
-        PopupMenuEntry file_exit_pane = new PopupMenuEntry("Exit", null);
+        PopupMenuEntry file_exit_pane = new PopupMenuEntry("Exit");
         file_exit_pane.setOnMouseClicked(me -> {
             fileMenuPopUp.hide();
             Platform.exit();
@@ -355,17 +359,10 @@ public class RootLayout extends BorderPane {
         AnchorPane.setBottomAnchor(backgroundBusyIndicator, 5D);
         leftMenu.getChildren().add(backgroundBusyIndicator);
 
-        //valid indicator
+        Dialog validationMessageDialog = new Dialog(displayedContent);
+        validationMessageDialog.textProperty().bind(decisionTableValidator.messageProperty());
+
         Pane validIndicator = new Pane();
-        JFXDialog messageDialog = new JFXDialog();
-
-        DialogPane dialogPane = new DialogPane(messageDialog);
-        dialogPane.contentProperty().bind(decisionTableValidator.messageProperty());
-        messageDialog.setContent(dialogPane);
-        messageDialog.setTransitionType(JFXDialog.DialogTransition.BOTTOM);
-        messageDialog.setDialogContainer(displayedContent);
-
-
         validIndicator.managedProperty().bind((decisionTableValidator.busyProperty().not()));
         validIndicator.visibleProperty().bind((decisionTableValidator.busyProperty().not()));
         Tooltip validTip = new Tooltip();
@@ -378,8 +375,8 @@ public class RootLayout extends BorderPane {
 
         PseudoClass success = PseudoClass.getPseudoClass("success");
         validIndicator.pseudoClassStateChanged(success, decisionTableValidator.validProperty().get());//trigger at load
-        final String validTipText = "Data passes validation!";
-        final String invalidTipText = "Data fails validation! Click to see message.";
+        final String validTipText = "Data passes validation. CTRL+V to re-validate.";
+        final String invalidTipText = "Data fails validation. CTRL+V to re-validate. Click to see message.";
         validTip.setText(decisionTableValidator.validProperty().get() ? validTipText : invalidTipText);
         decisionTableValidator.validProperty().addListener((obs, ov, isValid) -> {
             validIndicator.pseudoClassStateChanged(success, isValid);
@@ -390,7 +387,7 @@ public class RootLayout extends BorderPane {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {
                     if (me.getButton() == MouseButton.PRIMARY) {
-                        messageDialog.show();
+                        validationMessageDialog.show();
                     }
                 });
             } else {

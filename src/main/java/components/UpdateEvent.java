@@ -28,7 +28,6 @@ public class UpdateEvent extends Event {
 
     public UpdateEvent(Object source, EventTarget target) {
         super(source, target, UPDATE);
-
     }
 
     @Override

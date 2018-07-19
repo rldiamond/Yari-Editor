@@ -64,7 +64,7 @@ public class ActionsView extends StackPane {
         HBox buttonWrapper = new HBox(5);
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
         buttonWrapper.getChildren().setAll(removeAction, addAction);
-        tableCard.setBottomContent(buttonWrapper);
+        tableCard.setFooterContent(buttonWrapper);
 
     }
     private void removeAction(MouseEvent mouseEvent){

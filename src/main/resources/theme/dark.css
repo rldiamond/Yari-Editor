@@ -189,6 +189,21 @@
     -fx-cursor: default;
 }
 
+/******************** CARD *******************/
+.card {
+    -fx-background-color: ghostwhite;
+}
+
+.card .title {
+    -fx-font-size: 16px;
+}
+
+/******************** DIALOG *******************/
+.dialog {
+    -fx-background-color: ghostwhite;
+    -fx-padding: 15, 15, 15, 15;
+}
+
 /******************** TABLES *******************/
 .root {
     -fx-accent: #A32202;
