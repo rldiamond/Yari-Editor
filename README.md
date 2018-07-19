@@ -19,11 +19,14 @@ Yari Editor, in it's simplest form, is an XML editor developed specifically for 
   * Pressing TAB while editing cells will commit the current cell and select the next cell to the right
   * Pressing ESC will cancel the edit and deselect the cell
   * Pressing ENTER or unfocusing the cell will commit the edit
+* Printing of table data   
 * Keyboard shortcuts
-  * CTRL + S to save
-  * CTRL + P to print
-  * CTRL + O to open
-* Printing of table data  
+  * Save: CTRL + S
+  * Print: CTRL + P
+  * Open: CTRL + O
+  * New: CTRL + N
+  * Re-Validate: CTRL + V
+
 
 
 ## Project
