@@ -101,6 +101,7 @@ public class RowTable extends YariTable<Row> {
                     event.setDropCompleted(true);
                     getSelectionModel().select(dropIndex);
                     event.consume();
+                    fireEvent(new UpdateEvent());
                 }
             });
 
