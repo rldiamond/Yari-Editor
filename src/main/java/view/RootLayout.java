@@ -101,11 +101,7 @@ public class RootLayout extends BorderPane {
         toastBar.setPrefWidth(350);
         DecisionTableValidator.getInstance().validProperty().addListener((obs, ov, isValid) -> {
             if (!isValid) {
-                toastBar.enqueue(new JFXSnackbar.SnackbarEvent("Decision table no longer validates! " + decisionTableValidator.getMessage(),
-                        "DISMISS",
-                        3000,
-                        true,
-                        b -> toastBar.close()));
+                ToastUtil.sendPersistantToast("Workspace no longer validates! " + decisionTableValidator.getMessage());
             }
         });
 
@@ -124,7 +120,7 @@ public class RootLayout extends BorderPane {
         decisionTableValidator.validProperty().addListener((obs, ov, nv) -> {
             if (!ov && nv){
                 toastBar.close();
-                ToastUtil.sendToast("Table now validates!");
+                ToastUtil.sendToast("Workspace now validates!");
             }
         });
 
@@ -386,8 +382,8 @@ public class RootLayout extends BorderPane {
 
         PseudoClass success = PseudoClass.getPseudoClass("success");
         validIndicator.pseudoClassStateChanged(success, decisionTableValidator.validProperty().get());//trigger at load
-        final String validTipText = "Data passes validation!";
-        final String invalidTipText = "Data fails validation! Click to see message.";
+        final String validTipText = "Data passes validation. CTRL+V to re-validate.";
+        final String invalidTipText = "Data fails validation. CTRL+V to re-validate. Click to see message.";
         validTip.setText(decisionTableValidator.validProperty().get() ? validTipText : invalidTipText);
         decisionTableValidator.validProperty().addListener((obs, ov, isValid) -> {
             validIndicator.pseudoClassStateChanged(success, isValid);
