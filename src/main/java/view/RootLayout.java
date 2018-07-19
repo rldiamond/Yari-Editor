@@ -123,6 +123,7 @@ public class RootLayout extends BorderPane {
         //change toast on valid
         decisionTableValidator.validProperty().addListener((obs, ov, nv) -> {
             if (!ov && nv){
+                toastBar.close();
                 ToastUtil.sendToast("Table now validates!");
             }
         });
