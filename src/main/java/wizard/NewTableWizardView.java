@@ -63,7 +63,7 @@ public class NewTableWizardView extends Card {
         });
 
         buttonBar.getChildren().addAll(previousButton, nextButton);
-        setBottomContent(buttonBar);
+        setFooterContent(buttonBar);
 
         //setup tranisition pane
         transitionPane.setStyle("-fx-background-color: white;");

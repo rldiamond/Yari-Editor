@@ -31,7 +31,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Performs validation on the currently active decision table. If validation fails, the validProperty is set to false.
+ * Performs validation on the currently active decision table. If validation fails, the validProperty is set to false,
+ * and the message is populated with the exception message from Yari.
  */
 public class DecisionTableValidator {
 
@@ -45,6 +46,11 @@ public class DecisionTableValidator {
 
     private static DecisionTableValidator decisionTableValidator;
 
+    /**
+     * Return the instance of the validator.
+     *
+     * @return the instance of the validator.
+     */
     public static DecisionTableValidator getInstance() {
         if (decisionTableValidator == null) {
             decisionTableValidator = new DecisionTableValidator();
@@ -53,14 +59,15 @@ public class DecisionTableValidator {
     }
 
     private DecisionTableValidator() {
+        //when a new request is added to our queue, add to the executor queue.
         queue.addListener((ListChangeListener.Change<? extends ValidateRequest> c) -> {
             c.next();
             c.getAddedSubList().forEach(request -> {
-               executorService.submit(() -> {
-                   busy.set(true);
-                   isValid.set(request.runValidation());
-                   busy.set(false);
-               }) ;
+                executorService.submit(() -> {
+                    busy.set(true);
+                    isValid.set(request.runValidation());
+                    busy.set(false);
+                });
             });
         });
     }
@@ -85,41 +92,17 @@ public class DecisionTableValidator {
         }
     }
 
-    private class ValidateRequest {
-        private final DecisionTable decisionTable;
-
-        ValidateRequest(DecisionTable decisionTable) {
-            this.decisionTable = decisionTable;
-        }
-
-        boolean runValidation() {
-            boolean valid = true;
-            try {
-                updateTable();
-                TableValidator.validateRule(decisionTable);
-                decisionTable.convertRowData();
-                if (decisionTable.getTableName() == null || decisionTable.getTableName().equalsIgnoreCase("")) {
-                    message.set("The decision table must have a table name!");
-                    return false;
-                }
-                if (decisionTable.getTableDescription() == null || decisionTable.getTableDescription().equalsIgnoreCase("")) {
-                    message.set("The decision table must have a table description!");
-                    return false;
-                }
-            } catch (Exception ex) {
-                message.set(ex.getMessage());
-                valid = false;
-            }
-            FileUtil.setDirty(true);
-            return valid;
-        }
-    }
-
+    /**
+     * Immediately run a validation (not on an async thread).
+     */
     public void runValidation() {
         ValidateRequest validateRequest = new ValidateRequest(RootLayoutFactory.getInstance().getDecisionTable());
         validateRequest.runValidation();
     }
 
+    /**
+     * Update the decision table object to the latest values in the observable lists.
+     */
     public void updateTable() {
         List<Row> updatedRows = new ArrayList<>();
         updatedRows.addAll(RootLayoutFactory.getInstance().getRowsList());
@@ -134,6 +117,12 @@ public class DecisionTableValidator {
         RootLayoutFactory.getInstance().getDecisionTable().setActions(updatedActions);
     }
 
+    /**
+     * Re-order actions after drag-and-drop.
+     *
+     * @param draggedIndex index dragged from.
+     * @param dropIndex    index dropped to.
+     */
     public void reorderActions(int draggedIndex, int dropIndex) {
 
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
@@ -143,6 +132,12 @@ public class DecisionTableValidator {
         }
     }
 
+    /**
+     * Re-order conditions after drag-and-drop.
+     *
+     * @param draggedIndex index dragged from.
+     * @param dropIndex    index dropped to.
+     */
     public void reorderConditions(int draggedIndex /*from*/, int dropIndex /*to*/) {
 
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
@@ -170,15 +165,64 @@ public class DecisionTableValidator {
         return busy;
     }
 
+    /**
+     * Return the invalid message.
+     *
+     * @return the invalid message.
+     */
     public String getMessage() {
         return message.get();
     }
 
+    /**
+     * Return the invalid message property.
+     *
+     * @return the invalid message property.
+     */
     public StringProperty messageProperty() {
         return message;
     }
 
+    /**
+     * Enable or disable validation.
+     *
+     * @param enabled true to enable, false to stop.
+     */
     public void setEnabled(boolean enabled) {
         this.enabled.set(enabled);
+    }
+
+    /**
+     * Inner-class to describe a validation request.
+     */
+    private class ValidateRequest {
+
+        private final DecisionTable decisionTable;
+
+        ValidateRequest(DecisionTable decisionTable) {
+            this.decisionTable = decisionTable;
+        }
+
+        boolean runValidation() {
+            boolean valid = true;
+            try {
+                updateTable();
+                TableValidator.validateRule(decisionTable);
+                decisionTable.convertRowData();
+                if (decisionTable.getTableName() == null || decisionTable.getTableName().equalsIgnoreCase("")) {
+                    message.set("The decision table must have a table name!");
+                    return false;
+                }
+                if (decisionTable.getTableDescription() == null || decisionTable.getTableDescription().equalsIgnoreCase("")) {
+                    message.set("The decision table must have a table description!");
+                    return false;
+                }
+            } catch (Exception ex) {
+                message.set(ex.getMessage());
+                valid = false;
+            }
+            FileUtil.setDirty(true);
+            return valid;
+        }
     }
 }

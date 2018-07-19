@@ -99,7 +99,7 @@ public class GeneralView extends StackPane {
         resetButton.setOnMouseClicked(this::reset);
 
         buttonBar.getChildren().addAll(resetButton, applyButton);
-        card.setBottomContent(buttonBar);
+        card.setFooterContent(buttonBar);
 
         getChildren().setAll(card);
     }

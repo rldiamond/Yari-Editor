@@ -7,15 +7,30 @@ import javafx.scene.control.TableCell;
 
 import java.util.List;
 
+/**
+ * Extension of TableCell that provides additional features to make data editing simpler. Provides a ComboBox populated
+ * with the supplied String contents in the constructor. Any time a change is made to the ComboBox, commitEdit is called
+ * and an event to validate the workspace is fired.
+ *
+ * @param <T>
+ */
 public class EditableComboBoxCell<T extends Object> extends TableCell<T, String> {
 
     private ComboBox<String> comboBox;
     private ObservableList<String> contents = FXCollections.observableArrayList();
 
+    /**
+     * Construct the cell with default settings and populate the ComboBox with the supplied contents.
+     *
+     * @param contents String contents to populate the ComboBox with.
+     */
     public EditableComboBoxCell(List<String> contents) {
         this.contents.addAll(contents);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void startEdit() {
         if (!isEmpty()) {
@@ -26,6 +41,9 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void cancelEdit() {
         super.cancelEdit();
@@ -34,6 +52,9 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
         setGraphic(null);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -52,12 +73,15 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
         }
     }
 
+    /**
+     * Creates the ComboBox and applies listeners to it which allow for our custom editing.
+     */
     private void createComboBox() {
         comboBox = new ComboBox<>();
         comboBox.setItems(contents);
         comboBox.valueProperty().set(getString());
         comboBox.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-        comboBox.setOnAction(e ->{
+        comboBox.setOnAction(e -> {
             commitEdit(comboBox.getSelectionModel().getSelectedItem());
         });
         comboBox.getSelectionModel().selectedItemProperty().addListener((obs, ov, selected) -> {
@@ -65,12 +89,20 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
         });
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void commitEdit(String newValue) {
         super.commitEdit(newValue);
         fireEvent(new UpdateEvent());
     }
 
+    /**
+     * Convenience method to return a non-null String from the item.
+     *
+     * @return a non-null String from the item.
+     */
     private String getString() {
         return getItem() == null ? "" : getItem();
     }

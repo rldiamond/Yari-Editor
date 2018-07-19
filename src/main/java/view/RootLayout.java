@@ -22,7 +22,7 @@ package view;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
-import components.DialogPane;
+import components.Dialog;
 import components.PopupMenuEntry;
 import components.UpdateEvent;
 import javafx.application.Platform;
@@ -118,7 +118,7 @@ public class RootLayout extends BorderPane {
 
         //change toast on valid
         decisionTableValidator.validProperty().addListener((obs, ov, nv) -> {
-            if (!ov && nv){
+            if (!ov && nv) {
                 toastBar.close();
                 ToastUtil.sendToast("Workspace now validates!");
             }
@@ -189,7 +189,7 @@ public class RootLayout extends BorderPane {
             save(false);
             fileMenuPopUp.hide();
         });
-        PopupMenuEntry file_saveAs_pane = new PopupMenuEntry("Save As..", null);
+        PopupMenuEntry file_saveAs_pane = new PopupMenuEntry("Save As..");
         file_saveAs_pane.setOnMouseClicked(me -> {
             save(true);
             fileMenuPopUp.hide();
@@ -199,7 +199,7 @@ public class RootLayout extends BorderPane {
             FileUtil.print();
             fileMenuPopUp.hide();
         });
-        PopupMenuEntry file_exit_pane = new PopupMenuEntry("Exit", null);
+        PopupMenuEntry file_exit_pane = new PopupMenuEntry("Exit");
         file_exit_pane.setOnMouseClicked(me -> {
             fileMenuPopUp.hide();
             Platform.exit();
@@ -359,17 +359,10 @@ public class RootLayout extends BorderPane {
         AnchorPane.setBottomAnchor(backgroundBusyIndicator, 5D);
         leftMenu.getChildren().add(backgroundBusyIndicator);
 
-        //valid indicator
+        Dialog validationMessageDialog = new Dialog(displayedContent);
+        validationMessageDialog.textProperty().bind(decisionTableValidator.messageProperty());
+
         Pane validIndicator = new Pane();
-        JFXDialog messageDialog = new JFXDialog();
-
-        DialogPane dialogPane = new DialogPane(messageDialog);
-        dialogPane.contentProperty().bind(decisionTableValidator.messageProperty());
-        messageDialog.setContent(dialogPane);
-        messageDialog.setTransitionType(JFXDialog.DialogTransition.BOTTOM);
-        messageDialog.setDialogContainer(displayedContent);
-
-
         validIndicator.managedProperty().bind((decisionTableValidator.busyProperty().not()));
         validIndicator.visibleProperty().bind((decisionTableValidator.busyProperty().not()));
         Tooltip validTip = new Tooltip();
@@ -394,7 +387,7 @@ public class RootLayout extends BorderPane {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {
                     if (me.getButton() == MouseButton.PRIMARY) {
-                        messageDialog.show();
+                        validationMessageDialog.show();
                     }
                 });
             } else {

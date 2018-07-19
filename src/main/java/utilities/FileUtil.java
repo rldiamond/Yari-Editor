@@ -23,11 +23,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+/**
+ * Contains several file-management utilities such as save, open, and new files.
+ */
 public class FileUtil {
 
     private static File currentFile;
     private static BooleanProperty dirty = new SimpleBooleanProperty(false);
 
+    /**
+     * Show a file chooser and attempt to open the selected file.
+     *
+     * @param stage the stage to base the file chooser on.
+     */
     public static void openFile(Stage stage) {
         DecisionTableValidator.getInstance().setEnabled(false);
         FileChooser fileChooser = new FileChooser();
@@ -68,7 +76,10 @@ public class FileUtil {
 
     }
 
-    public static void newFile(){
+    /**
+     * Create a new file.
+     */
+    public static void newFile() {
         currentFile = null;
         clearData();
         DecisionTable decisionTable = new DecisionTable();
@@ -77,6 +88,10 @@ public class FileUtil {
 
     }
 
+    /**
+     * Save the file.
+     * @param file the file to save.
+     */
     public static void saveToFile(File file) {
         FXUtil.runAsync(() -> {
             DecisionTableValidator.getInstance().updateTable();
@@ -136,6 +151,9 @@ public class FileUtil {
         return true;
     }
 
+    /**
+     * Print the table.
+     */
     public static void print() {
         TablePrintView tablePrintView = new TablePrintView();
         Printer printer = Printer.getDefaultPrinter();
@@ -154,7 +172,7 @@ public class FileUtil {
         }
     }
 
-    public static void clearData() {
+    private static void clearData() {
         RootLayoutFactory.getInstance().getRowsList().clear();
         RootLayoutFactory.getInstance().getActionsList().clear();
         RootLayoutFactory.getInstance().getConditionsList().clear();

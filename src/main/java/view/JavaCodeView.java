@@ -58,7 +58,7 @@ public class JavaCodeView extends StackPane {
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
         buttonBar.getChildren().setAll(copyButton);
 
-        card.setBottomContent(buttonBar);
+        card.setFooterContent(buttonBar);
 
         getChildren().add(card);
 
