@@ -14,13 +14,11 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.yari.core.table.DecisionTable;
-import utilities.DecisionTableValidator;
 import utilities.FXUtil;
 import utilities.FileUtil;
 import utilities.ThemeUtil;
 import view.RootLayoutFactory;
 import view.WelcomeSplash;
-import view.WelcomeSplashFactory;
 
 public class YariEditor extends Application {
 
@@ -40,7 +38,7 @@ public class YariEditor extends Application {
         primaryStage.getIcons().setAll(new Image("/theme/YariLogo.png"));
         YariEditor.primaryStage = primaryStage;
         //show the welcome splash screen
-        WelcomeSplash welcomeSplash = WelcomeSplashFactory.getInstance();
+        WelcomeSplash welcomeSplash = WelcomeSplash.getInstance();
         Scene splashScene = new Scene(welcomeSplash);
         ThemeUtil.setThemeOnScene(splashScene);
 
@@ -76,9 +74,10 @@ public class YariEditor extends Application {
         primaryStage.show();
 
     }
+
     @Override
-    public void stop(){
-        if (FileUtil.isDirty()){
+    public void stop() {
+        if (FileUtil.isDirty()) {
             RootLayoutFactory.getInstance().handleDirty();
         }
     }

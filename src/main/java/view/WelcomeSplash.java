@@ -57,7 +57,16 @@ public class WelcomeSplash extends AnchorPane {
     @FXML
     private Pane dragBar;
 
-    public WelcomeSplash() {
+    private static WelcomeSplash welcomeSplash;
+
+    public static WelcomeSplash getInstance(){
+        if (welcomeSplash == null){
+            welcomeSplash = new WelcomeSplash();
+        }
+        return welcomeSplash;
+    }
+
+    WelcomeSplash() {
         FXUtil.intializeFXML(this);
         setId("welcomeSplash");
 

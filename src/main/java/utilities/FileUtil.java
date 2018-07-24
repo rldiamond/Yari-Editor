@@ -3,7 +3,11 @@ package utilities;
 import com.thoughtworks.xstream.XStream;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.print.*;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.Paper;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.control.Alert;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
@@ -17,7 +21,7 @@ import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import view.RootLayoutFactory;
 import view.TablePrintView;
-import view.WelcomeSplashFactory;
+import view.WelcomeSplash;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +51,7 @@ public class FileUtil {
         // Show save file dialog
         File file = fileChooser.showOpenDialog(stage); //must be on fx thread
         if (file == null) {
-            WelcomeSplashFactory.getInstance().busyProperty().set(false);
+            WelcomeSplash.getInstance().busyProperty().set(false);
             return;
         }
 
@@ -62,7 +66,7 @@ public class FileUtil {
 
                 }
             } catch (Exception ex) {
-                WelcomeSplashFactory.getInstance().busyProperty().set(false);
+                WelcomeSplash.getInstance().busyProperty().set(false);
                 FXUtil.runOnFXThread(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
@@ -90,6 +94,7 @@ public class FileUtil {
 
     /**
      * Save the file.
+     *
      * @param file the file to save.
      */
     public static void saveToFile(File file) {
@@ -110,7 +115,7 @@ public class FileUtil {
                 setDirty(false);
                 ToastUtil.sendToast("File saved.");
             } catch (Exception ex) {
-                ToastUtil.sendPersistantToast("Failed to save file! " + ex.getMessage());
+                ToastUtil.sendPersistentToast("Failed to save file! " + ex.getMessage());
             }
         });
     }

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package view;
+package components;
 
 import com.jfoenix.transitions.JFXFillTransition;
 import javafx.beans.property.BooleanProperty;

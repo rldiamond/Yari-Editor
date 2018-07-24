@@ -23,6 +23,7 @@ package view;
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
 import components.Dialog;
+import components.MenuOption;
 import components.PopupMenuEntry;
 import components.UpdateEvent;
 import javafx.application.Platform;
@@ -101,7 +102,7 @@ public class RootLayout extends BorderPane {
         toastBar.setPrefWidth(350);
         DecisionTableValidator.getInstance().validProperty().addListener((obs, ov, isValid) -> {
             if (!isValid) {
-                ToastUtil.sendPersistantToast("Workspace no longer validates! " + decisionTableValidator.getMessage());
+                ToastUtil.sendPersistentToast("Workspace no longer validates! " + decisionTableValidator.getMessage());
             }
         });
 
@@ -438,7 +439,7 @@ public class RootLayout extends BorderPane {
 
     public void save(boolean newFile) {
         if (!decisionTableValidator.validProperty().get()) {
-            ToastUtil.sendPersistantToast("Could not save decision table as it does not pass validation.");
+            ToastUtil.sendPersistentToast("Could not save decision table as it does not pass validation.");
         } else if (newFile) {
             //save as functionality
             FileChooser fileChooser = new FileChooser();
