@@ -85,8 +85,9 @@ public class RowsView extends StackPane {
      *
      * @param mouseEvent the event calling this method.
      */
-    private void addRow(MouseEvent mouseEvent) {
+    public void addRow(MouseEvent mouseEvent) {
         rowsList.add(new Row());
+        //TODO: focus the new row for quick editing
     }
 
     /**
