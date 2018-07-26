@@ -25,7 +25,9 @@ import org.yari.core.table.DecisionTable;
 import utilities.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class JavaCodeView extends StackPane {
 
@@ -81,12 +83,16 @@ public class JavaCodeView extends StackPane {
         // Create lookupGloabals
         sb.append("    @Override\n    public void lookupGlobals(Context globalContext){\n    }\n\n");
         // Create condition methods
-        List<String> conditionNames = new ArrayList<>();
+        Set<String> conditionNames = new HashSet<>();
         for (Condition condition : dt.getConditions()) {
+            if (conditionNames.contains(condition.getMethodName().toUpperCase())){
+                continue;
+            }
 
             sb.append("    @Condition(\"").append(condition.getMethodName()).append("\")\n");
             sb.append("    public ").append(convertTypeToJava(condition.getDataType())).append(" ").append(condition.getMethodName()).append("(Context localContext){\n");
             sb.append("        return; // TODO: return a ").append(condition.getDataType()).append("\n    }\n\n");
+            conditionNames.add(condition.getMethodName().toUpperCase());
         }
         // Create action methods
         for (Action action : dt.getActions()) {
