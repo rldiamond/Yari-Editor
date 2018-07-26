@@ -150,7 +150,6 @@ public class RowTable extends YariTable<Row> {
                 }
                 row.getValues().set(column, s);
 
-                refresh();
             });
             conditionsCol.getColumns().addAll(conditionCol);
             columnNum++;
