@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package types;
+package objects;
 
 import java.util.Arrays;
 import java.util.List;

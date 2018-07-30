@@ -8,14 +8,14 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package types;
+package objects;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Enum to describe the data types the Yari decision table engine is capable of processing.
+ * Enum to describe the data objects the Yari decision table engine is capable of processing.
  */
 public enum DataType {
 

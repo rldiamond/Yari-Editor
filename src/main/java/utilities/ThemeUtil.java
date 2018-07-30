@@ -23,28 +23,15 @@ package utilities;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import objects.Theme;
 
 /**
  * Provide application-wide support for themes. Currently implemented: Dark Theme.
  */
 public class ThemeUtil {
 
-    private static Theme ACTIVE_THEME = Theme.DARK;
+    private static Theme ACTIVE_THEME;
     private static final Image LOGO = new Image("/theme/YariLogo.png");
-
-    public enum Theme {
-        DARK("theme/dark.css");
-
-        final String css;
-
-        Theme(String css) {
-            this.css = css;
-        }
-
-        public String getCss() {
-            return css;
-        }
-    }
 
     /**
      * Sets the currently active theme.
@@ -53,6 +40,7 @@ public class ThemeUtil {
      */
     public static void setActiveTheme(Theme theme) {
         ACTIVE_THEME = theme;
+        SettingsUtil.getSettings().setTheme(theme);
     }
 
     /**
@@ -61,6 +49,10 @@ public class ThemeUtil {
      * @return the active theme.
      */
     public static Theme getActiveTheme() {
+        if (ACTIVE_THEME == null) {
+            //load theme from settings
+            ACTIVE_THEME = SettingsUtil.getSettings().getTheme();
+        }
         return ACTIVE_THEME;
     }
 
@@ -73,7 +65,7 @@ public class ThemeUtil {
         scene.getStylesheets().setAll(getActiveTheme().getCss());
     }
 
-    public static Image getLogo(){
+    public static Image getLogo() {
         return LOGO;
     }
 

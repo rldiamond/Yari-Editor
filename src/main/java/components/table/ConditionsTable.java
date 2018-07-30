@@ -43,8 +43,8 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import org.yari.core.table.Condition;
-import types.ComparatorType;
-import types.DataType;
+import objects.ComparatorType;
+import objects.DataType;
 import utilities.DecisionTableValidator;
 
 import java.util.List;

@@ -59,7 +59,7 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
-import types.KeyboardShortcut;
+import objects.KeyboardShortcut;
 import utilities.*;
 import view.editors.ActionsDataEditor;
 import view.editors.ConditionsDataEditor;

@@ -43,7 +43,7 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import org.yari.core.table.Action;
-import types.DataType;
+import objects.DataType;
 import utilities.DecisionTableValidator;
 
 import java.util.List;

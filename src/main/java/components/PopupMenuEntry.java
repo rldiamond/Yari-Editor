@@ -16,7 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.TextAlignment;
-import types.KeyboardShortcut;
+import objects.KeyboardShortcut;
 import utilities.TextUtil;
 
 /**
