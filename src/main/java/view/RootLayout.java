@@ -119,11 +119,6 @@ public class RootLayout extends BorderPane {
 
         toastBar = new JFXSnackbar(mainPanel);
         toastBar.setPrefWidth(350);
-        DecisionTableValidator.getInstance().validProperty().addListener((obs, ov, isValid) -> {
-            if (!isValid) {
-                ToastUtil.sendPersistentToast("Workspace no longer validates! " + decisionTableValidator.getMessage());
-            }
-        });
 
         //initial (minimal loading required)
         prepareOptions();
