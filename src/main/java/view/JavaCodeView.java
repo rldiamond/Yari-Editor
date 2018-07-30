@@ -24,9 +24,7 @@ import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import utilities.ToastUtil;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class JavaCodeView extends StackPane {
@@ -80,7 +78,7 @@ public class JavaCodeView extends StackPane {
         // Create Class and Constructor
         sb.append("public class ").append(ruleName).append(" () extends BasicRule {\n    public ").append(ruleName).append(" throws FileNotFoundException, YariException {\n");
         sb.append("        super(\"").append(dt.getTableName()).append("\", \"").append(dt.getTableDescription()).append("\", \"XMLPATH\");\n    }\n\n");
-        // Create lookupGloabals
+        // Create lookupGlobals
         sb.append("    @Override\n    public void lookupGlobals(Context globalContext){\n    }\n\n");
         // Create condition methods
         Set<String> conditionNames = new HashSet<>();
@@ -139,6 +137,6 @@ public class JavaCodeView extends StackPane {
         final ClipboardContent content = new ClipboardContent();
         content.putString(code);
         cb.setContent(content);
-        ToastUtil.sendToast("Code copied to clipboard.");
+        ToastUtil.sendToast("Skeleton code copied to clipboard.");
     }
 }

@@ -21,13 +21,7 @@
 package view;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
-import com.jfoenix.controls.JFXAlert;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXPopup;
-import com.jfoenix.controls.JFXSnackbar;
-import com.jfoenix.controls.JFXSpinner;
+import com.jfoenix.controls.*;
 import components.Dialog;
 import components.MenuOption;
 import components.PopupMenuEntry;
@@ -47,12 +41,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -60,12 +49,7 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
-import utilities.DecisionTableValidator;
-import utilities.FXUtil;
-import utilities.FileUtil;
-import utilities.KeyboardShortcut;
-import utilities.ThemeUtil;
-import utilities.ToastUtil;
+import utilities.*;
 
 import java.io.File;
 import java.util.Optional;
@@ -182,6 +166,7 @@ public class RootLayout extends BorderPane {
         AnchorPane.setLeftAnchor(menuWrapper, 185D);
         AnchorPane.setTopAnchor(menuWrapper, 0D);
         AnchorPane.setBottomAnchor(menuWrapper, 0D);
+        Tooltip.install(menu, new Tooltip("Menu"));
 
         JFXPopup fileMenuPopUp = new JFXPopup();
         fileMenuPopUp.setAutoHide(true);
@@ -195,31 +180,38 @@ public class RootLayout extends BorderPane {
             FileUtil.newFile();
             fileMenuPopUp.hide();
         });
+        Tooltip.install(file_new_pane, new Tooltip("Start a new document."));
         PopupMenuEntry file_open_pane = new PopupMenuEntry("Open", KeyboardShortcut.OPEN);
         file_open_pane.setOnMouseClicked(me -> {
             open();
             fileMenuPopUp.hide();
         });
+        Tooltip.install(file_open_pane, new Tooltip("Open a previously saved document."));
         PopupMenuEntry file_save_pane = new PopupMenuEntry("Save", KeyboardShortcut.SAVE);
         file_save_pane.setOnMouseClicked(me -> {
             save(false);
             fileMenuPopUp.hide();
         });
+        Tooltip.install(file_save_pane, new Tooltip("Save the current document."));
+        file_save_pane.disableProperty().bind(FileUtil.fileProperty().isNull());
         PopupMenuEntry file_saveAs_pane = new PopupMenuEntry("Save As..");
         file_saveAs_pane.setOnMouseClicked(me -> {
             save(true);
             fileMenuPopUp.hide();
         });
+        Tooltip.install(file_saveAs_pane, new Tooltip("Save the current document as a new file."));
         PopupMenuEntry file_print_pane = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
         file_print_pane.setOnMouseClicked(me -> {
             FileUtil.print();
             fileMenuPopUp.hide();
         });
+        Tooltip.install(file_print_pane, new Tooltip("Print the current document."));
         PopupMenuEntry file_exit_pane = new PopupMenuEntry("Exit");
         file_exit_pane.setOnMouseClicked(me -> {
             fileMenuPopUp.hide();
             Platform.exit();
         });
+        Tooltip.install(file_exit_pane, new Tooltip("Exit the application."));
 
         fileMenuList.getItems().addAll(file_new_pane, file_open_pane, file_save_pane, file_saveAs_pane, file_print_pane, file_exit_pane);
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));

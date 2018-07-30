@@ -1,13 +1,8 @@
 package utilities;
 
 import com.thoughtworks.xstream.XStream;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.print.PageLayout;
-import javafx.print.PageOrientation;
-import javafx.print.Paper;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
+import javafx.beans.property.*;
+import javafx.print.*;
 import javafx.scene.control.Alert;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
@@ -32,7 +27,7 @@ import java.io.FileOutputStream;
  */
 public class FileUtil {
 
-    private static File currentFile;
+    private static ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
     private static BooleanProperty dirty = new SimpleBooleanProperty(false);
 
     /**
@@ -84,7 +79,7 @@ public class FileUtil {
      * Create a new file.
      */
     public static void newFile() {
-        currentFile = null;
+        currentFile.setValue(null);
         clearData();
         DecisionTable decisionTable = new DecisionTable();
         decisionTable.setDescription("MyTable Description");
@@ -111,7 +106,7 @@ public class FileUtil {
 
             try (FileOutputStream out = new FileOutputStream(file)) {
                 xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
-                currentFile = file;
+                currentFile.setValue(file);
                 setDirty(false);
                 ToastUtil.sendToast("File saved.");
             } catch (Exception ex) {
@@ -134,7 +129,7 @@ public class FileUtil {
             }
         };
 
-        currentFile = file;
+        currentFile.setValue(file);
 
         decisionTable = basicRule.createDecisionTable(file.getPath());
         for (Condition condition : decisionTable.getConditions()) {
@@ -185,7 +180,7 @@ public class FileUtil {
     }
 
     public static File getCurrentFile() {
-        return currentFile;
+        return currentFile.get();
     }
 
     public static boolean isDirty() {
@@ -198,5 +193,9 @@ public class FileUtil {
 
     public static void setDirty(boolean dirty) {
         FileUtil.dirty.set(dirty);
+    }
+
+    public static ReadOnlyObjectProperty<File> fileProperty() {
+        return currentFile;
     }
 }
