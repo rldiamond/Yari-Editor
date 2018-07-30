@@ -12,6 +12,7 @@ package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
+import components.UpdateEvent;
 import components.table.ConditionsTable;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,6 +23,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Condition;
+import utilities.DecisionTableValidator;
 import utilities.FXUtil;
 import view.RootLayoutFactory;
 
@@ -107,6 +109,8 @@ public class ConditionsDataEditor extends StackPane implements DataEditor {
         int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
             Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex - 1);
+            DecisionTableValidator.getInstance().reorderConditions(selectedIndex, selectedIndex - 1);
+            fireEvent(new UpdateEvent());
         }
     }
 
@@ -121,6 +125,8 @@ public class ConditionsDataEditor extends StackPane implements DataEditor {
         int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex < conditionsTable.getItems().size() - 1) {
             Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex + 1);
+            DecisionTableValidator.getInstance().reorderConditions(selectedIndex, selectedIndex + 1);
+            fireEvent(new UpdateEvent());
         }
     }
 }

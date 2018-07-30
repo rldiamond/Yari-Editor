@@ -124,12 +124,13 @@ public class DecisionTableValidator {
      * @param dropIndex    index dropped to.
      */
     public void reorderActions(int draggedIndex, int dropIndex) {
-
+        setEnabled(false);
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
             String dragged = row.getResults().get(draggedIndex);
             row.getResults().remove(draggedIndex);
             row.getResults().add(dropIndex, dragged);
         }
+        setEnabled(true);
     }
 
     /**
@@ -139,12 +140,13 @@ public class DecisionTableValidator {
      * @param dropIndex    index dropped to.
      */
     public void reorderConditions(int draggedIndex /*from*/, int dropIndex /*to*/) {
-
+        setEnabled(false);
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
             String dragged = row.getValues().get(draggedIndex);
             row.getValues().remove(draggedIndex);
             row.getValues().add(dropIndex, dragged);
         }
+        setEnabled(true);
     }
 
     /**
