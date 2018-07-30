@@ -26,6 +26,10 @@ Yari Editor, in it's simplest form, is an XML editor developed specifically for 
   * Open: CTRL + O
   * New: CTRL + N
   * Re-Validate: CTRL + V
+  * Add Row: CTRL + R
+  * Delete Row: CTRL + DEL
+  * Move Row Up: CTRL + UP
+  * Move Row Down: CTRL + DOWN
 
 
 
