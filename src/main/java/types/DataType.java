@@ -20,11 +20,11 @@ public enum DataType {
     STRING("string", "String");
 
     private final String displayValue;
-    private final String javaCodeCompatableValue;
+    private final String javaCodeCompatibleValue;
 
-    private DataType(String displayValue, String javaCodeCompatableValue) {
+    private DataType(String displayValue, String javaCodeCompatibleValue) {
         this.displayValue = displayValue;
-        this.javaCodeCompatableValue = javaCodeCompatableValue;
+        this.javaCodeCompatibleValue = javaCodeCompatibleValue;
     }
 
     /**
@@ -41,8 +41,8 @@ public enum DataType {
      *
      * @return the java code-friendly value of the data type.
      */
-    public String getJavaCodeCompatableValue() {
-        return javaCodeCompatableValue;
+    public String getJavaCodeCompatibleValue() {
+        return javaCodeCompatibleValue;
     }
 
     /**
