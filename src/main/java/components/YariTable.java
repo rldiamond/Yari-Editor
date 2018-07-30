@@ -27,8 +27,6 @@ import java.util.List;
  */
 public abstract class YariTable<T extends Object> extends TableView<T> {
 
-    protected static final ObservableList<String> dataTypeValues = FXCollections.observableArrayList("boolean", "byte", "char", "double", "float", "integer", "long", "short", "string");
-    protected static final ObservableList<String> comparatorValues = FXCollections.observableArrayList("==", "!=", "GT", "GE", "LT", "LE");
     protected static final ObservableList<String> boolOptions = FXCollections.observableArrayList("True", "False");
     protected final ObservableList<Condition> conditions = RootLayoutFactory.getInstance().getConditionsList();
     protected final ObservableList<Action> actions = RootLayoutFactory.getInstance().getActionsList();

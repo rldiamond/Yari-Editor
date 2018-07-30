@@ -1,8 +1,10 @@
-package utilities;
+package types;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import utilities.DecisionTableValidator;
+import utilities.FileUtil;
 import view.RootLayoutFactory;
 
 /**

@@ -22,7 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Condition;
-import view.table.ConditionsTable;
+import components.table.ConditionsTable;
 
 
 public class ConditionsView extends StackPane {
