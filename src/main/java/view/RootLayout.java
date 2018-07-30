@@ -49,6 +49,7 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
+import types.KeyboardShortcut;
 import utilities.*;
 
 import java.io.File;

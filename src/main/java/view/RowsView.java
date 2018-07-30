@@ -24,7 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Row;
 import utilities.FXUtil;
-import view.table.RowTable;
+import components.table.RowTable;
 
 /**
  * Display a table of {@link Row} to allow for creation of additional rows, editing available rows, and removing rows.

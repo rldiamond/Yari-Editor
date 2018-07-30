@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package view.table;
+package components.table;
 
 import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
@@ -28,13 +28,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.util.converter.DefaultStringConverter;
 import org.yari.core.table.Action;
+import types.DataType;
 import utilities.DecisionTableValidator;
 
 import java.util.List;
@@ -142,7 +141,7 @@ public class ActionsTable extends YariTable<Action> {
         });
 
         TableColumn<Action, String> dataTypeCol = new TableColumn<>("DATA TYPE");
-        dataTypeCol.setCellFactory(c -> new EditableComboBoxCell<>(dataTypeValues));
+        dataTypeCol.setCellFactory(c -> new EditableComboBoxCell<>(DataType.getFXCompatibleList()));
         dataTypeCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT DATA TYPE" : cellData.getValue().getDataType();
             return new SimpleStringProperty(content);

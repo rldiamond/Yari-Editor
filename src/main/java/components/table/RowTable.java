@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package view.table;
+package components.table;
 
 import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
@@ -21,13 +21,11 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
-import javafx.util.converter.DefaultStringConverter;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.Row;

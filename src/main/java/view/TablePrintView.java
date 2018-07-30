@@ -7,7 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.yari.core.table.DecisionTable;
 import utilities.ThemeUtil;
-import view.table.RowTable;
+import components.table.RowTable;
 
 public class TablePrintView extends StackPane {
 

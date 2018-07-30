@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package view.table;
+package components.table;
 
 import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
@@ -28,13 +28,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.util.converter.DefaultStringConverter;
 import org.yari.core.table.Condition;
+import types.ComparatorType;
+import types.DataType;
 import utilities.DecisionTableValidator;
 
 import java.util.List;
@@ -143,7 +143,7 @@ public class ConditionsTable extends YariTable<Condition> {
         });
 
         TableColumn<Condition, String> dataTypeCol = new TableColumn<>("DATA TYPE");
-        dataTypeCol.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(), dataTypeValues));
+        dataTypeCol.setCellFactory(c -> new EditableComboBoxCell<>(DataType.getFXCompatibleList()));
         dataTypeCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT DATA TYPE" : cellData.getValue().getDataType();
             return new SimpleStringProperty(content);
@@ -155,7 +155,7 @@ public class ConditionsTable extends YariTable<Condition> {
         });
 
         TableColumn<Condition, String> comparatorCol = new TableColumn<>("COMPARATOR");
-        comparatorCol.setCellFactory(c -> new EditableComboBoxCell<>(comparatorValues));
+        comparatorCol.setCellFactory(c -> new EditableComboBoxCell<>(ComparatorType.getFXCompatibleList()));
         comparatorCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT COMPARATOR" : cellData.getValue().getComparator();
             return new SimpleStringProperty(content);

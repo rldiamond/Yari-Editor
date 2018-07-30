@@ -13,7 +13,7 @@ package view;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import utilities.KeyboardShortcut;
+import types.KeyboardShortcut;
 import utilities.ResizeHelper;
 import utilities.ThemeUtil;
 

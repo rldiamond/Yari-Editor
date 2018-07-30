@@ -22,7 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Action;
-import view.table.ActionsTable;
+import components.table.ActionsTable;
 
 
 public class ActionsView extends StackPane {
