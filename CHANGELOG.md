@@ -4,6 +4,9 @@
 ### Version 2.0.1
 ##### New Features
 - New keyboard shortcut: CTRL + R, to add a new row while the rows editor is open.
+- New keyboard shortcut: CTRL + DEL, to delete the currently selected row.
+- New keyboard shortcut: CTRL + UP, to move the currently selected row up.
+- New keyboard shortcut: CTRL + DOWN, to move the currently selected row down.
 
 ##### Bug Fixes
 - Fix for Iissue 1, where multiple condition methods would be generated in skeleton code when more than one condition shared the same method name.

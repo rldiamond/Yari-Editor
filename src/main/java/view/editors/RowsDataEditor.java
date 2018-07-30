@@ -8,10 +8,11 @@
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package view;
+package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
+import components.table.RowTable;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -19,25 +20,26 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Row;
 import utilities.FXUtil;
-import components.table.RowTable;
+import view.RootLayoutFactory;
+
+import java.util.Collections;
 
 /**
  * Display a table of {@link Row} to allow for creation of additional rows, editing available rows, and removing rows.
  */
-public class RowsView extends StackPane {
+public class RowsDataEditor extends StackPane implements DataEditor {
 
     private ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
     private RowTable rowTable = new RowTable();
 
     /**
-     * Construct a RowsView with default settings.
+     * Construct a RowsDataEditor with default settings.
      */
-    public RowsView() {
+    public RowsDataEditor() {
         setPadding(new Insets(20, 20, 20, 20));
         Card tableCard = new Card("Rows Editor");
         getChildren().setAll(tableCard);
@@ -55,22 +57,22 @@ public class RowsView extends StackPane {
 
         ContextMenu contextMenu = new ContextMenu();
         var addMenuItem = new MenuItem("ADD");
-        addMenuItem.setOnAction(e -> addRow(null));
+        addMenuItem.setOnAction(a -> addNewRow());
         var removeMenuItem = new MenuItem("REMOVE");
-        removeMenuItem.setOnAction(e -> removeRow(null));
+        removeMenuItem.setOnAction(a -> removeSelectedRow());
         contextMenu.getItems().setAll(addMenuItem, removeMenuItem);
         rowTable.setContextMenu(contextMenu);
 
         //buttons
         JFXButton addAction = new JFXButton();
-        addAction.setOnMouseClicked(this::addRow);
+        addAction.setOnMouseClicked(me -> addNewRow());
         addAction.setText("ADD");
         addAction.getStyleClass().add("button-flat-green");
         Tooltip.install(addAction, new Tooltip("Add new row"));
 
         JFXButton removeAction = new JFXButton();
         removeAction.disableProperty().bind(rowTable.getSelectionModel().selectedItemProperty().isNull());
-        removeAction.setOnMouseClicked(this::removeRow);
+        removeAction.setOnMouseClicked(me -> removeSelectedRow());
         removeAction.setText("REMOVE");
         removeAction.getStyleClass().add("button-flat-red");
         Tooltip.install(removeAction, new Tooltip("Remove selected row"));
@@ -82,11 +84,34 @@ public class RowsView extends StackPane {
     }
 
     /**
-     * Add a {@link Row} to the decision table.
-     *
-     * @param mouseEvent the event calling this method.
+     * Rows need to be renumbered when added, removed, or re-arranged.
      */
-    public void addRow(MouseEvent mouseEvent) {
+    private void renumberRows() {
+        var rowNumber = 0;
+        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
+            row.setRowNumber(rowNumber++);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void removeSelectedRow() {
+        if (rowTable.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        Row selectedItem = rowTable.getSelectionModel().getSelectedItem();
+        if (rowsList.contains(selectedItem)) {
+            rowsList.remove(selectedItem);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void addNewRow() {
         rowsList.add(new Row());
         FXUtil.runOnFXThread(() -> {
             rowTable.requestFocus();
@@ -95,24 +120,30 @@ public class RowsView extends StackPane {
     }
 
     /**
-     * Remove a {@link Row} from the decision table.
-     *
-     * @param mouseEvent the event calling this method.
+     * @inheritDoc
      */
-    private void removeRow(MouseEvent mouseEvent) {
-        Row selectedItem = rowTable.getSelectionModel().getSelectedItem();
-        if (rowsList.contains(selectedItem)) {
-            rowsList.remove(selectedItem);
+    @Override
+    public void moveRowUp() {
+        if (rowTable.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        int selectedIndex = rowTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex > 0) {
+            Collections.swap(rowTable.getItems(), selectedIndex, selectedIndex - 1);
         }
     }
 
     /**
-     * Rows need to be renumbered when added, removed, or re-arranged.
+     * @inheritDoc
      */
-    private void renumberRows() {
-        var rowNumber = 0;
-        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
-            row.setRowNumber(rowNumber++);
+    @Override
+    public void moveRowDown() {
+        if (rowTable.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        int selectedIndex = rowTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < rowTable.getItems().size() - 1) {
+            Collections.swap(rowTable.getItems(), selectedIndex, selectedIndex + 1);
         }
     }
 }

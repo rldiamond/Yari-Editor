@@ -51,6 +51,10 @@ import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import types.KeyboardShortcut;
 import utilities.*;
+import view.editors.ActionsDataEditor;
+import view.editors.ConditionsDataEditor;
+import view.editors.DataEditor;
+import view.editors.RowsDataEditor;
 
 import java.io.File;
 import java.util.Optional;
@@ -268,10 +272,10 @@ public class RootLayout extends BorderPane {
             loadingContent.set(true);
 
             FXUtil.runAsync(() -> {
-                ActionsView actionsView = new ActionsView();
+                ActionsDataEditor actionsDataEditor = new ActionsDataEditor();
 
                 FXUtil.runOnFXThread(() -> {
-                    displayedContent.getChildren().setAll(actionsView);
+                    displayedContent.getChildren().setAll(actionsDataEditor);
                     loadingContent.set(false);
                 });
             });
@@ -283,10 +287,10 @@ public class RootLayout extends BorderPane {
             loadingContent.set(true);
 
             FXUtil.runAsync(() -> {
-                ConditionsView conditionsView = new ConditionsView();
+                ConditionsDataEditor conditionsDataEditor = new ConditionsDataEditor();
 
                 FXUtil.runOnFXThread(() -> {
-                    displayedContent.getChildren().setAll(conditionsView);
+                    displayedContent.getChildren().setAll(conditionsDataEditor);
                     loadingContent.set(false);
                 });
             });
@@ -298,10 +302,10 @@ public class RootLayout extends BorderPane {
             loadingContent.set(true);
 
             FXUtil.runAsync(() -> {
-                RowsView rowsView = new RowsView();
+                RowsDataEditor rowsDataEditor = new RowsDataEditor();
 
                 FXUtil.runOnFXThread(() -> {
-                    displayedContent.getChildren().setAll(rowsView);
+                    displayedContent.getChildren().setAll(rowsDataEditor);
                     loadingContent.set(false);
                 });
             });
@@ -479,10 +483,10 @@ public class RootLayout extends BorderPane {
      *
      * @return the rows view, if displayed.
      */
-    public Optional<RowsView> getRowsView() {
+    public Optional<DataEditor> getDataEditor() {
         return displayedContent.getChildren().stream()
-                .filter(RowsView.class::isInstance)
-                .map(RowsView.class::cast)
+                .filter(DataEditor.class::isInstance)
+                .map(DataEditor.class::cast)
                 .findAny();
     }
 
