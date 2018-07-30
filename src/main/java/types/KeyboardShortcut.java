@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCombination;
 import utilities.DecisionTableValidator;
 import utilities.FileUtil;
 import view.RootLayoutFactory;
+import view.editors.DataEditor;
 
 /**
  * Implemented KeyboardShortcuts. Adding to this enumeration is all that's needed to add an additional keyboard shortcut.
@@ -17,7 +18,10 @@ public enum KeyboardShortcut {
     OPEN(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN), "Ctrl+O", () -> RootLayoutFactory.getInstance().open()),
     PRINT(new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN), "Ctrl+P", FileUtil::print),
     VALIDATE(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN), "Ctrl+V", () -> DecisionTableValidator.getInstance().requestValidation()),
-    ADD_ROW(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN), "Ctrl+R", () -> RootLayoutFactory.getInstance().getRowsView().ifPresent(rowsView -> rowsView.addRow(null)));
+    ADD_ROW(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN), "Ctrl+R", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::addNewRow)),
+    DELETE_ROW(new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN), "Ctrl+Del", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::removeSelectedRow)),
+    MOVE_ROW_UP(new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN), "Ctrl+UP", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::moveRowUp)),
+    MOVE_ROW_DOWN(new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN), "Ctrl+DOWN", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::moveRowDown));
 
     private final KeyCombination keyCombination;
     private final String displayLabel;
