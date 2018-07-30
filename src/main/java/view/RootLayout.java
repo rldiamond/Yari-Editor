@@ -21,7 +21,13 @@
 package view;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
-import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXAlert;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXPopup;
+import com.jfoenix.controls.JFXSnackbar;
+import com.jfoenix.controls.JFXSpinner;
 import components.Dialog;
 import components.MenuOption;
 import components.PopupMenuEntry;
@@ -41,7 +47,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -49,9 +60,16 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
-import utilities.*;
+import utilities.DecisionTableValidator;
+import utilities.FXUtil;
+import utilities.FileUtil;
+import utilities.KeyboardShortcut;
+import utilities.ThemeUtil;
+import utilities.ToastUtil;
 
 import java.io.File;
+import java.util.Optional;
+
 
 public class RootLayout extends BorderPane {
 
@@ -67,6 +85,7 @@ public class RootLayout extends BorderPane {
     private final DecisionTableValidator decisionTableValidator = DecisionTableValidator.getInstance();
     private Pane minimizeButton;
     private JFXSnackbar toastBar;
+
 
     public RootLayout() {
 
@@ -100,11 +119,6 @@ public class RootLayout extends BorderPane {
 
         toastBar = new JFXSnackbar(mainPanel);
         toastBar.setPrefWidth(350);
-        DecisionTableValidator.getInstance().validProperty().addListener((obs, ov, isValid) -> {
-            if (!isValid) {
-                ToastUtil.sendPersistentToast("Workspace no longer validates! " + decisionTableValidator.getMessage());
-            }
-        });
 
         //initial (minimal loading required)
         prepareOptions();
@@ -130,6 +144,7 @@ public class RootLayout extends BorderPane {
         fadePaneOut.play();
 
     }
+
 
     private void prepareHeader() {
         header.setId("header");
@@ -210,7 +225,6 @@ public class RootLayout extends BorderPane {
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
         fileMenuPopUp.setPopupContent(fileMenuList);
 
-
         //window controls
         HBox controls = new HBox(20);
         controls.setPadding(new Insets(0, 15, 0, 0));
@@ -244,15 +258,14 @@ public class RootLayout extends BorderPane {
 
     }
 
+
     private void selectTab(String tabTitle) {
-        menuOptions.stream()
-                .filter(tab -> tabTitle.equalsIgnoreCase(tab.getTitle()))
-                .findFirst()
-                .ifPresent(tab -> {
-                    menuOptions.forEach(MenuOption::deselect);
-                    tab.select();
-                });
+        menuOptions.stream().filter(tab -> tabTitle.equalsIgnoreCase(tab.getTitle())).findFirst().ifPresent(tab -> {
+            menuOptions.forEach(MenuOption::deselect);
+            tab.select();
+        });
     }
+
 
     private void prepareOptions() {
         var actionsOption = new MenuOption("Actions", "mdTab-actions");
@@ -317,7 +330,6 @@ public class RootLayout extends BorderPane {
 
             });
 
-
         });
         var skeletonCode = new MenuOption("Java Code", "mdTab-code");
         Tooltip.install(skeletonCode, new Tooltip("View Skeleton Java Code"));
@@ -332,7 +344,6 @@ public class RootLayout extends BorderPane {
                     loadingContent.set(false);
                 });
             });
-
 
         });
         skeletonCode.setOnMouseClicked(me -> selectTab("java code"));
@@ -396,13 +407,13 @@ public class RootLayout extends BorderPane {
             }
         });
 
-
         //style it
         leftMenu.setPrefSize(175, USE_COMPUTED_SIZE);
 
         setLeft(leftMenu);
 
     }
+
 
     public void handleDirty() {
         JFXDialogLayout layout = new JFXDialogLayout();
@@ -430,12 +441,14 @@ public class RootLayout extends BorderPane {
         alert.showAndWait();
     }
 
+
     public void open() {
         if (FileUtil.isDirty()) {
             handleDirty();
         }
         FileUtil.openFile((Stage) getScene().getWindow());
     }
+
 
     public void save(boolean newFile) {
         if (!decisionTableValidator.validProperty().get()) {
@@ -468,45 +481,68 @@ public class RootLayout extends BorderPane {
         }
     }
 
+    /**
+     * Returns the Rows view, if displayed.
+     *
+     * @return the rows view, if displayed.
+     */
+    public Optional<RowsView> getRowsView() {
+        return displayedContent.getChildren().stream()
+                .filter(RowsView.class::isInstance)
+                .map(RowsView.class::cast)
+                .findAny();
+    }
+
+
     public Pane getMinimizeButton() {
         return minimizeButton;
     }
+
 
     public AnchorPane getHeader() {
         return header;
     }
 
+
     public ObservableList<Action> getActionsList() {
         return actionsList;
     }
+
 
     public ObservableList<Condition> getConditionsList() {
         return conditionsList;
     }
 
+
     public ObservableList<Row> getRowsList() {
         return rowsList;
     }
+
 
     public DecisionTable getDecisionTable() {
         return decisionTable;
     }
 
+
     public String getRuleName() {
         return ruleName.get();
     }
+
 
     public StringProperty ruleNameProperty() {
         return ruleName;
     }
 
+
     public void setRuleName(String ruleName) {
         this.ruleName.set(ruleName);
     }
 
+
     public void setDecisionTable(DecisionTable decisionTable) {
         this.decisionTable = decisionTable;
     }
+
 
     public JFXSnackbar getToastBar() {
         return toastBar;

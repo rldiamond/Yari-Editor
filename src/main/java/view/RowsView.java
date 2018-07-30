@@ -23,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Row;
+import utilities.FXUtil;
 import view.table.RowTable;
 
 /**
@@ -85,8 +86,12 @@ public class RowsView extends StackPane {
      *
      * @param mouseEvent the event calling this method.
      */
-    private void addRow(MouseEvent mouseEvent) {
+    public void addRow(MouseEvent mouseEvent) {
         rowsList.add(new Row());
+        FXUtil.runOnFXThread(() -> {
+            rowTable.requestFocus();
+            rowTable.getSelectionModel().selectLast();
+        });
     }
 
     /**
