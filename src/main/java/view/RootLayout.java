@@ -82,7 +82,6 @@ public class RootLayout extends BorderPane {
     private final BooleanProperty loadingContent = new SimpleBooleanProperty(false);
     private final StackPane displayedContent = new StackPane();
     private final AnchorPane header = new AnchorPane();
-//    private final DecisionTableValidator decisionTableValidator = DecisionTableValidator.getInstance();
     private final ValidationService validationService = ValidationService.getService();
     private Pane minimizeButton;
     private JFXSnackbar toastBar;

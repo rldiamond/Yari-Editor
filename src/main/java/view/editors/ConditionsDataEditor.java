@@ -33,8 +33,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Condition;
-import utilities.DecisionTableValidator;
 import utilities.FXUtil;
+import utilities.TableUtil;
 import view.RootLayoutFactory;
 
 import java.util.Collections;
@@ -119,7 +119,7 @@ public class ConditionsDataEditor extends StackPane implements DataEditor {
         int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
             Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex - 1);
-            DecisionTableValidator.getInstance().reorderConditions(selectedIndex, selectedIndex - 1);
+            TableUtil.reorderConditions(selectedIndex, selectedIndex - 1);
             fireEvent(new UpdateEvent());
         }
     }
@@ -135,7 +135,7 @@ public class ConditionsDataEditor extends StackPane implements DataEditor {
         int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex < conditionsTable.getItems().size() - 1) {
             Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex + 1);
-            DecisionTableValidator.getInstance().reorderConditions(selectedIndex, selectedIndex + 1);
+            TableUtil.reorderConditions(selectedIndex, selectedIndex + 1);
             fireEvent(new UpdateEvent());
         }
     }

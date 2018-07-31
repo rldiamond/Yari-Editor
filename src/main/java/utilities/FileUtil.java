@@ -40,6 +40,7 @@ public class FileUtil {
 
     private static ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
     private static BooleanProperty dirty = new SimpleBooleanProperty(false);
+    private static ValidationService validationService = ValidationService.getService();
 
     /**
      * Show a file chooser and attempt to open the selected file.
@@ -67,7 +68,7 @@ public class FileUtil {
                 if (!RootLayoutFactory.isDisplayed()) {
                     FXUtil.runOnFXThread(() -> {
                         RootLayoutFactory.show(stage);
-                        ValidationService.getService().setEnabled(true);
+                        validationService.setEnabled(true);
                     });
 
                 }
@@ -80,7 +81,7 @@ public class FileUtil {
                     alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
                     alert.showAndWait();
                 });
-                ValidationService.getService().setEnabled(true);
+                validationService.setEnabled(true);
             }
         });
 
@@ -105,10 +106,10 @@ public class FileUtil {
      */
     public static void saveToFile(File file) {
         FXUtil.runAsync(() -> {
-            DecisionTableValidator.getInstance().updateTable();
-            DecisionTableValidator.getInstance().runValidation();
+            TableUtil.updateTable();
+            validationService.runValidationImmediately();
 
-            if (!DecisionTableValidator.getInstance().validProperty().get()) {
+            if (!validationService.validProperty().get()) {
                 return;
             }
 
@@ -129,7 +130,7 @@ public class FileUtil {
     private static boolean importFromFile(File file) throws FileNotFoundException, YariException {
         clearData();
 
-        DecisionTableValidator.getInstance().validateXML(file.getPath());
+        validationService.validateXML(file.getPath());
 
         DecisionTable decisionTable;
 
@@ -158,7 +159,6 @@ public class FileUtil {
 
         RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
         setDirty(false);
-        DecisionTableValidator.getInstance().validProperty().set(true); //sucessful loading means successful validation
         return true;
     }
 

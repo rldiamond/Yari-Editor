@@ -58,7 +58,7 @@ public class DataTypeConversionValidator extends TableValidator {
                 validatorErrorLocation.setViewClass(ConditionsDataEditor.class);
                 validatorErrorLocation.setCondition(condition);
                 validatorErrorLocation.setColumnNumber(1 + conditionIndex);
-                String errMsg = "The condition '" + condition.getName() + "' has an invalid data type of '" + condition.getDataType();
+                String errMsg = "The condition '" + condition.getName() + "' has an invalid data type of '" + condition.getDataType() + "'";
                 ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                 addError(validatorError);
             }

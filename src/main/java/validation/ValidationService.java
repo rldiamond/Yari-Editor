@@ -15,6 +15,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import org.yari.core.TableValidator;
+import org.yari.core.YariException;
 import utilities.SettingsUtil;
 
 import java.util.Optional;
@@ -78,6 +80,24 @@ public class ValidationService {
         latestValidation = validation;
         validProperty.set(validation.isValid());
         quickMessageProperty.set(validation.getQuickMessage());
+    }
+
+    /**
+     * Runs the supplied XML String through Yari's validation process.
+     *
+     * @param xml String representation of the {@link org.yari.core.table.DecisionTable} XML.
+     * @throws YariException if validation fails.
+     */
+    public void validateXML(String xml) throws YariException {
+        TableValidator tableValidator = new TableValidator();
+        tableValidator.validateXML(xml);
+    }
+
+    /**
+     * Immediately run a validation (not on an async thread).
+     */
+    public void runValidationImmediately() {
+        runValidation(new Validation(isStrict));
     }
 
     /**

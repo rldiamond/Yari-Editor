@@ -23,7 +23,6 @@ package components.table;
 import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
 import components.UpdateEvent;
-import components.YariTable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
