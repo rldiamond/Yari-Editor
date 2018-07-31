@@ -30,7 +30,7 @@ public class Validation {
         //base validators
         validators.add(new TableInformationValidator(isStrict));
         validators.add(new MinimumRequiredDataValidator(isStrict));
-//        validators.add(new DataTypeConversionValidator(isStrict));
+        validators.add(new DataTypeConversionValidator(isStrict));
 
         //strict validators
         if (isStrict) {

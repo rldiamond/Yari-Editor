@@ -10,7 +10,26 @@
 
 package validation.validators;
 
+import objects.DataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yari.core.table.Action;
+import org.yari.core.table.Condition;
+import org.yari.core.table.Row;
+import view.editors.ActionsDataEditor;
+import view.editors.ConditionsDataEditor;
+import view.editors.RowsDataEditor;
+
+import java.util.List;
+
+/**
+ * Validate the data in each cell can be converted to the specified data type.
+ * <p>
+ * Strict: Will not allow nulls
+ */
 public class DataTypeConversionValidator extends TableValidator {
+
+    private static Logger logger = LoggerFactory.getLogger(DataTypeConversionValidator.class);
 
     public DataTypeConversionValidator(boolean strict) {
         super("Data type conversion validator", strict);
@@ -18,6 +37,166 @@ public class DataTypeConversionValidator extends TableValidator {
 
     @Override
     public void run() {
-        addError(new ValidatorError());
+        List<Row> rows = getDecisionTable().getRawRowData();
+        List<Condition> conditions = getDecisionTable().getConditions();
+        List<Action> actions = getDecisionTable().getActions();
+
+        if (rows == null || conditions == null || actions == null) {
+            //Note: this is taken care of in MinimumRequiredDataValidator
+            return;
+        }
+
+        //results = actions, values = conditions
+
+        //check conditions
+        conditions.forEach(condition -> {
+
+            final int conditionIndex = conditions.indexOf(condition);
+            final DataType dataType = DataType.getFromTableString(condition.getDataType());
+            if (dataType == null) {
+                ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+                validatorErrorLocation.setViewClass(ConditionsDataEditor.class);
+                validatorErrorLocation.setCondition(condition);
+                validatorErrorLocation.setColumnNumber(1 + conditionIndex);
+                String errMsg = "The condition '" + condition.getName() + "' has an invalid data type of '" + condition.getDataType() + "'.";
+                ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
+                addError(validatorError);
+            }
+
+            rows.forEach(row -> {
+
+                // this is likely a new row, and does not contain a value for the condition
+                if (row.getValues().size() <= conditionIndex) {
+                    ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+                    validatorErrorLocation.setRowNumber(row.getRowNumber());
+                    validatorErrorLocation.setRow(row);
+                    validatorErrorLocation.setViewClass(RowsDataEditor.class);
+                    validatorErrorLocation.setColumnNumber(1 + conditionIndex);
+                    String errMsg = "Row " + row.getRowNumber() + " does not have a value for condition column " + condition.getName() + ".";
+                    ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
+                    addError(validatorError);
+                } else {
+
+                    String data = row.getValues().get(conditionIndex);
+                    if (!isStrict() && data == null) {
+                        //.. we don't validate nulls non-strict
+                    } else if (!canConvert(data, dataType)) {
+                        ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+                        validatorErrorLocation.setCondition(condition);
+                        validatorErrorLocation.setColumnNumber(1 + conditionIndex);
+                        validatorErrorLocation.setViewClass(RowsDataEditor.class);
+                        validatorErrorLocation.setRow(row);
+                        validatorErrorLocation.setRowNumber(row.getRowNumber());
+                        String errMsg = "The value '" + data + " in row " + row.getRowNumber() + ", column " + condition.getName() + " cannot be converted to " +
+                                "the specified data type of " + dataType.getDisplayValue();
+                        ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
+                        addError(validatorError);
+                    }
+                }
+
+            });
+
+        });
+
+        //check actions
+        actions.forEach(action -> {
+
+            final int actionIndex = actions.indexOf(action);
+            final DataType dataType = DataType.getFromTableString(action.getDataType());
+            if (dataType == null) {
+                ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+                validatorErrorLocation.setViewClass(ActionsDataEditor.class);
+                validatorErrorLocation.setAction(action);
+                validatorErrorLocation.setColumnNumber(1 + conditions.size() + actionIndex);
+                String errMsg = "The action '" + action.getName() + "' has an invalid data type of '" + action.getDataType() + "'.";
+                ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
+                addError(validatorError);
+            }
+
+            rows.forEach(row -> {
+
+                // this is likely a new row, and does not contain a value for the condition
+                if (row.getResults().size() <= actionIndex) {
+                    ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+                    validatorErrorLocation.setRowNumber(row.getRowNumber());
+                    validatorErrorLocation.setRow(row);
+                    validatorErrorLocation.setViewClass(RowsDataEditor.class);
+                    validatorErrorLocation.setColumnNumber(1 + conditions.size() + actionIndex);
+                    String errMsg = "Row " + row.getRowNumber() + " does not have a value for action column " + action.getName() + ".";
+                    ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
+                    addError(validatorError);
+                } else {
+
+                    String data = row.getResults().get(actionIndex);
+                    if (!isStrict() && data == null) {
+                        //.. we don't validate nulls non-strict
+                    } else if (!canConvert(data, dataType)) {
+                        ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+                        validatorErrorLocation.setAction(action);
+                        validatorErrorLocation.setColumnNumber(1 + conditions.size() + actionIndex);
+                        validatorErrorLocation.setViewClass(RowsDataEditor.class);
+                        validatorErrorLocation.setRow(row);
+                        validatorErrorLocation.setRowNumber(row.getRowNumber());
+                        String errMsg = "The value '" + data + " in row " + row.getRowNumber() + ", column " + action.getName() + " cannot be converted to " +
+                                "the specified data type of " + dataType.getDisplayValue();
+                        ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
+                        addError(validatorError);
+                    }
+                }
+
+            });
+
+        });
+
+    }
+
+    private boolean canConvert(String data, DataType dataType) {
+        boolean canConvert = true;
+
+        if (data == null) {
+            return false;
+        }
+
+        data = data.trim();
+
+        try {
+            switch (dataType) {
+                case BOOLEAN:
+                    Boolean.parseBoolean(data);
+                case DOUBLE:
+                    Double.parseDouble(data);
+                    break;
+                case CHAR:
+                    if (data.length() > 1) {
+                        canConvert = false;
+                    }
+                    data.charAt(0);
+                    break;
+                case BYTE:
+                    data.getBytes();
+                    break;
+                case FLOAT:
+                    Float.parseFloat(data);
+                    break;
+                case INTEGER:
+                    Integer.parseInt(data);
+                    break;
+                case LONG:
+                    Long.parseLong(data);
+                    break;
+                case SHORT:
+                    Short.parseShort(data);
+                    break;
+                case STRING:
+                    //NO VALIDATION REQUIRED
+                    break;
+                default:
+                    logger.error("Unsupported data type provided!");
+            }
+        } catch (Exception ex) {
+            canConvert = false;
+        }
+
+        return canConvert;
     }
 }
