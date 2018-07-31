@@ -29,14 +29,7 @@ public class TableInformationValidator extends TableValidator {
 
         final String tableName = getDecisionTable().getTableName();
         if (NAME_REQUIRED) {
-            if (tableName == null) {
-                ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setViewClass(GeneralView.class);
-                ValidatorError validatorError = new ValidatorError("A table name is required and not provided.", validatorErrorLocation);
-                addError(validatorError);
-            }
-
-            if ("".equals(tableName)) {
+            if (tableName == null || "".equals(tableName)) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(GeneralView.class);
                 ValidatorError validatorError = new ValidatorError("A table name is required and not provided.", validatorErrorLocation);
@@ -46,14 +39,7 @@ public class TableInformationValidator extends TableValidator {
 
         final String tableDescription = getDecisionTable().getTableDescription();
         if (DESCRIPTION_REQUIRED) {
-            if (tableDescription == null) {
-                ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setViewClass(GeneralView.class);
-                ValidatorError validatorError = new ValidatorError("A table description is required and not provided.", validatorErrorLocation);
-                addError(validatorError);
-            }
-
-            if ("".equals(tableDescription)) {
+            if (tableDescription == null || "".equals(tableDescription)) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(GeneralView.class);
                 ValidatorError validatorError = new ValidatorError("A table description is required and not provided.", validatorErrorLocation);

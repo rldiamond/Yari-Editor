@@ -10,6 +10,8 @@
 
 package validation;
 
+import validation.validators.DataTypeConversionValidator;
+import validation.validators.MinimumRequiredDataValidator;
 import validation.validators.TableInformationValidator;
 import validation.validators.Validator;
 
@@ -27,6 +29,8 @@ public class Validation {
     public Validation(boolean isStrict) {
         //base validators
         validators.add(new TableInformationValidator(isStrict));
+        validators.add(new MinimumRequiredDataValidator(isStrict));
+//        validators.add(new DataTypeConversionValidator(isStrict));
 
         //strict validators
         if (isStrict) {
@@ -37,7 +41,7 @@ public class Validation {
     public boolean isValid() {
         if (!validityChecked && ran) {
             //only run this once.
-            valid = validators.stream()
+            valid = !validators.stream()
                     .anyMatch(validator -> !validator.isValid());
             validityChecked = true;
         }

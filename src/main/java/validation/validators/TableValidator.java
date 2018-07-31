@@ -78,7 +78,7 @@ public abstract class TableValidator implements Validator {
      */
     @Override
     public boolean isValid() {
-        return errors != null && !errors.isEmpty();
+        return errors == null || errors.isEmpty();
     }
 
     /**

@@ -76,6 +76,11 @@ public class ValidationService {
         });
     }
 
+    /**
+     * Get the latest validation object, if available.
+     *
+     * @return the latest validation object.
+     */
     public Optional<Validation> getLatestValidation() {
         return Optional.ofNullable(latestValidation);
     }
@@ -89,19 +94,39 @@ public class ValidationService {
         }
     }
 
+    /**
+     * Returns true if the current workspace is valid, false if not.
+     *
+     * @return true if the current workspace is valid, false if not.
+     */
     public boolean isValid() {
         return validProperty.get();
     }
 
+    /**
+     * JavaFX property for the current validity status.
+     *
+     * @return property for the current validity status.
+     */
     public ReadOnlyBooleanProperty validProperty() {
         return validProperty;
     }
 
+    /**
+     * Allows for enabling and disabling of validation.
+     *
+     * @param enabled set enabled or disabled.
+     */
     public void setEnabled(boolean enabled) {
         enabledProperty.set(enabled);
     }
 
-    public BooleanProperty busyProperty() {
+    /**
+     * JavaFX property informing of the busy status of the service.
+     *
+     * @return property informing of the busy status of the service.
+     */
+    public ReadOnlyBooleanProperty busyProperty() {
         return busyProperty;
     }
 

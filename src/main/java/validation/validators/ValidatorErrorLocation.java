@@ -22,7 +22,7 @@ public class ValidatorErrorLocation {
     private Action action;
     private int rowNumber;
     private int columnNumber;
-    private Class<? extends DataEditor> viewClass;
+    private Class viewClass;
 
     public Class getViewClass() {
         return viewClass;
