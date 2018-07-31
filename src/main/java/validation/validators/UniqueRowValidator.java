@@ -10,6 +10,11 @@
 
 package validation.validators;
 
+import org.yari.core.table.Row;
+import view.editors.RowsDataEditor;
+
+import java.util.List;
+
 /**
  * Determines if there are any non-unique table rows.
  */
@@ -21,6 +26,25 @@ public class UniqueRowValidator extends TableValidator {
 
     @Override
     public void run() {
-        //TODO..
+        List<Row> rows = getDecisionTable().getRawRowData();
+
+        // Validate Rows
+        for (Row currentRow : rows) {
+            List<String> compare = currentRow.getValues();
+            for (Row comparisonRow : rows) {
+                if (currentRow == comparisonRow) {
+                    continue;
+                }
+                // Check if rows are unique
+                if (compare.equals(comparisonRow.getValues())) {
+                    ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+                    validatorErrorLocation.setViewClass(RowsDataEditor.class);
+                    validatorErrorLocation.setRow(comparisonRow);
+                    String errMsg = "Two rows of data were found to have the same data! Check rows " + comparisonRow + " and " + currentRow + ".";
+                    ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
+                    addError(validatorError);
+                }
+            }
+        }
     }
 }

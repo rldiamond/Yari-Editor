@@ -32,7 +32,7 @@ public class TableInformationValidator extends TableValidator {
             if (tableName == null || "".equals(tableName)) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(GeneralView.class);
-                ValidatorError validatorError = new ValidatorError("A table name is required and not provided.", validatorErrorLocation);
+                ValidatorError validatorError = new ValidatorError("A table name is required and not provided", validatorErrorLocation);
                 addError(validatorError);
             }
         }
@@ -42,7 +42,7 @@ public class TableInformationValidator extends TableValidator {
             if (tableDescription == null || "".equals(tableDescription)) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(GeneralView.class);
-                ValidatorError validatorError = new ValidatorError("A table description is required and not provided.", validatorErrorLocation);
+                ValidatorError validatorError = new ValidatorError("A table description is required and not provided", validatorErrorLocation);
                 addError(validatorError);
             }
         }

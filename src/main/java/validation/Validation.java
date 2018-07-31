@@ -10,10 +10,7 @@
 
 package validation;
 
-import validation.validators.DataTypeConversionValidator;
-import validation.validators.MinimumRequiredDataValidator;
-import validation.validators.TableInformationValidator;
-import validation.validators.Validator;
+import validation.validators.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +21,13 @@ public class Validation {
     private boolean valid;
     private boolean validityChecked = false;
     private boolean ran = false;
-    private String quickMessage = "";
+    private String quickMessage;
 
     public Validation(boolean isStrict) {
-        //base validators
         validators.add(new TableInformationValidator(isStrict));
         validators.add(new MinimumRequiredDataValidator(isStrict));
         validators.add(new DataTypeConversionValidator(isStrict));
-
-        //strict validators
-        if (isStrict) {
-            //..
-        }
+        validators.add(new UniqueRowValidator(isStrict));
     }
 
     public boolean isValid() {
@@ -53,11 +45,15 @@ public class Validation {
         validators.forEach(validator -> {
             validator.run();
             if (!validator.isValid()) {
-                validator.getErrors().forEach(validatorError -> messageBuilder.append(validatorError.getMessage()));
+                validator.getErrors().forEach(validatorError -> messageBuilder.append(validatorError.getMessage()).append(". \n"));
             }
         });
         quickMessage = messageBuilder.toString();
         ran = true;
+    }
+
+    public String getQuickMessage() {
+        return quickMessage;
     }
 
 }

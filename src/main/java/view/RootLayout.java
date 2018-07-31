@@ -383,8 +383,7 @@ public class RootLayout extends BorderPane {
         leftMenu.getChildren().add(backgroundBusyIndicator);
 
         Dialog validationMessageDialog = new Dialog(displayedContent);
-        //TODO: Update the following line
-//        validationMessageDialog.textProperty().bind(decisionTableValidator.messageProperty());
+        validationMessageDialog.textProperty().bind(validationService.quickMessageProperty());
 
         Pane validIndicator = new Pane();
         validIndicator.managedProperty().bind((validationService.busyProperty().not()));

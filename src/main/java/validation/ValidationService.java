@@ -11,9 +11,7 @@
 package validation;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -45,6 +43,7 @@ public class ValidationService {
     private final BooleanProperty validProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty busyProperty = new SimpleBooleanProperty(false);
+    private final StringProperty quickMessageProperty = new SimpleStringProperty("");
     private final ObservableList<Validation> validationQueue = FXCollections.observableArrayList();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Validation latestValidation;
@@ -65,15 +64,20 @@ public class ValidationService {
             change.next();
             change.getAddedSubList().forEach(validation -> {
                 executorService.submit(() -> {
-                    // run the validation
-                    validation.run();
-                    // and remove it from the queue on completion
-                    validationQueue.remove(validation);
-                    latestValidation = validation;
-                    validProperty.set(validation.isValid());
+                    runValidation(validation);
                 });
             });
         });
+    }
+
+    private void runValidation(Validation validation) {
+        // run the validation
+        validation.run();
+        // and remove it from the queue on completion
+        validationQueue.remove(validation);
+        latestValidation = validation;
+        validProperty.set(validation.isValid());
+        quickMessageProperty.set(validation.getQuickMessage());
     }
 
     /**
@@ -128,6 +132,15 @@ public class ValidationService {
      */
     public ReadOnlyBooleanProperty busyProperty() {
         return busyProperty;
+    }
+
+    /**
+     * JavaFX property containing a collection of error messages.
+     *
+     * @return
+     */
+    public ReadOnlyStringProperty quickMessageProperty() {
+        return quickMessageProperty;
     }
 
 }
