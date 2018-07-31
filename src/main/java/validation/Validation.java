@@ -10,7 +10,7 @@
 
 package validation;
 
-import validation.validators.TestValidator;
+import validation.validators.TableInformationValidator;
 import validation.validators.Validator;
 
 import java.util.ArrayList;
@@ -21,10 +21,11 @@ public class Validation {
     private List<Validator> validators = new ArrayList<>();
     boolean valid;
     boolean validityChecked = false;
+    boolean ran = false;
 
     public Validation(boolean isStrict) {
         //base validators
-        validators.add(new TestValidator());
+        validators.add(new TableInformationValidator(isStrict));
 
         //strict validators
         if (isStrict) {
@@ -33,15 +34,18 @@ public class Validation {
     }
 
     public boolean isValid() {
-        if (!validityChecked) {
+        if (!validityChecked && ran) {
+            //only run this once.
             valid = validators.stream()
                     .anyMatch(validator -> !validator.isValid());
+            validityChecked = true;
         }
         return valid;
     }
 
     void run() {
         validators.forEach(Validator::run);
+        ran = true;
     }
 
 }

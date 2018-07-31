@@ -14,8 +14,30 @@ import java.util.List;
 
 public interface Validator {
 
+    /**
+     * Returns true if the validation process succeeded, and false if it failed.
+     *
+     * @return true if the validation process succeeded, and false if it failed.
+     */
     boolean isValid();
+
+    /**
+     * Returns a list of {@link ValidatorError} found during validation.
+     *
+     * @return a list of {@link ValidatorError} found during validation.
+     */
     List<ValidatorError> getErrors();
+
+    /**
+     * Run the validation process.
+     */
     void run();
+
+    /**
+     * Return the name of the Validator.
+     *
+     * @return the name of the Validator.
+     */
+    String getName();
 
 }

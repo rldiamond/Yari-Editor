@@ -44,6 +44,7 @@ import java.util.concurrent.Executors;
  * Performs validation on the currently active decision table. If validation fails, the validProperty is set to false,
  * and the message is populated with the exception message from Yari.
  */
+@Deprecated
 public class DecisionTableValidator {
 
     private TableValidator tableValidator = new TableValidator();
@@ -61,6 +62,7 @@ public class DecisionTableValidator {
      *
      * @return the instance of the validator.
      */
+    @Deprecated
     public static DecisionTableValidator getInstance() {
         if (decisionTableValidator == null) {
             decisionTableValidator = new DecisionTableValidator();
@@ -89,6 +91,7 @@ public class DecisionTableValidator {
      * @param xml String representation of the {@link DecisionTable} XML.
      * @return true if valid, false if invalid.
      */
+    @Deprecated
     public void validateXML(String xml) throws YariException {
         tableValidator.validateXML(xml);
     }
@@ -96,6 +99,7 @@ public class DecisionTableValidator {
     /**
      * Place a request for table validation to occur. Validation occurs on an async thread.
      */
+    @Deprecated
     public void requestValidation() {
         if (enabled.get()) {
             queue.add(new ValidateRequest(RootLayoutFactory.getInstance().getDecisionTable()));
@@ -105,6 +109,7 @@ public class DecisionTableValidator {
     /**
      * Immediately run a validation (not on an async thread).
      */
+    @Deprecated
     public void runValidation() {
         ValidateRequest validateRequest = new ValidateRequest(RootLayoutFactory.getInstance().getDecisionTable());
         validateRequest.runValidation();
@@ -113,6 +118,7 @@ public class DecisionTableValidator {
     /**
      * Update the decision table object to the latest values in the observable lists.
      */
+    @Deprecated
     public void updateTable() {
         List<Row> updatedRows = new ArrayList<>();
         updatedRows.addAll(RootLayoutFactory.getInstance().getRowsList());
@@ -133,6 +139,7 @@ public class DecisionTableValidator {
      * @param draggedIndex index dragged from.
      * @param dropIndex    index dropped to.
      */
+    @Deprecated
     public void reorderActions(int draggedIndex, int dropIndex) {
         setEnabled(false);
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
@@ -149,6 +156,7 @@ public class DecisionTableValidator {
      * @param draggedIndex index dragged from.
      * @param dropIndex    index dropped to.
      */
+    @Deprecated
     public void reorderConditions(int draggedIndex /*from*/, int dropIndex /*to*/) {
         setEnabled(false);
         for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
@@ -164,6 +172,7 @@ public class DecisionTableValidator {
      *
      * @return changes to true if valid, false if invalid.
      */
+    @Deprecated
     public BooleanProperty validProperty() {
         return isValid;
     }
@@ -173,6 +182,7 @@ public class DecisionTableValidator {
      *
      * @return changes to true if busy, false if resting.
      */
+    @Deprecated
     public BooleanProperty busyProperty() {
         return busy;
     }
@@ -182,6 +192,7 @@ public class DecisionTableValidator {
      *
      * @return the invalid message.
      */
+    @Deprecated
     public String getMessage() {
         return message.get();
     }
@@ -191,6 +202,7 @@ public class DecisionTableValidator {
      *
      * @return the invalid message property.
      */
+    @Deprecated
     public StringProperty messageProperty() {
         return message;
     }
@@ -200,6 +212,7 @@ public class DecisionTableValidator {
      *
      * @param enabled true to enable, false to stop.
      */
+    @Deprecated
     public void setEnabled(boolean enabled) {
         this.enabled.set(enabled);
     }
@@ -207,6 +220,7 @@ public class DecisionTableValidator {
     /**
      * Inner-class to describe a validation request.
      */
+    @Deprecated
     private class ValidateRequest {
 
         private final DecisionTable decisionTable;

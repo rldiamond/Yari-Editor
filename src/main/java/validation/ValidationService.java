@@ -18,11 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import utilities.SettingsUtil;
-import validation.validators.TestValidator;
-import validation.validators.Validator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,6 +52,9 @@ public class ValidationService {
     private boolean isStrict;
 
 
+    /**
+     * Setup the validation service.
+     */
     private ValidationService() {
         // load strict from user settings
         isStrict = SettingsUtil.getSettings().isStrictValidation();
@@ -64,21 +63,21 @@ public class ValidationService {
         // meanwhile, anything added to the queue is added to the executor service
         validationQueue.addListener((ListChangeListener.Change<? extends Validation> change) -> {
             change.next();
-            change.getAddedSubList().forEach(validation -> {
-                executorService.submit(() -> {
-                    // run the validation
-                    validation.run();
-                    // and remove it from the queue on completion
-                    if (validationQueue.contains(validation)) {
-                        validationQueue.remove(validation);
-                    }
-                    //TODO: Do something with the validation
-                    latestValidation = validation;
-                    validProperty.set(validation.isValid());
+            if (enabledProperty.get()) {
+                change.getAddedSubList().forEach(validation -> {
+                    executorService.submit(() -> {
+                        // run the validation
+                        validation.run();
+                        // and remove it from the queue on completion
+                        if (validationQueue.contains(validation)) {
+                            validationQueue.remove(validation);
+                        }
+                        latestValidation = validation;
+                        validProperty.set(validation.isValid());
+                    });
                 });
-            });
+            }
         });
-
     }
 
     public Optional<Validation> getLatestValidation() {

@@ -13,6 +13,7 @@ package validation.validators;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.Row;
+import view.editors.DataEditor;
 
 public class ValidatorErrorLocation {
 
@@ -21,7 +22,7 @@ public class ValidatorErrorLocation {
     private Action action;
     private int rowNumber;
     private int columnNumber;
-    private Class viewClass;
+    private Class<? extends DataEditor> viewClass;
 
     public Class getViewClass() {
         return viewClass;
