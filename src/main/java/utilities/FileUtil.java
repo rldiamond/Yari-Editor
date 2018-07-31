@@ -24,6 +24,7 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
+import validation.ValidationService;
 import view.RootLayoutFactory;
 import view.TablePrintView;
 import view.WelcomeSplash;
@@ -46,7 +47,7 @@ public class FileUtil {
      * @param stage the stage to base the file chooser on.
      */
     public static void openFile(Stage stage) {
-        DecisionTableValidator.getInstance().setEnabled(false);
+        ValidationService.getService().setEnabled(false);
         FileChooser fileChooser = new FileChooser();
 
         // Set the extension filter
@@ -66,7 +67,7 @@ public class FileUtil {
                 if (!RootLayoutFactory.isDisplayed()) {
                     FXUtil.runOnFXThread(() -> {
                         RootLayoutFactory.show(stage);
-                        DecisionTableValidator.getInstance().setEnabled(true);
+                        ValidationService.getService().setEnabled(true);
                     });
 
                 }
@@ -79,7 +80,7 @@ public class FileUtil {
                     alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
                     alert.showAndWait();
                 });
-                DecisionTableValidator.getInstance().setEnabled(true);
+                ValidationService.getService().setEnabled(true);
             }
         });
 

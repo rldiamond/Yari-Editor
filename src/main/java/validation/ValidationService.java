@@ -63,20 +63,16 @@ public class ValidationService {
         // meanwhile, anything added to the queue is added to the executor service
         validationQueue.addListener((ListChangeListener.Change<? extends Validation> change) -> {
             change.next();
-            if (enabledProperty.get()) {
-                change.getAddedSubList().forEach(validation -> {
-                    executorService.submit(() -> {
-                        // run the validation
-                        validation.run();
-                        // and remove it from the queue on completion
-                        if (validationQueue.contains(validation)) {
-                            validationQueue.remove(validation);
-                        }
-                        latestValidation = validation;
-                        validProperty.set(validation.isValid());
-                    });
+            change.getAddedSubList().forEach(validation -> {
+                executorService.submit(() -> {
+                    // run the validation
+                    validation.run();
+                    // and remove it from the queue on completion
+                    validationQueue.remove(validation);
+                    latestValidation = validation;
+                    validProperty.set(validation.isValid());
                 });
-            }
+            });
         });
     }
 
@@ -88,7 +84,9 @@ public class ValidationService {
      * Request the validation service run validation.
      */
     public void requestValidation() {
-        validationQueue.add(new Validation(isStrict));
+        if (enabledProperty.get()) {
+            validationQueue.add(new Validation(isStrict));
+        }
     }
 
     public boolean isValid() {

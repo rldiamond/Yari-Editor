@@ -19,9 +19,10 @@ import java.util.List;
 public class Validation {
 
     private List<Validator> validators = new ArrayList<>();
-    boolean valid;
-    boolean validityChecked = false;
-    boolean ran = false;
+    private boolean valid;
+    private boolean validityChecked = false;
+    private boolean ran = false;
+    private String quickMessage = "";
 
     public Validation(boolean isStrict) {
         //base validators
@@ -44,7 +45,14 @@ public class Validation {
     }
 
     void run() {
-        validators.forEach(Validator::run);
+        StringBuilder messageBuilder = new StringBuilder();
+        validators.forEach(validator -> {
+            validator.run();
+            if (!validator.isValid()) {
+                validator.getErrors().forEach(validatorError -> messageBuilder.append(validatorError.getMessage()));
+            }
+        });
+        quickMessage = messageBuilder.toString();
         ran = true;
     }
 

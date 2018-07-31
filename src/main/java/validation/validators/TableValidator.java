@@ -29,9 +29,11 @@ public abstract class TableValidator implements Validator {
         // update the table with the latest data
         final RootLayout rootLayout = RootLayoutFactory.getInstance();
         final DecisionTable decisionTable = rootLayout.getDecisionTable();
-        decisionTable.setRows(rootLayout.getRowsList());
-        decisionTable.setConditions(rootLayout.getConditionsList());
-        decisionTable.setActions(rootLayout.getActionsList());
+        if (decisionTable != null) {
+            decisionTable.setRows(rootLayout.getRowsList());
+            decisionTable.setConditions(rootLayout.getConditionsList());
+            decisionTable.setActions(rootLayout.getActionsList());
+        }
         this.decisionTable = decisionTable;
         this.validatorName = validatorName;
         this.strict = strict;
