@@ -67,13 +67,13 @@ public class MinimumRequiredDataValidator extends TableValidator {
         }
 
         if (MIN_ACTIONS_REQUIRED > 0) {
-            if (conditions == null || conditions.isEmpty()) {
+            if (actions == null || actions.isEmpty()) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(ActionsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("Actions are required. There currently aren't any", validatorErrorLocation);
                 addError(validatorError);
             }
-            if (conditions != null && conditions.size() < MIN_ACTIONS_REQUIRED) {
+            if (actions != null && actions.size() < MIN_ACTIONS_REQUIRED) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(ActionsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("At least " + MIN_ACTIONS_REQUIRED + " actions are required. There currently are " + actions.size(), validatorErrorLocation);
