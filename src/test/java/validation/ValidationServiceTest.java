@@ -8,31 +8,29 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package objects;
+package validation;
 
-import javafx.beans.property.BooleanProperty;
+import org.junit.jupiter.api.Test;
 
-/**
- * Simple object describing several user-adjustable settings.
- */
-public class Settings {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private Theme theme;
-    private boolean strictValidation;
+class ValidationServiceTest {
 
-    public boolean isStrictValidation() {
-        return strictValidation;
+
+    @Test
+    public void testService(){
+        ValidationService service = ValidationService.getService();
+
+        assertEquals(true, service.isValid());
+
+        service.requestValidation();
+
+        Validation validation = service.getLatestValidation().get();
+
+        assertEquals(false, service.isValid());
+        
+        
+
     }
 
-    public void setStrictValidation(boolean strictValidation) {
-        this.strictValidation = strictValidation;
-    }
-
-    public Theme getTheme() {
-        return theme;
-    }
-
-    public void setTheme(Theme theme) {
-        this.theme = theme;
-    }
 }

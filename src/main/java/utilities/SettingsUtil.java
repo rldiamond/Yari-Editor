@@ -38,6 +38,7 @@ public class SettingsUtil {
     private static void loadDefaults() {
         activeSettings = new Settings();
         activeSettings.setTheme(Theme.DARK);
+        activeSettings.setStrictValidation(true);
     }
 
 }

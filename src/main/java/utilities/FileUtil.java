@@ -74,7 +74,7 @@ public class FileUtil {
                 WelcomeSplash.getInstance().busyProperty().set(false);
                 FXUtil.runOnFXThread(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
+                    alert.setTitle("ValidatorError");
                     alert.setHeaderText("Could not load table data");
                     alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
                     alert.showAndWait();

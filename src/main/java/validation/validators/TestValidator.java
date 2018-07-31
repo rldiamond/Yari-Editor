@@ -8,31 +8,30 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package objects;
+package validation.validators;
 
-import javafx.beans.property.BooleanProperty;
+import java.util.Collections;
+import java.util.List;
 
-/**
- * Simple object describing several user-adjustable settings.
- */
-public class Settings {
+public class TestValidator implements Validator {
 
-    private Theme theme;
-    private boolean strictValidation;
-
-    public boolean isStrictValidation() {
-        return strictValidation;
+    @Override
+    public boolean isValid() {
+        return true;
     }
 
-    public void setStrictValidation(boolean strictValidation) {
-        this.strictValidation = strictValidation;
+    @Override
+    public List<ValidatorError> getErrors() {
+        return Collections.emptyList();
     }
 
-    public Theme getTheme() {
-        return theme;
-    }
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(100);
 
-    public void setTheme(Theme theme) {
-        this.theme = theme;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
