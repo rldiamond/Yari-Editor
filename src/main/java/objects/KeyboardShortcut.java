@@ -13,8 +13,8 @@ package objects;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import utilities.DecisionTableValidator;
 import utilities.FileUtil;
+import validation.ValidationService;
 import view.RootLayoutFactory;
 import view.editors.DataEditor;
 
@@ -27,7 +27,7 @@ public enum KeyboardShortcut {
     SAVE(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), "Ctrl+S", () -> RootLayoutFactory.getInstance().save(false)),
     OPEN(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN), "Ctrl+O", () -> RootLayoutFactory.getInstance().open()),
     PRINT(new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN), "Ctrl+P", FileUtil::print),
-    VALIDATE(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN), "Ctrl+V", () -> DecisionTableValidator.getInstance().requestValidation()),
+    VALIDATE(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN), "Ctrl+V", () -> ValidationService.getService().requestValidation()),
     ADD_ROW(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN), "Ctrl+R", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::addNewRow)),
     DELETE_ROW(new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN), "Ctrl+Del", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::removeSelectedRow)),
     MOVE_ROW_UP(new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN), "Ctrl+UP", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::moveRowUp)),

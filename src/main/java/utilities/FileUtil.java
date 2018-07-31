@@ -24,6 +24,7 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
+import validation.ValidationService;
 import view.RootLayoutFactory;
 import view.TablePrintView;
 import view.WelcomeSplash;
@@ -39,6 +40,7 @@ public class FileUtil {
 
     private static ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
     private static BooleanProperty dirty = new SimpleBooleanProperty(false);
+    private static ValidationService validationService = ValidationService.getService();
 
     /**
      * Show a file chooser and attempt to open the selected file.
@@ -46,7 +48,7 @@ public class FileUtil {
      * @param stage the stage to base the file chooser on.
      */
     public static void openFile(Stage stage) {
-        DecisionTableValidator.getInstance().setEnabled(false);
+        ValidationService.getService().setEnabled(false);
         FileChooser fileChooser = new FileChooser();
 
         // Set the extension filter
@@ -66,7 +68,7 @@ public class FileUtil {
                 if (!RootLayoutFactory.isDisplayed()) {
                     FXUtil.runOnFXThread(() -> {
                         RootLayoutFactory.show(stage);
-                        DecisionTableValidator.getInstance().setEnabled(true);
+                        validationService.setEnabled(true);
                     });
 
                 }
@@ -74,12 +76,12 @@ public class FileUtil {
                 WelcomeSplash.getInstance().busyProperty().set(false);
                 FXUtil.runOnFXThread(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
+                    alert.setTitle("ValidatorError");
                     alert.setHeaderText("Could not load table data");
                     alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
                     alert.showAndWait();
                 });
-                DecisionTableValidator.getInstance().setEnabled(true);
+                validationService.setEnabled(true);
             }
         });
 
@@ -104,10 +106,10 @@ public class FileUtil {
      */
     public static void saveToFile(File file) {
         FXUtil.runAsync(() -> {
-            DecisionTableValidator.getInstance().updateTable();
-            DecisionTableValidator.getInstance().runValidation();
+            TableUtil.updateTable();
+            validationService.runValidationImmediately();
 
-            if (!DecisionTableValidator.getInstance().validProperty().get()) {
+            if (!validationService.validProperty().get()) {
                 return;
             }
 
@@ -128,7 +130,7 @@ public class FileUtil {
     private static boolean importFromFile(File file) throws FileNotFoundException, YariException {
         clearData();
 
-        DecisionTableValidator.getInstance().validateXML(file.getPath());
+        validationService.validateXML(file.getPath());
 
         DecisionTable decisionTable;
 
@@ -157,7 +159,6 @@ public class FileUtil {
 
         RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
         setDirty(false);
-        DecisionTableValidator.getInstance().validProperty().set(true); //sucessful loading means successful validation
         return true;
     }
 

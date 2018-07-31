@@ -61,6 +61,7 @@ import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import objects.KeyboardShortcut;
 import utilities.*;
+import validation.ValidationService;
 import view.editors.ActionsDataEditor;
 import view.editors.ConditionsDataEditor;
 import view.editors.DataEditor;
@@ -81,7 +82,7 @@ public class RootLayout extends BorderPane {
     private final BooleanProperty loadingContent = new SimpleBooleanProperty(false);
     private final StackPane displayedContent = new StackPane();
     private final AnchorPane header = new AnchorPane();
-    private final DecisionTableValidator decisionTableValidator = DecisionTableValidator.getInstance();
+    private final ValidationService validationService = ValidationService.getService();
     private Pane minimizeButton;
     private JFXSnackbar toastBar;
 
@@ -125,13 +126,15 @@ public class RootLayout extends BorderPane {
         setCenter(mainPanel);
 
         //validate table anytime changes are made to the lists
-        actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> decisionTableValidator.requestValidation());
-        conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> decisionTableValidator.requestValidation());
-        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> decisionTableValidator.requestValidation());
-        addEventHandler(UpdateEvent.UPDATE, e -> decisionTableValidator.requestValidation());
+        //TODO: Evaluate if the following three lines are necessary
+        actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> validationService.requestValidation());
+        conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> validationService.requestValidation());
+        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> validationService.requestValidation());
+
+        addEventHandler(UpdateEvent.UPDATE, e -> validationService.requestValidation());
 
         //change toast on valid
-        decisionTableValidator.validProperty().addListener((obs, ov, nv) -> {
+        validationService.validProperty().addListener((obs, ov, nv) -> {
             if (!ov && nv) {
                 toastBar.close();
                 ToastUtil.sendToast("Workspace now validates!");
@@ -372,18 +375,18 @@ public class RootLayout extends BorderPane {
 
         JFXSpinner backgroundBusyIndicator = new JFXSpinner();
         backgroundBusyIndicator.setRadius(5);
-        backgroundBusyIndicator.managedProperty().bind(decisionTableValidator.busyProperty());
-        backgroundBusyIndicator.visibleProperty().bind(decisionTableValidator.busyProperty());
+        backgroundBusyIndicator.managedProperty().bind(validationService.busyProperty());
+        backgroundBusyIndicator.visibleProperty().bind(validationService.busyProperty());
         AnchorPane.setRightAnchor(backgroundBusyIndicator, 5D);
         AnchorPane.setBottomAnchor(backgroundBusyIndicator, 5D);
         leftMenu.getChildren().add(backgroundBusyIndicator);
 
         Dialog validationMessageDialog = new Dialog(displayedContent);
-        validationMessageDialog.textProperty().bind(decisionTableValidator.messageProperty());
+        validationMessageDialog.textProperty().bind(validationService.quickMessageProperty());
 
         Pane validIndicator = new Pane();
-        validIndicator.managedProperty().bind((decisionTableValidator.busyProperty().not()));
-        validIndicator.visibleProperty().bind((decisionTableValidator.busyProperty().not()));
+        validIndicator.managedProperty().bind((validationService.busyProperty().not()));
+        validIndicator.visibleProperty().bind((validationService.busyProperty().not()));
         Tooltip validTip = new Tooltip();
         Tooltip.install(validIndicator, validTip);
         AnchorPane.setRightAnchor(validIndicator, 5D);
@@ -393,16 +396,16 @@ public class RootLayout extends BorderPane {
         leftMenu.getChildren().add(validIndicator);
 
         PseudoClass success = PseudoClass.getPseudoClass("success");
-        validIndicator.pseudoClassStateChanged(success, decisionTableValidator.validProperty().get());//trigger at load
+        validIndicator.pseudoClassStateChanged(success, validationService.validProperty().get());//trigger at load
         final String validTipText = "Data passes validation. CTRL+V to re-validate.";
         final String invalidTipText = "Data fails validation. CTRL+V to re-validate. Click to see message.";
-        validTip.setText(decisionTableValidator.validProperty().get() ? validTipText : invalidTipText);
-        decisionTableValidator.validProperty().addListener((obs, ov, isValid) -> {
+        validTip.setText(validationService.validProperty().get() ? validTipText : invalidTipText);
+        validationService.validProperty().addListener((obs, ov, isValid) -> {
             validIndicator.pseudoClassStateChanged(success, isValid);
             validTip.setText(isValid ? validTipText : invalidTipText);
         });
 
-        decisionTableValidator.validProperty().addListener((obs, ov, valid) -> {
+        validationService.validProperty().addListener((obs, ov, valid) -> {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {
                     if (me.getButton() == MouseButton.PRIMARY) {
@@ -458,7 +461,7 @@ public class RootLayout extends BorderPane {
 
 
     public void save(boolean newFile) {
-        if (!decisionTableValidator.validProperty().get()) {
+        if (!validationService.validProperty().get()) {
             ToastUtil.sendPersistentToast("Could not save decision table as it does not pass validation.");
         } else if (newFile) {
             //save as functionality

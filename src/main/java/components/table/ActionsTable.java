@@ -33,7 +33,6 @@ package components.table;
 import components.EditableComboBoxCell;
 import components.EditableTextFieldCell;
 import components.UpdateEvent;
-import components.YariTable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -44,7 +43,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import org.yari.core.table.Action;
 import objects.DataType;
-import utilities.DecisionTableValidator;
+import utilities.TableUtil;
 
 import java.util.List;
 
@@ -115,7 +114,7 @@ public class ActionsTable extends YariTable<Action> {
                     event.setDropCompleted(true);
                     getSelectionModel().select(dropIndex);
 
-                    DecisionTableValidator.getInstance().reorderActions(draggedIndex, dropIndex);
+                    TableUtil.reorderActions(draggedIndex, dropIndex);
                     event.consume();
                     fireEvent(new UpdateEvent());
                 }

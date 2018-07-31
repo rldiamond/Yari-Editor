@@ -8,37 +8,36 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package utilities;
+package validation.validators;
 
-import objects.Settings;
-import objects.Theme;
+import java.util.List;
 
-/**
- * Loads, saves, and maintains the active user {@link Settings}.
- */
-public class SettingsUtil {
-
-    private static Settings activeSettings;
+public interface Validator {
 
     /**
-     * Retrieve the currently active set of user settings.
+     * Returns true if the validation process succeeded, and false if it failed.
      *
-     * @return the currently active set of user settings.
+     * @return true if the validation process succeeded, and false if it failed.
      */
-    public static Settings getSettings() {
-        if (activeSettings == null) {
-            loadDefaults();
-        }
-        return activeSettings;
-    }
+    boolean isValid();
 
     /**
-     * Load base default settings.
+     * Returns a list of {@link ValidatorError} found during validation.
+     *
+     * @return a list of {@link ValidatorError} found during validation.
      */
-    private static void loadDefaults() {
-        activeSettings = new Settings();
-        activeSettings.setTheme(Theme.DARK);
-        activeSettings.setStrictValidation(true);
-    }
+    List<ValidatorError> getErrors();
+
+    /**
+     * Run the validation process.
+     */
+    void run();
+
+    /**
+     * Return the name of the Validator.
+     *
+     * @return the name of the Validator.
+     */
+    String getName();
 
 }

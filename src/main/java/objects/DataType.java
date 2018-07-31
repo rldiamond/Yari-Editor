@@ -65,4 +65,10 @@ public enum DataType {
                 .map(DataType::getDisplayValue)
                 .collect(Collectors.toList());
     }
+
+    public static DataType getFromTableString(String dataType) {
+        return Arrays.stream(values())
+                .filter(type -> type.getDisplayValue().equalsIgnoreCase(dataType))
+                .findFirst().orElse(null);
+    }
 }
