@@ -42,8 +42,7 @@ public class MinimumRequiredDataValidator extends TableValidator {
                 validatorErrorLocation.setViewClass(RowsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("Rows are required. There currently aren't any", validatorErrorLocation);
                 addError(validatorError);
-            }
-            if (rows != null && rows.size() < MIN_ROWS_REQUIRED) {
+            } else if (rows.size() < MIN_ROWS_REQUIRED) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(RowsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("At least " + MIN_ROWS_REQUIRED + " rows are required. There currently are " + rows.size(), validatorErrorLocation);
@@ -57,8 +56,7 @@ public class MinimumRequiredDataValidator extends TableValidator {
                 validatorErrorLocation.setViewClass(ConditionsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("Conditions are required. There currently aren't any.", validatorErrorLocation);
                 addError(validatorError);
-            }
-            if (conditions != null && conditions.size() < MIN_CONDITIONS_REQUIRED) {
+            } else if (conditions.size() < MIN_CONDITIONS_REQUIRED) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(ConditionsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("At least " + MIN_CONDITIONS_REQUIRED + " conditions are required. There currently are " + conditions.size(), validatorErrorLocation);
@@ -72,8 +70,7 @@ public class MinimumRequiredDataValidator extends TableValidator {
                 validatorErrorLocation.setViewClass(ActionsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("Actions are required. There currently aren't any", validatorErrorLocation);
                 addError(validatorError);
-            }
-            if (actions != null && actions.size() < MIN_ACTIONS_REQUIRED) {
+            } else if (actions.size() < MIN_ACTIONS_REQUIRED) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setViewClass(ActionsDataEditor.class);
                 ValidatorError validatorError = new ValidatorError("At least " + MIN_ACTIONS_REQUIRED + " actions are required. There currently are " + actions.size(), validatorErrorLocation);
