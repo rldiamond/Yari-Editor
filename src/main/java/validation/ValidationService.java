@@ -170,4 +170,22 @@ public class ValidationService {
         return quickMessageProperty;
     }
 
+
+    /**
+     * Set whether the service should run strict validations or not.
+     *
+     * @param strict true to run strict validations.
+     */
+    public void setStrict(boolean strict) {
+        isStrict = strict;
+    }
+
+    /**
+     * JavaFX property informing of the enabled status of the service.
+     *
+     * @return property informing of the enabled status of the service.
+     */
+    public ReadOnlyBooleanProperty enabledProperty() {
+        return enabledProperty;
+    }
 }

@@ -11,14 +11,19 @@
 package utilities;
 
 import com.thoughtworks.xstream.XStream;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import objects.Theme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import settings.Settings;
+import validation.ValidationService;
 import validation.ValidationType;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Loads, saves, and maintains the active user {@link Settings}.
@@ -26,7 +31,13 @@ import java.io.FileOutputStream;
 public class SettingsUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(SettingsUtil.class);
-    private static Settings activeSettings;
+    private static ObjectProperty<Settings> settingsProperty = new SimpleObjectProperty<>(null);
+
+    private SettingsUtil() {
+        settingsProperty.addListener((obs, ov, nv) -> {
+            updateApplicationServices();
+        });
+    }
 
     /**
      * Retrieve the currently active set of user settings.
@@ -34,35 +45,59 @@ public class SettingsUtil {
      * @return the currently active set of user settings.
      */
     public static Settings getSettings() {
-        if (activeSettings == null) {
-            loadDefaults();
+        if (settingsProperty.get() == null) {
+            loadSettings();
         }
-        return activeSettings;
+        return settingsProperty.get();
     }
 
-    public static void loadSettings() {
-        //TODO: load via xstream
-        updateApplicationServices();
-    }
-
-    public static void saveSettings(Settings settings) {
-        String dir = getUserDirectory();
-        File file = new File(dir);
-
+    /**
+     * Load settings from the User directory.
+     */
+    private static void loadSettings() {
         XStream xStream = new XStream();
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            xStream.toXML(settings, out);
-            activeSettings = settings;
-            updateApplicationServices();
-        } catch (Exception ex) {
-            logger.error("Failed to save settings to the user directory.", ex);
-            //TODO: Do a thing
+        Settings settings = null;
+        try (FileReader reader = new FileReader(getUserDirectory())) {
+            settings = (Settings) xStream.fromXML(reader);
+        } catch (IOException ex) {
+            logger.error("Failed to load settings from the user directory.");
         }
 
+        if (settings == null) {
+            //settings not found, let's save the default settings
+            saveSettings(getDefaults());
+        } else {
+            settingsProperty.set(settings);
+        }
+    }
+
+    /**
+     * Save the supplied settings to the user directory and apply changes to the application services.
+     *
+     * @param settings settings to save.
+     */
+    public static void saveSettings(Settings settings) {
+        FXUtil.runAsync(() -> {
+
+            String dir = getUserDirectory();
+            File file = new File(dir);
+
+            XStream xStream = new XStream();
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                xStream.toXML(settings, out);
+                settingsProperty.set(settings);
+            } catch (Exception ex) {
+                logger.error("Failed to save settings to the user directory.", ex);
+            }
+
+        });
     }
 
     private static void updateApplicationServices() {
-        //TODO: When settings change, application services will behave differently. here, we change the settings in them.
+        Settings newestSettings = getSettings();
+        ValidationService.getService().setEnabled(!newestSettings.getValidationType().equals(ValidationType.DISABLED));
+        ValidationService.getService().setStrict(!newestSettings.getValidationType().equals(ValidationType.STRICT));
+        ThemeUtil.setActiveTheme(newestSettings.getTheme());
     }
 
     private static String getUserDirectory() {
@@ -72,12 +107,13 @@ public class SettingsUtil {
     /**
      * Load base default settings.
      */
-    private static void loadDefaults() {
-        activeSettings = new Settings();
-        activeSettings.setTheme(Theme.DARK);
-        activeSettings.setValidationType(ValidationType.STRICT);
-        activeSettings.setProjectDirectory(null);
-        activeSettings.setAutoSave(false);
+    private static Settings getDefaults() {
+        Settings defaultSettings = new Settings();
+        defaultSettings.setTheme(Theme.DARK);
+        defaultSettings.setValidationType(ValidationType.STRICT);
+        defaultSettings.setProjectDirectory(null);
+        defaultSettings.setAutoSave(false);
+        return defaultSettings;
     }
 
 }
