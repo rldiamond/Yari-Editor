@@ -35,6 +35,7 @@ public class RootLayoutFactory {
     private static double xOffset = 0;
     private static double yOffset = 0;
     private static boolean displayed = false;
+    private static Scene scene;
 
     public static RootLayout getInstance() {
         if (rootLayout == null) {
@@ -44,7 +45,7 @@ public class RootLayoutFactory {
     }
 
     public static void show(Stage stage) {
-        Scene scene = new Scene(getInstance());
+        scene = new Scene(getInstance());
         ThemeUtil.setThemeOnScene(scene);
 
         //take note of position of frame, so when we show the new frame, we can center it on the previous location.
@@ -91,5 +92,9 @@ public class RootLayoutFactory {
 
     public static boolean isDisplayed() {
         return displayed;
+    }
+
+    public static Scene getScene(){
+        return scene;
     }
 }

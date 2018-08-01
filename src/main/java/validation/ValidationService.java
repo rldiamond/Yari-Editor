@@ -59,8 +59,8 @@ public class ValidationService {
      */
     private ValidationService() {
         // load from user settings
-        isStrict = SettingsUtil.getSettings().isStrictValidation();
-        enabledProperty.set(SettingsUtil.getSettings().isValidationEnabled());
+        isStrict = SettingsUtil.getSettings().getValidationType().equals(ValidationType.STRICT);
+        enabledProperty.set(!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED));
         // while the queue has stuff, lets be busy
         busyProperty.bind(Bindings.isNotEmpty(validationQueue));
         // meanwhile, anything added to the queue is added to the executor service
@@ -147,9 +147,7 @@ public class ValidationService {
      */
     public void setEnabled(boolean enabled) {
         // only change if the overall service is enabled
-        if (SettingsUtil.getSettings().isValidationEnabled()) {
-            enabledProperty.set(enabled);
-        }
+        enabledProperty.set(enabled);
     }
 
     /**
@@ -170,4 +168,22 @@ public class ValidationService {
         return quickMessageProperty;
     }
 
+
+    /**
+     * Set whether the service should run strict validations or not.
+     *
+     * @param strict true to run strict validations.
+     */
+    public void setStrict(boolean strict) {
+        isStrict = strict;
+    }
+
+    /**
+     * JavaFX property informing of the enabled status of the service.
+     *
+     * @return property informing of the enabled status of the service.
+     */
+    public ReadOnlyBooleanProperty enabledProperty() {
+        return enabledProperty;
+    }
 }

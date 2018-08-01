@@ -32,8 +32,11 @@ package view;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
-import components.*;
+import components.MenuOption;
+import components.PopupMenuEntry;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -44,6 +47,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -58,13 +62,11 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
-import utilities.FXUtil;
-import utilities.FileUtil;
-import utilities.ThemeUtil;
-import utilities.ToastUtil;
+import settings.SettingsView;
+import utilities.*;
 import validation.UpdateEvent;
-import validation.view.ValidationLogDialog;
 import validation.ValidationService;
+import validation.view.ValidationLogDialog;
 import view.editors.ActionsDataEditor;
 import view.editors.ConditionsDataEditor;
 import view.editors.DataEditor;
@@ -221,6 +223,15 @@ public class RootLayout extends BorderPane {
             fileMenuPopUp.hide();
         });
         Tooltip.install(file_saveAs_pane, new Tooltip("Save the current document as a new file."));
+        PopupMenuEntry file_settings_pane = new PopupMenuEntry("Settings");
+        file_settings_pane.setOnMouseClicked(me -> {
+            Stage stage = new Stage();
+            Scene scene = new Scene(new SettingsView(SettingsUtil.getSettings(), stage));
+            ThemeUtil.setThemeOnScene(scene);
+            stage.setScene(scene);
+            stage.show();
+
+        });
         PopupMenuEntry file_print_pane = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
         file_print_pane.setOnMouseClicked(me -> {
             FileUtil.print();
@@ -234,7 +245,7 @@ public class RootLayout extends BorderPane {
         });
         Tooltip.install(file_exit_pane, new Tooltip("Exit the application."));
 
-        fileMenuList.getItems().addAll(file_new_pane, file_open_pane, file_save_pane, file_saveAs_pane, file_print_pane, file_exit_pane);
+        fileMenuList.getItems().addAll(file_new_pane, file_open_pane, file_save_pane, file_saveAs_pane, file_settings_pane, file_print_pane, file_exit_pane);
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
         fileMenuPopUp.setPopupContent(fileMenuList);
 
@@ -326,8 +337,9 @@ public class RootLayout extends BorderPane {
         leftMenu.getChildren().add(backgroundBusyIndicator);
 
         Pane validIndicator = new Pane();
-        validIndicator.managedProperty().bind((validationService.busyProperty().not()));
-        validIndicator.visibleProperty().bind((validationService.busyProperty().not()));
+        BooleanBinding notBusyAndEnabled = Bindings.and(validationService.busyProperty().not(), validationService.enabledProperty());
+        validIndicator.managedProperty().bind(notBusyAndEnabled);
+        validIndicator.visibleProperty().bind(notBusyAndEnabled);
         Tooltip validTip = new Tooltip();
         Tooltip.install(validIndicator, validTip);
         AnchorPane.setRightAnchor(validIndicator, 5D);
