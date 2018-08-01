@@ -62,6 +62,8 @@ import utilities.FXUtil;
 import utilities.FileUtil;
 import utilities.ThemeUtil;
 import utilities.ToastUtil;
+import validation.UpdateEvent;
+import validation.view.ValidationDialog;
 import validation.ValidationService;
 import view.editors.ActionsDataEditor;
 import view.editors.ConditionsDataEditor;

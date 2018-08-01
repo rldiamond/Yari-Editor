@@ -30,9 +30,7 @@
 
 package components.table;
 
-import components.EditableComboBoxCell;
-import components.EditableTextFieldCell;
-import components.UpdateEvent;
+import validation.UpdateEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;

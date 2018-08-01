@@ -22,7 +22,7 @@ package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
-import components.UpdateEvent;
+import validation.UpdateEvent;
 import components.table.ActionsTable;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

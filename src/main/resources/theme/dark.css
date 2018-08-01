@@ -146,9 +146,7 @@
     -fx-padding: 0.7em 0.57em;
     -fx-font-size: 14px;
     -jfx-button-type: FLAT;
-    /*-fx-background-color: #00a800;*/
     -fx-pref-width: 100;
-    /*-fx-text-fill: WHITE;*/
     -fx-text-fill: #00a800;
     -fx-cursor: hand;
 
@@ -162,7 +160,6 @@
     -fx-padding: 0.7em 0.57em;
     -fx-font-size: 14px;
     -jfx-button-type: FLAT;
-    /*-fx-background-color: #eeeeee;*/
     -fx-pref-width: 100;
     -fx-text-fill: #303030;
     -fx-cursor: hand;
@@ -177,7 +174,6 @@
     -fx-padding: 0.7em 0.57em;
     -fx-font-size: 14px;
     -jfx-button-type: FLAT;
-    /*-fx-background-color: #eeeeee;*/
     -fx-pref-width: 100;
     -fx-text-fill: darkred;
     -fx-cursor: hand;
@@ -212,6 +208,9 @@
 .dialog {
     -fx-background-color: ghostwhite;
     -fx-padding: 15, 15, 15, 15;
+}
+.validationDialog {
+    -fx-background-color: ghostwhite;
 }
 
 /******************** TABLES *******************/
@@ -280,6 +279,10 @@
 
 .list-cell:filled:hover {
     -fx-text-fill: white;
+}
+
+.list-view {
+    -fx-background-insets: 0;
 }
 
 /******************** MD TAB OPTION *******************/

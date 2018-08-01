@@ -17,6 +17,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.yari.core.TableValidator;
 import org.yari.core.YariException;
+import utilities.FileUtil;
 import utilities.SettingsUtil;
 
 import java.util.Optional;
@@ -57,8 +58,9 @@ public class ValidationService {
      * Setup the validation service.
      */
     private ValidationService() {
-        // load strict from user settings
+        // load from user settings
         isStrict = SettingsUtil.getSettings().isStrictValidation();
+        enabledProperty.set(SettingsUtil.getSettings().isValidationEnabled());
         // while the queue has stuff, lets be busy
         busyProperty.bind(Bindings.isNotEmpty(validationQueue));
         // meanwhile, anything added to the queue is added to the executor service
@@ -80,6 +82,8 @@ public class ValidationService {
         latestValidation = validation;
         validProperty.set(validation.isValid());
         quickMessageProperty.set(validation.getQuickMessage());
+        // we assume that the file has changed when validation has run
+        FileUtil.setDirty(true);
     }
 
     /**
@@ -142,7 +146,10 @@ public class ValidationService {
      * @param enabled set enabled or disabled.
      */
     public void setEnabled(boolean enabled) {
-        enabledProperty.set(enabled);
+        // only change if the overall service is enabled
+        if (SettingsUtil.getSettings().isValidationEnabled()) {
+            enabledProperty.set(enabled);
+        }
     }
 
     /**
