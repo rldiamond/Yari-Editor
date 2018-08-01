@@ -32,8 +32,11 @@ package view;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
-import components.*;
+import components.MenuOption;
+import components.PopupMenuEntry;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -62,8 +65,8 @@ import org.yari.core.table.Row;
 import settings.SettingsView;
 import utilities.*;
 import validation.UpdateEvent;
-import validation.view.ValidationLogDialog;
 import validation.ValidationService;
+import validation.view.ValidationLogDialog;
 import view.editors.ActionsDataEditor;
 import view.editors.ConditionsDataEditor;
 import view.editors.DataEditor;
@@ -334,8 +337,9 @@ public class RootLayout extends BorderPane {
         leftMenu.getChildren().add(backgroundBusyIndicator);
 
         Pane validIndicator = new Pane();
-        validIndicator.managedProperty().bind((validationService.busyProperty().not()));
-        validIndicator.visibleProperty().bind((validationService.busyProperty().not()));
+        BooleanBinding notBusyAndEnabled = Bindings.and(validationService.busyProperty().not(), validationService.enabledProperty());
+        validIndicator.managedProperty().bind(notBusyAndEnabled);
+        validIndicator.visibleProperty().bind(notBusyAndEnabled);
         Tooltip validTip = new Tooltip();
         Tooltip.install(validIndicator, validTip);
         AnchorPane.setRightAnchor(validIndicator, 5D);

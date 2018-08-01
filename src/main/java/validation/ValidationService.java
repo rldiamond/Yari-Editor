@@ -147,9 +147,7 @@ public class ValidationService {
      */
     public void setEnabled(boolean enabled) {
         // only change if the overall service is enabled
-        if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
-            enabledProperty.set(enabled);
-        }
+        enabledProperty.set(enabled);
     }
 
     /**

@@ -23,8 +23,6 @@ import validation.ValidationType;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.Set;
 
 /**
  * Loads, saves, and maintains the active user {@link Settings}.
@@ -60,7 +58,7 @@ public class SettingsUtil {
         Settings settings = null;
         try (FileReader reader = new FileReader(getUserDirectory())) {
             settings = (Settings) xStream.fromXML(reader);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             logger.error("Failed to load settings from the user directory.");
         }
 
@@ -78,23 +76,19 @@ public class SettingsUtil {
      * @param settings settings to save.
      */
     public static void saveSettings(Settings settings) {
-        FXUtil.runAsync(() -> {
+        String dir = getUserDirectory();
+        File file = new File(dir);
 
-            String dir = getUserDirectory();
-            File file = new File(dir);
-
-            XStream xStream = new XStream();
-            try (FileOutputStream out = new FileOutputStream(file)) {
-                xStream.toXML(settings, out);
-                setSettings(settings);
-            } catch (Exception ex) {
-                logger.error("Failed to save settings to the user directory.", ex);
-            }
-
-        });
+        XStream xStream = new XStream();
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            xStream.toXML(settings, out);
+            setSettings(settings);
+        } catch (Exception ex) {
+            logger.error("Failed to save settings to the user directory.", ex);
+        }
     }
 
-    private static void setSettings(Settings settings){
+    private static void setSettings(Settings settings) {
         settingsProperty.set(settings);
         updateApplicationServices();
     }
