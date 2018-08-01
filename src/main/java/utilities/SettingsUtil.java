@@ -10,14 +10,22 @@
 
 package utilities;
 
-import objects.Settings;
+import com.thoughtworks.xstream.XStream;
 import objects.Theme;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import settings.Settings;
+import validation.ValidationType;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * Loads, saves, and maintains the active user {@link Settings}.
  */
 public class SettingsUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(SettingsUtil.class);
     private static Settings activeSettings;
 
     /**
@@ -32,15 +40,44 @@ public class SettingsUtil {
         return activeSettings;
     }
 
+    public static void loadSettings() {
+        //TODO: load via xstream
+        updateApplicationServices();
+    }
+
+    public static void saveSettings(Settings settings) {
+        String dir = getUserDirectory();
+        File file = new File(dir);
+
+        XStream xStream = new XStream();
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            xStream.toXML(settings, out);
+            activeSettings = settings;
+            updateApplicationServices();
+        } catch (Exception ex) {
+            logger.error("Failed to save settings to the user directory.", ex);
+            //TODO: Do a thing
+        }
+
+    }
+
+    private static void updateApplicationServices() {
+        //TODO: When settings change, application services will behave differently. here, we change the settings in them.
+    }
+
+    private static String getUserDirectory() {
+        return System.getProperty("user.home") + File.separator + ".yariEditorSettings" + File.separator;
+    }
+
     /**
      * Load base default settings.
      */
     private static void loadDefaults() {
         activeSettings = new Settings();
         activeSettings.setTheme(Theme.DARK);
-
-        activeSettings.setValidationEnabled(true);
-        activeSettings.setStrictValidation(true);
+        activeSettings.setValidationType(ValidationType.STRICT);
+        activeSettings.setProjectDirectory(null);
+        activeSettings.setAutoSave(false);
     }
 
 }
