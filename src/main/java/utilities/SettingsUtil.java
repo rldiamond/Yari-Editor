@@ -98,6 +98,7 @@ public class SettingsUtil {
         ValidationService.getService().setEnabled(!newestSettings.getValidationType().equals(ValidationType.DISABLED));
         ValidationService.getService().setStrict(!newestSettings.getValidationType().equals(ValidationType.STRICT));
         ThemeUtil.setActiveTheme(newestSettings.getTheme());
+        ThemeUtil.refreshThemes();
     }
 
     private static String getUserDirectory() {

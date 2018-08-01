@@ -22,8 +22,8 @@ package utilities;
 
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import objects.Theme;
+import view.RootLayoutFactory;
 
 /**
  * Provide application-wide support for themes. Currently implemented: Dark Theme.
@@ -62,11 +62,20 @@ public class ThemeUtil {
      * @param scene themed scene.
      */
     public static void setThemeOnScene(Scene scene) {
-        scene.getStylesheets().setAll(getActiveTheme().getCss());
+        if (scene != null) {
+            scene.getStylesheets().setAll(getActiveTheme().getCss());
+        }
     }
 
     public static Image getLogo() {
         return LOGO;
+    }
+
+    /**
+     * Refresh the themes on active scenes. Call if changing theme.
+     */
+    public static void refreshThemes() {
+        setThemeOnScene(RootLayoutFactory.getScene());
     }
 
 }
