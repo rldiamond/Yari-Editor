@@ -38,8 +38,17 @@ import javafx.scene.layout.StackPane;
 import validation.ValidationService;
 import validation.validators.ValidatorError;
 
+/**
+ * Extension of JFXDialog providing a list of {@link ValidatorError} utilizing the {@link ValidationListCell}
+ * to provide additional functionality.
+ */
 public class ValidationLogDialog extends JFXDialog {
 
+    /**
+     * Build a ValidationLogDialog with the current validation results and use the supplied StackPane as it's container.
+     *
+     * @param container the container for the dialog to appear in.
+     */
     public ValidationLogDialog(StackPane container) {
         //standard properties
         setTransitionType(DialogTransition.BOTTOM);

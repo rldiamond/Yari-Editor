@@ -45,20 +45,21 @@ import javafx.scene.layout.Pane;
 import validation.validators.ValidatorError;
 import view.RootLayoutFactory;
 
+/**
+ * List cell for {@link ValidatorError}. Provides the user the ability to double-click on an entry and be taken
+ * to the appropriate view to fix the error, as well as a graphic for each entry.
+ */
 public class ValidationListCell extends ListCell<ValidatorError> {
 
-    public ValidationListCell() {
-
-        //TODO: Custom graphic
+    ValidationListCell() {
         setOnMouseClicked(me -> {
-            if (me.getClickCount() == 2){
+            if (me.getClickCount() == 2) {
                 // show the appropriate view
                 if (getItem() != null && getItem().getValidatorErrorLocation() != null) {
                     RootLayoutFactory.getInstance().showView(getItem().getValidatorErrorLocation().getEditorView());
                 }
             }
         });
-
     }
 
     @Override
