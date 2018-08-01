@@ -34,7 +34,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Row;
 import utilities.FXUtil;
-import view.EditorView;
 import view.RootLayoutFactory;
 
 import java.util.Collections;
@@ -42,7 +41,7 @@ import java.util.Collections;
 /**
  * Display a table of {@link Row} to allow for creation of additional rows, editing available rows, and removing rows.
  */
-public class RowsDataEditor extends StackPane implements DataEditor, EditorView {
+public class RowsDataEditor extends StackPane implements DataEditor {
 
     private ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
     private RowTable rowTable = new RowTable();

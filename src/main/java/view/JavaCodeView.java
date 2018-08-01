@@ -37,7 +37,7 @@ import utilities.ToastUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public class JavaCodeView extends StackPane implements EditorView {
+public class JavaCodeView extends StackPane {
 
     private DecisionTable dt = RootLayoutFactory.getInstance().getDecisionTable();
     private String ruleName = RootLayoutFactory.getInstance().getRuleName();

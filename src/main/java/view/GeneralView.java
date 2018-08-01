@@ -32,7 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class GeneralView extends StackPane implements EditorView {
+public class GeneralView extends StackPane {
 
     private final JFXTextField tableNameField = new JFXTextField();
     private final JFXTextField tableDescriptionField = new JFXTextField();
