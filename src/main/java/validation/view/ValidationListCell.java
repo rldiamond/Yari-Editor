@@ -41,6 +41,7 @@
 package validation.view;
 
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.Pane;
 import validation.validators.ValidatorError;
 import view.RootLayoutFactory;
 
@@ -65,6 +66,10 @@ public class ValidationListCell extends ListCell<ValidatorError> {
         super.updateItem(item, empty);
         if (item != null) {
             setText(item.getMessage());
+            Pane image = new Pane();
+            image.getStyleClass().add("validationLogItem");
+            image.setPrefSize(16, 16);
+            setGraphic(image);
         }
     }
 }

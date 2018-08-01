@@ -63,7 +63,7 @@ import utilities.FileUtil;
 import utilities.ThemeUtil;
 import utilities.ToastUtil;
 import validation.UpdateEvent;
-import validation.view.ValidationDialog;
+import validation.view.ValidationLogDialog;
 import validation.ValidationService;
 import view.editors.ActionsDataEditor;
 import view.editors.ConditionsDataEditor;
@@ -325,9 +325,6 @@ public class RootLayout extends BorderPane {
         AnchorPane.setBottomAnchor(backgroundBusyIndicator, 5D);
         leftMenu.getChildren().add(backgroundBusyIndicator);
 
-//        Dialog validationMessageDialog = new Dialog(displayedContent);
-//        validationMessageDialog.textProperty().bind(validationService.quickMessageProperty());
-
         Pane validIndicator = new Pane();
         validIndicator.managedProperty().bind((validationService.busyProperty().not()));
         validIndicator.visibleProperty().bind((validationService.busyProperty().not()));
@@ -353,8 +350,8 @@ public class RootLayout extends BorderPane {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {
                     if (me.getButton() == MouseButton.PRIMARY) {
-                        ValidationDialog validationDialog = new ValidationDialog(displayedContent);
-                        validationDialog.show();
+                        ValidationLogDialog validationLogDialog = new ValidationLogDialog(displayedContent);
+                        validationLogDialog.show();
                     }
                 });
             } else {
