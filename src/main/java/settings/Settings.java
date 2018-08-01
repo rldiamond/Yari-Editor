@@ -72,8 +72,4 @@ public class Settings {
         this.theme = theme;
     }
 
-    @Override
-    public String toString() {
-        return theme.name() + validationType.name() + projectDirectory + autoSave;
-    }
 }

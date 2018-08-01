@@ -22,6 +22,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import objects.Theme;
 import utilities.SettingsUtil;
 import validation.ValidationType;
@@ -34,10 +35,14 @@ public class SettingsView extends Card {
     private EnumComboBox<Theme> themeComboBox;
     private CheckBox automaticSavingCheckBox;
     private TextField projectDirectoryField;
+    private JFXButton okayButton;
+    private Stage stage;
 
-    public SettingsView(Settings settings) {
+    public SettingsView(Settings settings, Stage stage) {
         super("Settings");
         this.settings = settings;
+        this.stage = stage;
+        setId("settings");
 
         //view settings
         VBox settingsContainer = new VBox(10);
@@ -49,21 +54,26 @@ public class SettingsView extends Card {
         Label validationLabel = new Label("Validation:");
         validationLabel.setPrefWidth(75);
         validationTypeComboBox = new EnumComboBox<>(ValidationType.class);
+        validationTypeComboBox.setPrettyPrint(true);
         HBox validationSettings = new HBox(validationLabel, validationTypeComboBox);
         validationSettings.setAlignment(Pos.CENTER_LEFT);
+        Tooltip.install(validationSettings, new Tooltip("Select a validation method."));
 
         //theme settings
         Label themeLabel = new Label("Theme:");
         themeLabel.setPrefWidth(75);
         themeComboBox = new EnumComboBox<>(Theme.class);
+        themeComboBox.setPrettyPrint(true);
         HBox themeSettings = new HBox(themeLabel, themeComboBox);
         themeSettings.setAlignment(Pos.CENTER_LEFT);
+        Tooltip.install(themeSettings, new Tooltip("Select a theme."));
 
         //automatic saving
         automaticSavingCheckBox = new CheckBox("Automatic Saving");
         HBox automaticSavingSettings = new HBox(automaticSavingCheckBox);
         automaticSavingSettings.setAlignment(Pos.CENTER_LEFT);
         automaticSavingSettings.setDisable(true); //Note: Future feature
+        Tooltip.install(automaticSavingSettings, new Tooltip("Allow automatic saving in the background."));
 
         //projects directory
         Label projectDirectoryLabel = new Label("Project Directory:");
@@ -72,12 +82,13 @@ public class SettingsView extends Card {
         projectDirectoryField.setEditable(false);
         Pane browsePane = new Pane();
         browsePane.setPrefSize(16, 16);
-        browsePane.setMaxSize(16,16);
+        browsePane.setMaxSize(16, 16);
         browsePane.setId("browse");
         HBox projectsDirectorySettings = new HBox(projectDirectoryLabel, projectDirectoryField, browsePane);
         projectsDirectorySettings.setAlignment(Pos.CENTER_LEFT);
         projectsDirectorySettings.setSpacing(8);
         projectsDirectorySettings.setDisable(true); //Note: Future feature
+        Tooltip.install(projectsDirectorySettings, new Tooltip("Select a project directory."));
 
         settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings, automaticSavingSettings);
 
@@ -88,11 +99,14 @@ public class SettingsView extends Card {
 
         //footer (buttons)
         //buttons
-        JFXButton save = new JFXButton();
-        save.setOnMouseClicked(a -> saveSettings());
-        save.setText("OKAY");
-        save.getStyleClass().add("button-flat-gray");
-        Tooltip.install(save, new Tooltip("Save and Close"));
+        okayButton = new JFXButton();
+        okayButton.setOnMouseClicked(a -> {
+            saveSettings();
+            stage.close();
+        });
+        okayButton.setText("OKAY");
+        okayButton.getStyleClass().add("button-flat-gray");
+        Tooltip.install(okayButton, new Tooltip("Save and Close"));
 
         JFXButton discard = new JFXButton();
         discard.setOnMouseClicked(me -> resetSettings());
@@ -102,7 +116,7 @@ public class SettingsView extends Card {
 
         HBox buttonWrapper = new HBox(5);
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
-        buttonWrapper.getChildren().setAll(discard, save);
+        buttonWrapper.getChildren().setAll(discard, okayButton);
         setFooterContent(buttonWrapper);
     }
 

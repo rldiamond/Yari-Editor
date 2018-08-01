@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Loads, saves, and maintains the active user {@link Settings}.
@@ -67,7 +68,7 @@ public class SettingsUtil {
             //settings not found, let's save the default settings
             saveSettings(getDefaults());
         } else {
-            settingsProperty.set(settings);
+            setSettings(settings);
         }
     }
 
@@ -85,12 +86,17 @@ public class SettingsUtil {
             XStream xStream = new XStream();
             try (FileOutputStream out = new FileOutputStream(file)) {
                 xStream.toXML(settings, out);
-                settingsProperty.set(settings);
+                setSettings(settings);
             } catch (Exception ex) {
                 logger.error("Failed to save settings to the user directory.", ex);
             }
 
         });
+    }
+
+    private static void setSettings(Settings settings){
+        settingsProperty.set(settings);
+        updateApplicationServices();
     }
 
     private static void updateApplicationServices() {

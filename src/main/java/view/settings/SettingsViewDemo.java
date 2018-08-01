@@ -25,7 +25,7 @@ public class SettingsViewDemo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(new SettingsView(SettingsUtil.getSettings()));
+        Scene scene = new Scene(new SettingsView(SettingsUtil.getSettings(), primaryStage));
         ThemeUtil.setThemeOnScene(scene);
 
         primaryStage.setScene(scene);
