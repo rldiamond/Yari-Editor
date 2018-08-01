@@ -20,9 +20,7 @@
 
 package components.table;
 
-import components.EditableComboBoxCell;
-import components.EditableTextFieldCell;
-import components.UpdateEvent;
+import validation.UpdateEvent;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;

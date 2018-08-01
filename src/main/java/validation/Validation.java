@@ -14,7 +14,12 @@ import validation.validators.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * The Validation object allows for multiple validators to be ran and for inspections to be easily made
+ * against the results of each validator.
+ */
 public class Validation {
 
     private List<Validator> validators = new ArrayList<>();
@@ -23,6 +28,11 @@ public class Validation {
     private boolean ran = false;
     private String quickMessage;
 
+    /**
+     * Construct a Validation object with basic {@link Validator}s configured with the supplied strict setting.
+     *
+     * @param isStrict should the {@link Validator} be ran in strict mode.
+     */
     public Validation(boolean isStrict) {
         validators.add(new TableInformationValidator(isStrict));
         validators.add(new MinimumRequiredDataValidator(isStrict));
@@ -30,6 +40,11 @@ public class Validation {
         validators.add(new UniqueRowValidator(isStrict));
     }
 
+    /**
+     * Returns true if all validators have been ran and are valid, false if else.
+     *
+     * @return true if all validators have been ran and are valid, false if else.
+     */
     public boolean isValid() {
         if (!validityChecked && ran) {
             //only run this once.
@@ -40,6 +55,9 @@ public class Validation {
         return valid;
     }
 
+    /**
+     * Run the validation process.
+     */
     void run() {
         StringBuilder messageBuilder = new StringBuilder();
         validators.forEach(validator -> {
@@ -52,8 +70,24 @@ public class Validation {
         ran = true;
     }
 
+    /**
+     * Return the quick message built from the validation process.
+     *
+     * @returnt he quick message built from the validation process.
+     */
     public String getQuickMessage() {
         return quickMessage;
+    }
+
+    /**
+     * Returns all errors from all validators ran.
+     *
+     * @return all errors from all validators ran.
+     */
+    public List<ValidatorError> getAllErrors() {
+        return validators.stream()
+                .flatMap(validator -> validator.getErrors().stream())
+                .collect(Collectors.toList());
     }
 
 }

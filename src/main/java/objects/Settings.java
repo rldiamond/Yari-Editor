@@ -10,15 +10,25 @@
 
 package objects;
 
-import javafx.beans.property.BooleanProperty;
-
 /**
  * Simple object describing several user-adjustable settings.
  */
 public class Settings {
 
+    //visual
     private Theme theme;
+
+    //validation
     private boolean strictValidation;
+    private boolean validationEnabled;
+
+    public boolean isValidationEnabled() {
+        return validationEnabled;
+    }
+
+    public void setValidationEnabled(boolean validationEnabled) {
+        this.validationEnabled = validationEnabled;
+    }
 
     public boolean isStrictValidation() {
         return strictValidation;

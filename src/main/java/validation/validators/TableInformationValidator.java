@@ -10,7 +10,7 @@
 
 package validation.validators;
 
-import view.GeneralView;
+import objects.EditorView;
 
 /**
  * Validates the table information: table name, table description.
@@ -31,7 +31,7 @@ public class TableInformationValidator extends TableValidator {
         if (NAME_REQUIRED) {
             if (tableName == null || "".equals(tableName)) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setViewClass(GeneralView.class);
+                validatorErrorLocation.setEditorView(EditorView.GENERAL);
                 ValidatorError validatorError = new ValidatorError("A table name is required and not provided", validatorErrorLocation);
                 addError(validatorError);
             }
@@ -41,7 +41,7 @@ public class TableInformationValidator extends TableValidator {
         if (DESCRIPTION_REQUIRED) {
             if (tableDescription == null || "".equals(tableDescription)) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setViewClass(GeneralView.class);
+                validatorErrorLocation.setEditorView(EditorView.GENERAL);
                 ValidatorError validatorError = new ValidatorError("A table description is required and not provided", validatorErrorLocation);
                 addError(validatorError);
             }

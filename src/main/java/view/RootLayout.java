@@ -32,10 +32,7 @@ package view;
 
 import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
-import components.Dialog;
-import components.MenuOption;
-import components.PopupMenuEntry;
-import components.UpdateEvent;
+import components.*;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -55,12 +52,18 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import objects.EditorView;
+import objects.KeyboardShortcut;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
-import objects.KeyboardShortcut;
-import utilities.*;
+import utilities.FXUtil;
+import utilities.FileUtil;
+import utilities.ThemeUtil;
+import utilities.ToastUtil;
+import validation.UpdateEvent;
+import validation.view.ValidationLogDialog;
 import validation.ValidationService;
 import view.editors.ActionsDataEditor;
 import view.editors.ConditionsDataEditor;
@@ -281,81 +284,22 @@ public class RootLayout extends BorderPane {
         var actionsOption = new MenuOption("Actions", "mdTab-actions");
         Tooltip.install(actionsOption, new Tooltip("Open the Actions Editor"));
         actionsOption.setOnMouseClicked(me -> selectTab("actions"));
-        actionsOption.setOnSelectAction(() -> {
-            loadingContent.set(true);
-
-            FXUtil.runAsync(() -> {
-                ActionsDataEditor actionsDataEditor = new ActionsDataEditor();
-
-                FXUtil.runOnFXThread(() -> {
-                    displayedContent.getChildren().setAll(actionsDataEditor);
-                    loadingContent.set(false);
-                });
-            });
-        });
+        actionsOption.setOnSelectAction(() -> showView(EditorView.ACTIONS_EDITOR));
         var conditionsOption = new MenuOption("Conditions", "mdTab-conditions");
         Tooltip.install(conditionsOption, new Tooltip("Open the Conditions Editor"));
         conditionsOption.setOnMouseClicked(me -> selectTab("conditions"));
-        conditionsOption.setOnSelectAction(() -> {
-            loadingContent.set(true);
-
-            FXUtil.runAsync(() -> {
-                ConditionsDataEditor conditionsDataEditor = new ConditionsDataEditor();
-
-                FXUtil.runOnFXThread(() -> {
-                    displayedContent.getChildren().setAll(conditionsDataEditor);
-                    loadingContent.set(false);
-                });
-            });
-        });
+        conditionsOption.setOnSelectAction(() -> showView(EditorView.CONDITIONS_EDITOR));
         var rowsOption = new MenuOption("Rows", "mdTab-rows");
         Tooltip.install(rowsOption, new Tooltip("Open the Rows Editor"));
         rowsOption.setOnMouseClicked(me -> selectTab("rows"));
-        rowsOption.setOnSelectAction(() -> {
-            loadingContent.set(true);
-
-            FXUtil.runAsync(() -> {
-                RowsDataEditor rowsDataEditor = new RowsDataEditor();
-
-                FXUtil.runOnFXThread(() -> {
-                    displayedContent.getChildren().setAll(rowsDataEditor);
-                    loadingContent.set(false);
-                });
-            });
-        });
+        rowsOption.setOnSelectAction(() -> showView(EditorView.ROWS_EDITOR));
         var generalOption = new MenuOption("General", "mdTab-general");
         Tooltip.install(generalOption, new Tooltip("Open the General Table Setting Editor"));
         generalOption.setOnMouseClicked(me -> selectTab("general"));
-        generalOption.setOnSelectAction(() -> {
-            loadingContent.set(true);
-
-            FXUtil.runAsync(() -> {
-
-                GeneralView generalView = new GeneralView();
-
-                FXUtil.runOnFXThread(() -> {
-                    this.displayedContent.getChildren().setAll(generalView);
-                    loadingContent.set(false);
-                });
-
-            });
-
-        });
+        generalOption.setOnSelectAction(() -> showView(EditorView.GENERAL));
         var skeletonCode = new MenuOption("Java Code", "mdTab-code");
         Tooltip.install(skeletonCode, new Tooltip("View Skeleton Java Code"));
-        skeletonCode.setOnSelectAction(() -> {
-            loadingContent.set(true);
-
-            FXUtil.runAsync(() -> {
-                JavaCodeView javaCodeView = new JavaCodeView();
-
-                FXUtil.runOnFXThread(() -> {
-                    this.displayedContent.getChildren().setAll(javaCodeView);
-                    loadingContent.set(false);
-                });
-            });
-
-        });
+        skeletonCode.setOnSelectAction(() -> showView(EditorView.SKELETON_CODE));
         skeletonCode.setOnMouseClicked(me -> selectTab("java code"));
 
         menuOptions.addAll(actionsOption, conditionsOption, rowsOption, generalOption, skeletonCode);
@@ -380,9 +324,6 @@ public class RootLayout extends BorderPane {
         AnchorPane.setRightAnchor(backgroundBusyIndicator, 5D);
         AnchorPane.setBottomAnchor(backgroundBusyIndicator, 5D);
         leftMenu.getChildren().add(backgroundBusyIndicator);
-
-        Dialog validationMessageDialog = new Dialog(displayedContent);
-        validationMessageDialog.textProperty().bind(validationService.quickMessageProperty());
 
         Pane validIndicator = new Pane();
         validIndicator.managedProperty().bind((validationService.busyProperty().not()));
@@ -409,7 +350,8 @@ public class RootLayout extends BorderPane {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {
                     if (me.getButton() == MouseButton.PRIMARY) {
-                        validationMessageDialog.show();
+                        ValidationLogDialog validationLogDialog = new ValidationLogDialog(displayedContent);
+                        validationLogDialog.show();
                     }
                 });
             } else {
@@ -451,6 +393,37 @@ public class RootLayout extends BorderPane {
         alert.showAndWait();
     }
 
+    public void showView(EditorView editorView) {
+        loadingContent.set(true);
+
+        FXUtil.runAsync(() -> {
+            Pane displayPane;
+            switch (editorView) {
+                case GENERAL:
+                    displayPane = new GeneralView();
+                    break;
+                case ROWS_EDITOR:
+                    displayPane = new RowsDataEditor();
+                    break;
+                case ACTIONS_EDITOR:
+                    displayPane = new ActionsDataEditor();
+                    break;
+                case CONDITIONS_EDITOR:
+                    displayPane = new ConditionsDataEditor();
+                    break;
+                case SKELETON_CODE:
+                    displayPane = new JavaCodeView();
+                    break;
+                default:
+                    displayPane = new StackPane(new Label("An error occurred. Please contact the developer."));
+                    break;
+            }
+            FXUtil.runOnFXThread(() -> {
+                this.displayedContent.getChildren().setAll(displayPane);
+                loadingContent.set(false);
+            });
+        });
+    }
 
     public void open() {
         if (FileUtil.isDirty()) {

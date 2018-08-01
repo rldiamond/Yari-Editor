@@ -30,6 +30,9 @@ Yari Editor, in it's simplest form, is an XML editor developed specifically for 
   * Delete Row: CTRL + DEL
   * Move Row Up: CTRL + UP
   * Move Row Down: CTRL + DOWN
+* Improved Validation
+  * Yari Editor provides additional, more detailed information on validation errors.
+  * Validation Error view lists all validation errors, double clicking on an error brings the user to the proper view to correct the issue. 
 
 
 
