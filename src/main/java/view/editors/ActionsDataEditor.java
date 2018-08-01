@@ -35,12 +35,13 @@ import javafx.scene.layout.StackPane;
 import org.yari.core.table.Action;
 import utilities.FXUtil;
 import utilities.TableUtil;
+import view.EditorView;
 import view.RootLayoutFactory;
 
 import java.util.Collections;
 
 
-public class ActionsDataEditor extends StackPane implements DataEditor {
+public class ActionsDataEditor extends StackPane implements DataEditor, EditorView {
 
     private ObservableList<Action> actionList = RootLayoutFactory.getInstance().getActionsList();
     private ActionsTable actionsTable = new ActionsTable();

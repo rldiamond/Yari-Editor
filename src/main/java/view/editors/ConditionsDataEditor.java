@@ -35,12 +35,13 @@ import javafx.scene.layout.StackPane;
 import org.yari.core.table.Condition;
 import utilities.FXUtil;
 import utilities.TableUtil;
+import view.EditorView;
 import view.RootLayoutFactory;
 
 import java.util.Collections;
 
 
-public class ConditionsDataEditor extends StackPane implements DataEditor {
+public class ConditionsDataEditor extends StackPane implements DataEditor, EditorView {
 
     private ObservableList<Condition> conditionList = RootLayoutFactory.getInstance().getConditionsList();
     private ConditionsTable conditionsTable = new ConditionsTable();

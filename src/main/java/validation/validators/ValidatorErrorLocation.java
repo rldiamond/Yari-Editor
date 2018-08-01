@@ -10,10 +10,10 @@
 
 package validation.validators;
 
+import objects.EditorView;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.Row;
-import view.editors.DataEditor;
 
 public class ValidatorErrorLocation {
 
@@ -22,14 +22,14 @@ public class ValidatorErrorLocation {
     private Action action;
     private int rowNumber;
     private int columnNumber;
-    private Class viewClass;
+    private EditorView editorView;
 
-    public Class getViewClass() {
-        return viewClass;
+    public EditorView getEditorView() {
+        return editorView;
     }
 
-    public void setViewClass(Class viewClass) {
-        this.viewClass = viewClass;
+    public void setEditorView(EditorView editorView) {
+        this.editorView = editorView;
     }
 
     public Row getRow() {

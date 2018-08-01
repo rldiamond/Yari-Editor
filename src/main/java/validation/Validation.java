@@ -14,6 +14,7 @@ import validation.validators.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Validation {
 
@@ -54,6 +55,12 @@ public class Validation {
 
     public String getQuickMessage() {
         return quickMessage;
+    }
+
+    public List<ValidatorError> getAllErrors() {
+        return validators.stream()
+                .flatMap(validator -> validator.getErrors().stream())
+                .collect(Collectors.toList());
     }
 
 }

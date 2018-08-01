@@ -260,6 +260,28 @@
     -fx-background-color: ghostwhite;
 }
 
+/******************** List View *******************/
+.list-cell {
+    -fx-background-color: white;
+}
+
+.list-cell:selected {
+    -fx-background-color: darkred;
+    -fx-text-fill: white;
+}
+
+.list-cell:odd {
+    -fx-background-color: ghostwhite;
+}
+
+.list-cell:odd:selected {
+    -fx-background-color: darkred;
+}
+
+.list-cell:filled:hover {
+    -fx-text-fill: white;
+}
+
 /******************** MD TAB OPTION *******************/
 #mdTab:hover {
     -fx-cursor: hand;
