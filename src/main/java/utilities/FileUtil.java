@@ -126,6 +126,7 @@ public class FileUtil {
             try (FileOutputStream out = new FileOutputStream(file)) {
                 xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
                 currentFile.setValue(file);
+                SettingsUtil.addRecentFile(file);
                 setDirty(false);
                 ToastUtil.sendToast("File saved.");
             } catch (Exception ex) {

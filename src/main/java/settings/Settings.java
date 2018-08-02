@@ -20,8 +20,13 @@
 
 package settings;
 
+import objects.RecommendedFile;
 import objects.Theme;
 import validation.ValidationType;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Simple object describing several user-adjustable settings.
@@ -36,6 +41,9 @@ public class Settings {
 
     //project directory
     private String projectDirectory;
+
+    //recent files
+    private List<RecommendedFile> recommendedFiles;
 
     //auto saving
     private boolean autoSave;
@@ -72,4 +80,29 @@ public class Settings {
         this.theme = theme;
     }
 
+    public void addRecentFile(File file) {
+
+        if (recommendedFiles == null){
+            recommendedFiles = new ArrayList<>();
+        }
+
+        RecommendedFile recommendedFile = new RecommendedFile(file);
+
+        if (!recommendedFiles.contains(recommendedFile)) {
+            if (recommendedFiles.size() >= 5) {
+                RecommendedFile oldest = recommendedFiles.get(0);
+                for (RecommendedFile rc : recommendedFiles) {
+                    if (rc.getTime().before(oldest.getTime())) {
+                        oldest = rc;
+                    }
+                }
+                recommendedFiles.remove(oldest);
+            }
+            recommendedFiles.add(recommendedFile);
+        }
+    }
+
+    public List<RecommendedFile> getRecommendedFiles() {
+        return recommendedFiles;
+    }
 }

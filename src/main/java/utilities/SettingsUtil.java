@@ -50,6 +50,12 @@ public class SettingsUtil {
         return settingsProperty.get();
     }
 
+    public static void addRecentFile(File file) {
+        Settings settings = getSettings();
+        settings.addRecentFile(file);
+        saveSettings(settings);
+    }
+
     /**
      * Load settings from the User directory.
      */

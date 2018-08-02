@@ -15,12 +15,18 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import objects.RecommendedFile;
 import utilities.FileUtil;
 import utilities.SettingsUtil;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class DirectoryFileList extends ListView<File> {
+public class DirectoryFileList extends ListView<RecommendedFile> {
 
     public DirectoryFileList(Stage stage) {
 
@@ -29,7 +35,23 @@ public class DirectoryFileList extends ListView<File> {
         File f = new File(SettingsUtil.getSettings().getProjectDirectory());
         File[] matchingFiles = f.listFiles((dir, name) -> name.endsWith("xml"));
 
-        setItems(FXCollections.observableArrayList(matchingFiles));
+        Set<RecommendedFile> projectDirFiles;
+
+        if (matchingFiles == null) {
+            projectDirFiles = new HashSet<>();
+        } else {
+            projectDirFiles = Arrays.stream(matchingFiles)
+                    .map(RecommendedFile::new)
+                    .collect(Collectors.toSet());
+        }
+
+        List<RecommendedFile> filesFromSettings = SettingsUtil.getSettings().getRecommendedFiles();
+        if (filesFromSettings != null){
+            projectDirFiles.addAll(filesFromSettings);
+
+        }
+
+        setItems(FXCollections.observableArrayList(projectDirFiles));
         setCellFactory(c -> new FileListCell(stage));
 
         //if there's nothing to display, don't display
@@ -39,7 +61,7 @@ public class DirectoryFileList extends ListView<File> {
         }
     }
 
-    private class FileListCell extends ListCell<File> {
+    private class FileListCell extends ListCell<RecommendedFile> {
 
         private final Stage stage;
 
@@ -48,13 +70,13 @@ public class DirectoryFileList extends ListView<File> {
 
             setOnMouseClicked(me -> {
                 if (getItem() != null) {
-                    FileUtil.openFile(getItem(), stage);
+                    FileUtil.openFile(new File(getItem().getPath()), stage);
                 }
             });
         }
 
         @Override
-        protected void updateItem(File item, boolean empty) {
+        protected void updateItem(RecommendedFile item, boolean empty) {
             super.updateItem(item, empty);
 
             if (!empty) {
