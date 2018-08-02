@@ -8,16 +8,15 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package view.settings;
+package view;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import settings.SettingsView;
-import utilities.SettingsUtil;
+import javafx.stage.StageStyle;
 import utilities.ThemeUtil;
 
-public class SettingsViewDemo extends Application {
+public class WelcomeViewDemo extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -25,10 +24,10 @@ public class SettingsViewDemo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(new SettingsView(SettingsUtil.getSettings(), primaryStage));
+        Scene scene = new Scene(new WelcomeView(primaryStage));
         ThemeUtil.setThemeOnScene(scene);
-
         primaryStage.setScene(scene);
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.show();
     }
 }

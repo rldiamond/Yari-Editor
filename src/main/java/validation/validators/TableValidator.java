@@ -11,6 +11,7 @@
 package validation.validators;
 
 import org.yari.core.table.DecisionTable;
+import utilities.TableUtil;
 import view.RootLayout;
 import view.RootLayoutFactory;
 
@@ -27,13 +28,9 @@ public abstract class TableValidator implements Validator {
 
     public TableValidator(String validatorName, boolean strict) {
         // update the table with the latest data
+        TableUtil.updateTable();
         final RootLayout rootLayout = RootLayoutFactory.getInstance();
         final DecisionTable decisionTable = rootLayout.getDecisionTable();
-        if (decisionTable != null) {
-            decisionTable.setRows(rootLayout.getRowsList());
-            decisionTable.setConditions(rootLayout.getConditionsList());
-            decisionTable.setActions(rootLayout.getActionsList());
-        }
         this.decisionTable = decisionTable;
         this.validatorName = validatorName;
         this.strict = strict;

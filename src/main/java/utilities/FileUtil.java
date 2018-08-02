@@ -25,9 +25,9 @@ import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import validation.ValidationService;
+import validation.ValidationType;
 import view.RootLayoutFactory;
 import view.TablePrintView;
-import view.WelcomeSplash;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,8 +47,7 @@ public class FileUtil {
      *
      * @param stage the stage to base the file chooser on.
      */
-    public static void openFile(Stage stage) {
-        ValidationService.getService().setEnabled(false);
+    public static boolean openFile(Stage stage) {
         FileChooser fileChooser = new FileChooser();
 
         // Set the extension filter
@@ -58,22 +57,29 @@ public class FileUtil {
         // Show save file dialog
         File file = fileChooser.showOpenDialog(stage); //must be on fx thread
         if (file == null) {
-            WelcomeSplash.getInstance().busyProperty().set(false);
-            return;
+            return false;
         }
+        openFile(file, stage);
+        return true;
+    }
 
+    public static void openFile(File file, Stage stage) {
         FXUtil.runAsync(() -> {
+            if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
+                ValidationService.getService().setEnabled(false);
+            }
             try {
                 importFromFile(file); //want off thread
                 if (!RootLayoutFactory.isDisplayed()) {
                     FXUtil.runOnFXThread(() -> {
                         RootLayoutFactory.show(stage);
-                        validationService.setEnabled(true);
+                        if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
+                            validationService.setEnabled(true);
+                        }
                     });
 
                 }
             } catch (Exception ex) {
-                WelcomeSplash.getInstance().busyProperty().set(false);
                 FXUtil.runOnFXThread(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("ValidatorError");
@@ -81,10 +87,11 @@ public class FileUtil {
                     alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
                     alert.showAndWait();
                 });
-                validationService.setEnabled(true);
+                if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
+                    validationService.setEnabled(true);
+                }
             }
         });
-
     }
 
     /**
@@ -119,6 +126,7 @@ public class FileUtil {
             try (FileOutputStream out = new FileOutputStream(file)) {
                 xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
                 currentFile.setValue(file);
+                SettingsUtil.addRecommendedFile(file);
                 setDirty(false);
                 ToastUtil.sendToast("File saved.");
             } catch (Exception ex) {

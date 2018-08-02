@@ -21,11 +21,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import objects.Theme;
 import utilities.SettingsUtil;
 import validation.ValidationType;
+
+import java.io.File;
 
 public class SettingsView extends Card {
 
@@ -36,12 +40,10 @@ public class SettingsView extends Card {
     private CheckBox automaticSavingCheckBox;
     private TextField projectDirectoryField;
     private JFXButton okayButton;
-    private Stage stage;
 
     public SettingsView(Settings settings, Stage stage) {
         super("Settings");
         this.settings = settings;
-        this.stage = stage;
         setId("settings");
 
         //view settings
@@ -80,14 +82,25 @@ public class SettingsView extends Card {
         projectDirectoryLabel.setPrefWidth(120);
         projectDirectoryField = new TextField();
         projectDirectoryField.setEditable(false);
+        projectDirectoryField.setPrefWidth(USE_COMPUTED_SIZE);
+        HBox.setHgrow(projectDirectoryField, Priority.ALWAYS);
         Pane browsePane = new Pane();
         browsePane.setPrefSize(16, 16);
         browsePane.setMaxSize(16, 16);
         browsePane.setId("browse");
-        HBox projectsDirectorySettings = new HBox(projectDirectoryLabel, projectDirectoryField, browsePane);
+        browsePane.setOnMouseClicked(me -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            File file = directoryChooser.showDialog(stage.getOwner());
+            if (file == null) {
+                projectDirectoryField.setText("Select a directory.");
+            } else {
+                projectDirectoryField.setText(file.getPath());
+            }
+        });
+
+        HBox projectsDirectorySettings = new HBox(projectDirectoryLabel, browsePane, projectDirectoryField);
         projectsDirectorySettings.setAlignment(Pos.CENTER_LEFT);
-        projectsDirectorySettings.setSpacing(8);
-        projectsDirectorySettings.setDisable(true); //Note: Future feature
+        projectsDirectorySettings.setSpacing(3);
         Tooltip.install(projectsDirectorySettings, new Tooltip("Select a project directory."));
 
         settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings, automaticSavingSettings);
@@ -106,13 +119,16 @@ public class SettingsView extends Card {
         });
         okayButton.setText("OKAY");
         okayButton.getStyleClass().add("button-flat-gray");
-        Tooltip.install(okayButton, new Tooltip("Save and Close"));
+        Tooltip.install(okayButton, new Tooltip("Save and close"));
 
         JFXButton discard = new JFXButton();
-        discard.setOnMouseClicked(me -> resetSettings());
-        discard.setText("DISCARD");
+        discard.setOnMouseClicked(me -> {
+            resetSettings();
+            stage.close();
+        });
+        discard.setText("CANCEL");
         discard.getStyleClass().add("button-flat-red");
-        Tooltip.install(discard, new Tooltip("Discard"));
+        Tooltip.install(discard, new Tooltip("Discard changes and close"));
 
         HBox buttonWrapper = new HBox(5);
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
@@ -123,7 +139,9 @@ public class SettingsView extends Card {
     private void saveSettings() {
         Settings updatedSettings = new Settings();
         updatedSettings.setAutoSave(automaticSavingCheckBox.isSelected());
-        updatedSettings.setProjectDirectory(projectDirectoryField.getText());
+        if (!projectDirectoryField.getText().equalsIgnoreCase("Select a directory.")) {
+            updatedSettings.setProjectDirectory(projectDirectoryField.getText());
+        }
         updatedSettings.setTheme(themeComboBox.getValue());
         updatedSettings.setValidationType(validationTypeComboBox.getValue());
 
@@ -137,5 +155,4 @@ public class SettingsView extends Card {
         automaticSavingCheckBox.setSelected(settings.isAutoSave());
         projectDirectoryField.setText(settings.getProjectDirectory());
     }
-
 }

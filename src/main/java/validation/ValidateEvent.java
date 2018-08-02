@@ -37,27 +37,27 @@ import javafx.event.EventType;
 /**
  * Custom Event used to send the call to the Validator to request validation be run.
  */
-public class UpdateEvent extends Event {
+public class ValidateEvent extends Event {
 
-    public static final EventType<UpdateEvent> UPDATE =
-            new EventType<>(Event.ANY, "UPDATE");
+    public static final EventType<ValidateEvent> VALIDATE =
+            new EventType<>(Event.ANY, "VALIDATE");
 
-    public UpdateEvent() {
-        super(UPDATE);
+    public ValidateEvent() {
+        super(VALIDATE);
     }
 
-    public UpdateEvent(Object source, EventTarget target) {
-        super(source, target, UPDATE);
-    }
-
-    @Override
-    public UpdateEvent copyFor(Object newSource, EventTarget newTarget) {
-        return (UpdateEvent) super.copyFor(newSource, newTarget);
+    public ValidateEvent(Object source, EventTarget target) {
+        super(source, target, VALIDATE);
     }
 
     @Override
-    public EventType<? extends UpdateEvent> getEventType() {
-        return (EventType<? extends UpdateEvent>) super.getEventType();
+    public ValidateEvent copyFor(Object newSource, EventTarget newTarget) {
+        return (ValidateEvent) super.copyFor(newSource, newTarget);
+    }
+
+    @Override
+    public EventType<? extends ValidateEvent> getEventType() {
+        return (EventType<? extends ValidateEvent>) super.getEventType();
     }
 
 }

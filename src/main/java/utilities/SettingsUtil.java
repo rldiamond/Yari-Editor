@@ -13,6 +13,7 @@ package utilities;
 import com.thoughtworks.xstream.XStream;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import objects.RecommendedFile;
 import objects.Theme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,29 @@ public class SettingsUtil {
             loadSettings();
         }
         return settingsProperty.get();
+    }
+
+    /**
+     * Add a recommended file to the settings.
+     *
+     * @param file the file to add.
+     */
+    public static void addRecommendedFile(File file) {
+        Settings settings = getSettings();
+        settings.addRecentFile(file);
+        saveSettings(settings);
+    }
+
+    /**
+     * Remove a recommended file from the settings.
+     *
+     * @param recommendedFile the file to remove.
+     */
+    public static void removeRecommendedFile(RecommendedFile recommendedFile) {
+        if (recommendedFile != null && getSettings().getRecommendedFiles().contains(recommendedFile)) {
+            getSettings().getRecommendedFiles().remove(recommendedFile);
+            saveSettings(getSettings());
+        }
     }
 
     /**

@@ -64,7 +64,7 @@ import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import settings.SettingsView;
 import utilities.*;
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 import validation.ValidationService;
 import validation.view.ValidationLogDialog;
 import view.editors.ActionsDataEditor;
@@ -136,7 +136,7 @@ public class RootLayout extends BorderPane {
         conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> validationService.requestValidation());
         rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> validationService.requestValidation());
 
-        addEventHandler(UpdateEvent.UPDATE, e -> validationService.requestValidation());
+        addEventHandler(ValidateEvent.VALIDATE, e -> validationService.requestValidation());
 
         //change toast on valid
         validationService.validProperty().addListener((obs, ov, nv) -> {

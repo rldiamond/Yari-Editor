@@ -36,7 +36,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import utilities.FXUtil;
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +119,7 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
     @Override
     public void commitEdit(String newValue) {
         super.commitEdit(newValue);
-        fireEvent(new UpdateEvent());
+        fireEvent(new ValidateEvent());
     }
 
     /**

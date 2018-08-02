@@ -24,7 +24,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 
 import java.util.List;
 
@@ -116,7 +116,7 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
     @Override
     public void commitEdit(String newValue) {
         super.commitEdit(newValue);
-        fireEvent(new UpdateEvent());
+        fireEvent(new ValidateEvent());
     }
 
     /**
