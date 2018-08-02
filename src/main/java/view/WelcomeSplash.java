@@ -21,7 +21,7 @@
 package view;
 
 import com.jfoenix.controls.JFXSpinner;
-import components.DirectoryFileList;
+import components.RecommendedFileListView;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -40,6 +40,8 @@ import utilities.ThemeUtil;
  * The WelcomeSplash view is displayed when the application is first launched, offering users the ability to open a project
  * or start new.
  */
+//TODO: Remove FXML
+//TODO: Internalize dragbar/buttons
 public class WelcomeSplash extends AnchorPane {
 
     private final BooleanProperty busy = new SimpleBooleanProperty(false);
@@ -65,14 +67,6 @@ public class WelcomeSplash extends AnchorPane {
     @FXML
     private Pane dragBar;
 
-//    private static WelcomeSplash welcomeSplash;
-//
-//    public static WelcomeSplash getInstance(){
-//        if (welcomeSplash == null){
-//            welcomeSplash = new WelcomeSplash();
-//        }
-//        return welcomeSplash;
-//    }
 
     public WelcomeSplash(Stage stage) {
         FXUtil.intializeFXML(this);
@@ -106,15 +100,16 @@ public class WelcomeSplash extends AnchorPane {
         createNewButton.disableProperty().bind(busy);
 
         //file list
-        DirectoryFileList directoryFileList = new DirectoryFileList(stage);
-        directoryFileList.setPrefHeight(80);
-        directoryFileList.setPrefWidth(USE_COMPUTED_SIZE);
+        //TODO: async
+        RecommendedFileListView recommendedFileListView = new RecommendedFileListView(stage, busy);
+        recommendedFileListView.setPrefHeight(80);
+        recommendedFileListView.setPrefWidth(USE_COMPUTED_SIZE);
 
-        AnchorPane.setLeftAnchor(directoryFileList, 5D);
-        AnchorPane.setRightAnchor(directoryFileList, 5D);
-        AnchorPane.setBottomAnchor(directoryFileList, 5D);
+        AnchorPane.setLeftAnchor(recommendedFileListView, 5D);
+        AnchorPane.setRightAnchor(recommendedFileListView, 5D);
+        AnchorPane.setBottomAnchor(recommendedFileListView, 5D);
 
-        getChildren().add(directoryFileList);
+        getChildren().add(recommendedFileListView);
 
     }
 

@@ -10,10 +10,10 @@
 
 package components;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import objects.RecommendedFile;
 import utilities.FileUtil;
@@ -26,14 +26,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DirectoryFileList extends ListView<RecommendedFile> {
+public class RecommendedFileListView extends ListView<RecommendedFile> {
 
-    public DirectoryFileList(Stage stage) {
+    private final BooleanProperty busy;
+
+    public RecommendedFileListView(Stage stage, BooleanProperty busy) {
+        this.busy = busy;
 
         getStyleClass().add("fileList");
 
-        File f = new File(SettingsUtil.getSettings().getProjectDirectory());
-        File[] matchingFiles = f.listFiles((dir, name) -> name.endsWith("xml"));
+        File[] matchingFiles = null;
+        String path = SettingsUtil.getSettings().getProjectDirectory();
+        if (path != null) {
+            File f = new File(path);
+            matchingFiles = f.listFiles((dir, name) -> name.endsWith("xml"));
+        }
 
         Set<RecommendedFile> projectDirFiles;
 
@@ -46,7 +53,7 @@ public class DirectoryFileList extends ListView<RecommendedFile> {
         }
 
         List<RecommendedFile> filesFromSettings = SettingsUtil.getSettings().getRecommendedFiles();
-        if (filesFromSettings != null){
+        if (filesFromSettings != null) {
             projectDirFiles.addAll(filesFromSettings);
 
         }
@@ -61,16 +68,17 @@ public class DirectoryFileList extends ListView<RecommendedFile> {
         }
     }
 
-    private class FileListCell extends ListCell<RecommendedFile> {
-
-        private final Stage stage;
+    public class FileListCell extends ListCell<RecommendedFile> {
 
         public FileListCell(Stage stage) {
-            this.stage = stage;
 
             setOnMouseClicked(me -> {
-                if (getItem() != null) {
-                    FileUtil.openFile(new File(getItem().getPath()), stage);
+                if (me.getClickCount() == 2) {
+                    if (getItem() != null) {
+                        busy.set(true);
+                        FileUtil.openFile(new File(getItem().getPath()), stage);
+                        busy.set(false);
+                    }
                 }
             });
         }
@@ -80,11 +88,7 @@ public class DirectoryFileList extends ListView<RecommendedFile> {
             super.updateItem(item, empty);
 
             if (!empty) {
-                setText(item.getName());
-                Pane image = new Pane();
-                image.getStyleClass().add("fileIcon");
-                image.setPrefSize(12, 12);
-                setGraphic(image);
+                setGraphic(new RecommendedFileListCellGraphic(this));
             }
         }
     }
