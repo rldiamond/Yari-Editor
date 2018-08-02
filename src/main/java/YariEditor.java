@@ -48,7 +48,7 @@ public class YariEditor extends Application {
         primaryStage.getIcons().setAll(new Image("/theme/YariLogo.png"));
         YariEditor.primaryStage = primaryStage;
         //show the welcome splash screen
-        WelcomeSplash welcomeSplash = WelcomeSplash.getInstance();
+        WelcomeSplash welcomeSplash = new WelcomeSplash(primaryStage);
         Scene splashScene = new Scene(welcomeSplash);
         ThemeUtil.setThemeOnScene(splashScene);
 
@@ -78,7 +78,10 @@ public class YariEditor extends Application {
 
         welcomeSplash.getOpenButton().setOnMouseClicked(me -> {
             welcomeSplash.busyProperty().set(true);
-            FileUtil.openFile(primaryStage);
+            boolean success = FileUtil.openFile(primaryStage);
+            if (!success){
+                welcomeSplash.busyProperty().set(false);
+            }
         });
 
         primaryStage.show();

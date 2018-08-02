@@ -21,22 +21,20 @@
 package view;
 
 import com.jfoenix.controls.JFXSpinner;
+import components.DirectoryFileList;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import utilities.FXUtil;
 import utilities.ThemeUtil;
-
-import javax.tools.Tool;
 
 /**
  * The WelcomeSplash view is displayed when the application is first launched, offering users the ability to open a project
@@ -67,16 +65,16 @@ public class WelcomeSplash extends AnchorPane {
     @FXML
     private Pane dragBar;
 
-    private static WelcomeSplash welcomeSplash;
+//    private static WelcomeSplash welcomeSplash;
+//
+//    public static WelcomeSplash getInstance(){
+//        if (welcomeSplash == null){
+//            welcomeSplash = new WelcomeSplash();
+//        }
+//        return welcomeSplash;
+//    }
 
-    public static WelcomeSplash getInstance(){
-        if (welcomeSplash == null){
-            welcomeSplash = new WelcomeSplash();
-        }
-        return welcomeSplash;
-    }
-
-    WelcomeSplash() {
+    public WelcomeSplash(Stage stage) {
         FXUtil.intializeFXML(this);
         setId("welcomeSplash");
 
@@ -106,6 +104,17 @@ public class WelcomeSplash extends AnchorPane {
         openButton.disableProperty().bind(busy);
         closeButton.disableProperty().bind(busy);
         createNewButton.disableProperty().bind(busy);
+
+        //file list
+        DirectoryFileList directoryFileList = new DirectoryFileList(stage);
+        directoryFileList.setPrefHeight(80);
+        directoryFileList.setPrefWidth(USE_COMPUTED_SIZE);
+
+        AnchorPane.setLeftAnchor(directoryFileList, 5D);
+        AnchorPane.setRightAnchor(directoryFileList, 5D);
+        AnchorPane.setBottomAnchor(directoryFileList, 5D);
+
+        getChildren().add(directoryFileList);
 
     }
 
