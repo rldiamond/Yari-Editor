@@ -13,8 +13,10 @@ package components;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import objects.RecommendedFile;
 import utilities.FileUtil;
@@ -81,6 +83,20 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
                     }
                 }
             });
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem openItem = new MenuItem("Open");
+            openItem.setOnAction(a -> {
+                busy.set(true);
+                FileUtil.openFile(new File(getItem().getPath()), stage);
+                busy.set(false);
+            });
+            MenuItem removeItem = new MenuItem("Remove");
+            removeItem.setOnAction(a -> {
+                SettingsUtil.removeRecommendedFile(getItem());
+                getListView().getItems().remove(getItem());
+            });
+            contextMenu.getItems().addAll(openItem, removeItem);
+            setContextMenu(contextMenu);
         }
 
         @Override

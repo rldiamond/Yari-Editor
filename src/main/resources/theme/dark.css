@@ -601,6 +601,33 @@
     -fx-background-color: ghostwhite;
 }
 
+.fileList .scroll-bar:vertical {
+    -fx-pref-width: 5;
+}
+
+.fileList .scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.fileList .scroll-bar .track-background {
+    -fx-background-color: transparent;
+}
+
+.fileList .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.fileList .scroll-bar:vertical .track-background {
+    -fx-background-color: transparent;
+}
+
+.fileList .scroll-bar:horizontal .track,
+.fileList .scroll-bar:vertical .track {
+    -fx-background-color: #353535;
+    -fx-border-color: transparent;
+}
+
+
 /******************** Directory FIle List View Cell *******************/
 .fileCellGraphic .label {
     -fx-text-fill: lightgrey;

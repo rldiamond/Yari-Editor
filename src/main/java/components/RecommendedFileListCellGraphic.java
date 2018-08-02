@@ -11,7 +11,9 @@
 package components;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import utilities.SettingsUtil;
@@ -73,7 +75,6 @@ public class RecommendedFileListCellGraphic extends StackPane {
         wrappem.getChildren().addAll(stackem, removeButton);
         getChildren().add(wrappem);
 
-
     }
 
     private String formatName(String string) {
@@ -85,7 +86,7 @@ public class RecommendedFileListCellGraphic extends StackPane {
     }
 
     private String formatPath(String string) {
-        int maxChars = 45;
+        int maxChars = 35;
         if (string.length() <= maxChars) {
             return string;
         }

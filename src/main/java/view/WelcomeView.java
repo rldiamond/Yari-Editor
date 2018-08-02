@@ -79,7 +79,7 @@ public class WelcomeView extends VBox {
 
         //Left Content
         StackPane leftContainerPane = new StackPane();
-        leftContainerPane.setPrefSize(255, USE_COMPUTED_SIZE);
+        leftContainerPane.setPrefSize(260, USE_COMPUTED_SIZE);
         leftContainerPane.setMinSize(USE_PREF_SIZE, USE_COMPUTED_SIZE);
         leftContainerPane.setMaxSize(USE_PREF_SIZE, USE_COMPUTED_SIZE);
         contentContainer.getChildren().add(leftContainerPane);
