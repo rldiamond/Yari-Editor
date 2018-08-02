@@ -63,7 +63,9 @@ public class ThemeUtil {
      */
     public static void setThemeOnScene(Scene scene) {
         if (scene != null) {
-            scene.getStylesheets().setAll(getActiveTheme().getCss());
+            FXUtil.runOnFXThread(() -> {
+                scene.getStylesheets().setAll(getActiveTheme().getCss());
+            });
         }
     }
 
