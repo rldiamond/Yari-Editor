@@ -113,6 +113,7 @@ public class WelcomeView extends VBox {
 
         //create new
         HBox createNewContainer = new HBox(8);
+        createNewContainer.setAlignment(Pos.CENTER_LEFT);
         VBox.setMargin(createNewContainer, new Insets(30, 0, 0, 110));
         Pane createNewIcon = new Pane();
         createNewIcon.setPrefSize(10, 13);
@@ -137,6 +138,7 @@ public class WelcomeView extends VBox {
 
         //open
         HBox openContainer = new HBox(5);
+        openContainer.setAlignment(Pos.CENTER_LEFT);
         Tooltip.install(openContainer, new Tooltip("Open a document from a file"));
         VBox.setMargin(openContainer, new Insets(0, 0, 0, 108));
         Pane openIcon = new Pane();

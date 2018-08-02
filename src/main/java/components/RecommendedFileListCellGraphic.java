@@ -37,7 +37,7 @@ public class RecommendedFileListCellGraphic extends StackPane {
         final String pathText = formatPath(fileListCell.getItem().getPath());
         path.setText(pathText);
         VBox stackem = new VBox(name, path);
-        Tooltip.install(stackem, new Tooltip("Double-Click to open file " + nameText));
+        Tooltip.install(this, new Tooltip("Double-Click to open file " + nameText));
 
         stackem.setSpacing(2);
         setAlignment(Pos.CENTER);
@@ -56,7 +56,7 @@ public class RecommendedFileListCellGraphic extends StackPane {
             SettingsUtil.removeRecommendedFile(fileListCell.getItem());
             fileListCell.getListView().getItems().remove(fileListCell.getItem());
         });
-        Tooltip.install(removeButton, new Tooltip("Remove entry"));
+        Tooltip.install(remove, new Tooltip("Remove entry"));
         setOnMouseEntered(e -> {
             if (fileListCell.isSelected()) {
                 remove.setManaged(true);
