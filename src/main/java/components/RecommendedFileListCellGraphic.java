@@ -111,8 +111,14 @@ public class RecommendedFileListCellGraphic extends StackPane {
             path.append("/").append(backwards.get(i));
         }
 
+        String pathString = path.toString();
 
-        return path.toString();
+        if (pathString.startsWith("//")){
+            pathString = pathString.substring(1);
+        }
+
+
+        return pathString;
 
     }
 

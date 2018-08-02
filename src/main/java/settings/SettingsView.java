@@ -70,13 +70,6 @@ public class SettingsView extends Card {
         themeSettings.setAlignment(Pos.CENTER_LEFT);
         Tooltip.install(themeSettings, new Tooltip("Select a theme."));
 
-        //automatic saving
-        automaticSavingCheckBox = new CheckBox("Automatic Saving");
-        HBox automaticSavingSettings = new HBox(automaticSavingCheckBox);
-        automaticSavingSettings.setAlignment(Pos.CENTER_LEFT);
-        automaticSavingSettings.setDisable(true); //Note: Future feature
-        Tooltip.install(automaticSavingSettings, new Tooltip("Allow automatic saving in the background."));
-
         //projects directory
         Label projectDirectoryLabel = new Label("Project Directory:");
         projectDirectoryLabel.setPrefWidth(120);
@@ -103,7 +96,7 @@ public class SettingsView extends Card {
         projectsDirectorySettings.setSpacing(3);
         Tooltip.install(projectsDirectorySettings, new Tooltip("Select a project directory."));
 
-        settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings, automaticSavingSettings);
+        settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings);
 
         //call to initially populate the fields
         resetSettings();
@@ -138,7 +131,6 @@ public class SettingsView extends Card {
 
     private void saveSettings() {
         Settings updatedSettings = new Settings();
-        updatedSettings.setAutoSave(automaticSavingCheckBox.isSelected());
         if (!projectDirectoryField.getText().equalsIgnoreCase("Select a directory.")) {
             updatedSettings.setProjectDirectory(projectDirectoryField.getText());
         }
@@ -152,7 +144,6 @@ public class SettingsView extends Card {
     private void resetSettings() {
         validationTypeComboBox.getSelectionModel().select(settings.getValidationType());
         themeComboBox.getSelectionModel().select(settings.getTheme());
-        automaticSavingCheckBox.setSelected(settings.isAutoSave());
         projectDirectoryField.setText(settings.getProjectDirectory());
     }
 }

@@ -54,6 +54,7 @@ public class YariEditor extends Application {
         if (FileUtil.isDirty()) {
             RootLayoutFactory.getInstance().handleDirty();
         }
+        System.exit(0);
     }
 
 }

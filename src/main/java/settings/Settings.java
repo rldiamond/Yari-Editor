@@ -45,17 +45,6 @@ public class Settings {
     //recent files
     private List<RecommendedFile> recommendedFiles;
 
-    //auto saving
-    private boolean autoSave;
-
-    public boolean isAutoSave() {
-        return autoSave;
-    }
-
-    public void setAutoSave(boolean autoSave) {
-        this.autoSave = autoSave;
-    }
-
     public String getProjectDirectory() {
         return projectDirectory;
     }
@@ -82,7 +71,7 @@ public class Settings {
 
     public void addRecentFile(File file) {
 
-        if (recommendedFiles == null){
+        if (recommendedFiles == null) {
             recommendedFiles = new ArrayList<>();
         }
 

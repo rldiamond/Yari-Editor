@@ -137,7 +137,6 @@ public class SettingsUtil {
         defaultSettings.setTheme(Theme.DARK);
         defaultSettings.setValidationType(ValidationType.STRICT);
         defaultSettings.setProjectDirectory(null);
-        defaultSettings.setAutoSave(false);
         return defaultSettings;
     }
 
