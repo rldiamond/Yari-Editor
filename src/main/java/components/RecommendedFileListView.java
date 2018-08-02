@@ -12,6 +12,7 @@ package components;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -60,12 +61,11 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
 
         setItems(FXCollections.observableArrayList(projectDirFiles));
         setCellFactory(c -> new FileListCell(stage));
+        getItems().addListener((ListChangeListener.Change<? extends RecommendedFile> c) -> {
+            c.next();
+            refresh();
+        });
 
-        //if there's nothing to display, don't display
-        if (matchingFiles == null || matchingFiles.length == 0) {
-            setManaged(false);
-            setVisible(false);
-        }
     }
 
     public class FileListCell extends ListCell<RecommendedFile> {
@@ -89,6 +89,8 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
 
             if (!empty) {
                 setGraphic(new RecommendedFileListCellGraphic(this));
+            } else {
+                setGraphic(null);
             }
         }
     }

@@ -25,7 +25,6 @@ import javafx.stage.Stage;
 import org.yari.core.table.DecisionTable;
 import utilities.FXUtil;
 import utilities.FileUtil;
-import utilities.SettingsUtil;
 import utilities.ThemeUtil;
 
 public class WelcomeView extends VBox {
@@ -80,7 +79,7 @@ public class WelcomeView extends VBox {
 
         //Left Content
         StackPane leftContainerPane = new StackPane();
-        leftContainerPane.setPrefSize(250, USE_COMPUTED_SIZE);
+        leftContainerPane.setPrefSize(255, USE_COMPUTED_SIZE);
         leftContainerPane.setMinSize(USE_PREF_SIZE, USE_COMPUTED_SIZE);
         leftContainerPane.setMaxSize(USE_PREF_SIZE, USE_COMPUTED_SIZE);
         contentContainer.getChildren().add(leftContainerPane);
@@ -121,6 +120,7 @@ public class WelcomeView extends VBox {
         createNewIcon.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
         createNewIcon.setId("fileIcon");
         Label createNewLabel = new Label("Create New");
+        Tooltip.install(createNewContainer, new Tooltip("Create a new document"));
         createNewLabel.setId("splashLink");
         createNewLabel.setOnMouseClicked(me -> {
             FXUtil.runAsync(() -> {
@@ -137,6 +137,7 @@ public class WelcomeView extends VBox {
 
         //open
         HBox openContainer = new HBox(5);
+        Tooltip.install(openContainer, new Tooltip("Open a document from a file"));
         VBox.setMargin(openContainer, new Insets(0, 0, 0, 108));
         Pane openIcon = new Pane();
         openIcon.setPrefSize(16, 12);

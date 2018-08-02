@@ -13,8 +13,8 @@ package components;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import utilities.SettingsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +28,52 @@ public class RecommendedFileListCellGraphic extends StackPane {
         setMaxHeight(35);
         Label name = new Label();
         final String nameText = formatName(fileListCell.getItem().getName());
+        name.setStyle("-fx-font-weight: bold");
         name.setText(nameText);
         Label path = new Label();
         path.setStyle("-fx-font-size: 10px");
         final String pathText = formatPath(fileListCell.getItem().getPath());
         path.setText(pathText);
-        Tooltip.install(this, new Tooltip("Double-Click to open file " + nameText));
         VBox stackem = new VBox(name, path);
+        Tooltip.install(stackem, new Tooltip("Double-Click to open file " + nameText));
+
         stackem.setSpacing(2);
-        getChildren().add(stackem);
         setAlignment(Pos.CENTER);
+
+        //remove item
+        StackPane removeButton = new StackPane();
+        removeButton.setAlignment(Pos.TOP_RIGHT);
+        Pane remove = new Pane();
+        remove.setPrefSize(12, 12);
+        remove.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        remove.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        remove.setId("closeButton");
+        remove.setManaged(false);
+        remove.setVisible(false);
+        remove.setOnMouseClicked(me -> {
+            SettingsUtil.removeRecommendedFile(fileListCell.getItem());
+            fileListCell.getListView().getItems().remove(fileListCell.getItem());
+        });
+        Tooltip.install(removeButton, new Tooltip("Remove entry"));
+        setOnMouseEntered(e -> {
+            if (fileListCell.isSelected()) {
+                remove.setManaged(true);
+                remove.setVisible(true);
+            }
+        });
+        setOnMouseExited(e -> {
+            if (fileListCell.isSelected()) {
+                remove.setVisible(false);
+                remove.setManaged(false);
+            }
+        });
+        removeButton.getChildren().add(remove);
+        HBox.setHgrow(removeButton, Priority.ALWAYS);
+        HBox wrappem = new HBox();
+        wrappem.getChildren().addAll(stackem, removeButton);
+        getChildren().add(wrappem);
+
+
     }
 
     private String formatName(String string) {
