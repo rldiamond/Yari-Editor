@@ -17,16 +17,23 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.yari.core.table.DecisionTable;
+import settings.SettingsView;
 import utilities.FXUtil;
 import utilities.FileUtil;
+import utilities.SettingsUtil;
 import utilities.ThemeUtil;
 
+/**
+ * View displayed when the application is first launched. Provides extra direction for users such as create a new table,
+ * open a saved table from a file, change settings as well as listing recommended files.
+ */
 public class WelcomeView extends VBox {
 
     private BooleanProperty busy = new SimpleBooleanProperty(false);
@@ -34,7 +41,11 @@ public class WelcomeView extends VBox {
     private double xOffset = 0;
     private double yOffset = 0;
 
-
+    /**
+     * Construct the WelcomeView with the supplied stage.
+     *
+     * @param stage the stage to utilize in various tasks.
+     */
     public WelcomeView(Stage stage) {
         this.stage = stage;
 
@@ -158,6 +169,26 @@ public class WelcomeView extends VBox {
         openContainer.getChildren().addAll(openIcon, openLabel);
         openContainer.disableProperty().bind(busy);
         rightContent.getChildren().add(openContainer);
+
+        //settings icon
+        StackPane settingsContainer = new StackPane();
+        VBox.setVgrow(settingsContainer, Priority.ALWAYS);
+        settingsContainer.setAlignment(Pos.BOTTOM_RIGHT);
+        Pane settingsButton = new Pane();
+        Tooltip.install(settingsButton, new Tooltip("Settings"));
+        settingsButton.setOnMouseClicked(e -> {
+            Stage settingsStage = new Stage();
+            Scene settingsScene = new Scene(new SettingsView(SettingsUtil.getSettings(), settingsStage));
+            ThemeUtil.setThemeOnScene(settingsScene);
+            settingsStage.setScene(settingsScene);
+            settingsStage.show();
+        });
+        settingsButton.setId("settingsButton");
+        settingsButton.setPrefSize(14, 14);
+        settingsButton.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        settingsButton.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        settingsContainer.getChildren().add(settingsButton);
+        rightContent.getChildren().add(settingsContainer);
 
         //busy indicator
         var busySpinner = new JFXSpinner();

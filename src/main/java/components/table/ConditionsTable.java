@@ -30,7 +30,7 @@
 
 package components.table;
 
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -116,7 +116,7 @@ public class ConditionsTable extends YariTable<Condition> {
                     TableUtil.reorderConditions(draggedIndex, dropIndex);
 
                     event.consume();
-                    fireEvent(new UpdateEvent());
+                    fireEvent(new ValidateEvent());
                 }
             });
 
@@ -158,7 +158,7 @@ public class ConditionsTable extends YariTable<Condition> {
         dataTypeCol.setOnEditCommit(edit -> {
             String newContent = edit.getNewValue().trim();
             edit.getRowValue().setDataType(newContent);
-            fireEvent(new UpdateEvent());
+            fireEvent(new ValidateEvent());
         });
 
         TableColumn<Condition, String> comparatorCol = new TableColumn<>("COMPARATOR");
@@ -170,7 +170,7 @@ public class ConditionsTable extends YariTable<Condition> {
         comparatorCol.setOnEditCommit(edit -> {
             String newContent = edit.getNewValue().trim();
             edit.getRowValue().setComparator(newContent);
-            fireEvent(new UpdateEvent());
+            fireEvent(new ValidateEvent());
         });
 
 

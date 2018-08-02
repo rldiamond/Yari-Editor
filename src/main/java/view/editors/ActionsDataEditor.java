@@ -22,7 +22,7 @@ package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 import components.table.ActionsTable;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -121,7 +121,7 @@ public class ActionsDataEditor extends StackPane implements DataEditor {
         if (selectedIndex > 0) {
             Collections.swap(actionsTable.getItems(), selectedIndex, selectedIndex - 1);
             TableUtil.reorderActions(selectedIndex, selectedIndex - 1);
-            fireEvent(new UpdateEvent());
+            fireEvent(new ValidateEvent());
         }
     }
 
@@ -137,7 +137,7 @@ public class ActionsDataEditor extends StackPane implements DataEditor {
         if (selectedIndex < actionsTable.getItems().size() - 1) {
             Collections.swap(actionsTable.getItems(), selectedIndex, selectedIndex + 1);
             TableUtil.reorderActions(selectedIndex, selectedIndex + 1);
-            fireEvent(new UpdateEvent());
+            fireEvent(new ValidateEvent());
         }
     }
 }

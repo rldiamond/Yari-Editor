@@ -30,8 +30,6 @@ import view.WelcomeView;
 
 public class YariEditor extends Application {
 
-    private static Stage primaryStage;
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -40,7 +38,7 @@ public class YariEditor extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Yari Editor");
         primaryStage.getIcons().setAll(new Image("/theme/YariLogo.png"));
-        YariEditor.primaryStage = primaryStage;
+
         //show the welcome splash screen
         WelcomeView welcomeSplash = new WelcomeView(primaryStage);
         Scene splashScene = new Scene(welcomeSplash);
@@ -48,10 +46,7 @@ public class YariEditor extends Application {
 
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(splashScene);
-
-
         primaryStage.show();
-
     }
 
     @Override

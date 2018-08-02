@@ -13,10 +13,8 @@ package components;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import objects.RecommendedFile;
 import utilities.FileUtil;
@@ -29,10 +27,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Custom ListView for displaying recommended files.
+ */
 public class RecommendedFileListView extends ListView<RecommendedFile> {
 
     private final BooleanProperty busy;
 
+    /**
+     * Build the list view with the supplied stage and busy property.
+     *
+     * @param stage the stage to utilize in actions.
+     * @param busy  will notify when busy.
+     */
     public RecommendedFileListView(Stage stage, BooleanProperty busy) {
         this.busy = busy;
 
@@ -70,6 +77,9 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
 
     }
 
+    /**
+     * Custom ListCell for RecommendedFiles to provide opening logic and custom graphics.
+     */
     public class FileListCell extends ListCell<RecommendedFile> {
 
         public FileListCell(Stage stage) {

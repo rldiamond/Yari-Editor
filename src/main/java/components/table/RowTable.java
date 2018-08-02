@@ -20,7 +20,7 @@
 
 package components.table;
 
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -106,7 +106,7 @@ public class RowTable extends YariTable<Row> {
                     event.setDropCompleted(true);
                     getSelectionModel().select(dropIndex);
                     event.consume();
-                    fireEvent(new UpdateEvent());
+                    fireEvent(new ValidateEvent());
                 }
             });
 

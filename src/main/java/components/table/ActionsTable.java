@@ -30,7 +30,7 @@
 
 package components.table;
 
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -114,7 +114,7 @@ public class ActionsTable extends YariTable<Action> {
 
                     TableUtil.reorderActions(draggedIndex, dropIndex);
                     event.consume();
-                    fireEvent(new UpdateEvent());
+                    fireEvent(new ValidateEvent());
                 }
             });
 
@@ -156,7 +156,7 @@ public class ActionsTable extends YariTable<Action> {
         dataTypeCol.setOnEditCommit(edit -> {
             String newContent = edit.getNewValue().trim();
             edit.getRowValue().setDatatype(newContent);
-            fireEvent(new UpdateEvent());
+            fireEvent(new ValidateEvent());
         });
 
         return List.of(nameCol, methodNameCol, dataTypeCol);

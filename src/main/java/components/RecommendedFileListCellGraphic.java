@@ -11,9 +11,7 @@
 package components;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import utilities.SettingsUtil;
@@ -21,9 +19,12 @@ import utilities.SettingsUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom graphic for the RecommendedFile list cell.
+ */
 public class RecommendedFileListCellGraphic extends StackPane {
 
-    public RecommendedFileListCellGraphic(RecommendedFileListView.FileListCell fileListCell) {
+    RecommendedFileListCellGraphic(RecommendedFileListView.FileListCell fileListCell) {
         getStyleClass().add("fileCellGraphic");
         setPrefHeight(35);
         setMinHeight(35);

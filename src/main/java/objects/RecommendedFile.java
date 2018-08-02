@@ -13,12 +13,20 @@ package objects;
 import java.io.File;
 import java.util.Calendar;
 
+/**
+ * A simple object to keep some information on files in the settings file that is saved to the user directory.
+ */
 public class RecommendedFile {
 
     private String path;
     private String name;
     private Calendar time;
 
+    /**
+     * Construct a RecommendedFile object and populate the fields with information from the supplied File.
+     *
+     * @param file the file to create the object with.
+     */
     public RecommendedFile(File file) {
         time = Calendar.getInstance();
         path = file.getPath();
@@ -51,16 +59,16 @@ public class RecommendedFile {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof RecommendedFile)){
+        if (!(obj instanceof RecommendedFile)) {
             return false;
         }
         RecommendedFile other = (RecommendedFile) obj;
 
-        if (!other.getName().equalsIgnoreCase(getName())){
+        if (!other.getName().equalsIgnoreCase(getName())) {
             return false;
         }
 
-        if (!other.getPath().equalsIgnoreCase(getPath())){
+        if (!other.getPath().equalsIgnoreCase(getPath())) {
             return false;
         }
 

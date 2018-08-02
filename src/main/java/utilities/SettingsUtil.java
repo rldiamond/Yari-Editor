@@ -51,14 +51,24 @@ public class SettingsUtil {
         return settingsProperty.get();
     }
 
+    /**
+     * Add a recommended file to the settings.
+     *
+     * @param file the file to add.
+     */
     public static void addRecommendedFile(File file) {
         Settings settings = getSettings();
         settings.addRecentFile(file);
         saveSettings(settings);
     }
 
-    public static void removeRecommendedFile(RecommendedFile recommendedFile){
-        if (recommendedFile != null && getSettings().getRecommendedFiles().contains(recommendedFile)){
+    /**
+     * Remove a recommended file from the settings.
+     *
+     * @param recommendedFile the file to remove.
+     */
+    public static void removeRecommendedFile(RecommendedFile recommendedFile) {
+        if (recommendedFile != null && getSettings().getRecommendedFiles().contains(recommendedFile)) {
             getSettings().getRecommendedFiles().remove(recommendedFile);
             saveSettings(getSettings());
         }

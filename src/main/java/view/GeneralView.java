@@ -23,7 +23,7 @@ package view;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import components.Card;
-import validation.UpdateEvent;
+import validation.ValidateEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -52,7 +52,7 @@ public class GeneralView extends StackPane {
         tableNameField.setPrefWidth(350);
         tableNameField.focusedProperty().addListener((obs, ov, focused) -> {
             if (!focused) {
-                fireEvent(new UpdateEvent());
+                fireEvent(new ValidateEvent());
             }
         });
         tableNameField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableName());
@@ -67,7 +67,7 @@ public class GeneralView extends StackPane {
         tableDescriptionField.setPrefWidth(350);
         tableDescriptionField.focusedProperty().addListener((obs, ov, focused) -> {
             if (!focused) {
-                fireEvent(new UpdateEvent());
+                fireEvent(new ValidateEvent());
             }
         });
         tableDescriptionField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableDescription());
@@ -118,13 +118,13 @@ public class GeneralView extends StackPane {
         tableNameField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableName());
         tableDescriptionField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableDescription());
         ruleNameField.setText(RootLayoutFactory.getInstance().getRuleName());
-        fireEvent(new UpdateEvent());
+        fireEvent(new ValidateEvent());
     }
 
     private void save(MouseEvent mouseEvent) {
         RootLayoutFactory.getInstance().getDecisionTable().setName(tableNameField.getText());
         RootLayoutFactory.getInstance().getDecisionTable().setDescription(tableDescriptionField.getText());
         RootLayoutFactory.getInstance().setRuleName(ruleNameField.getText());
-        fireEvent(new UpdateEvent());
+        fireEvent(new ValidateEvent());
     }
 }
