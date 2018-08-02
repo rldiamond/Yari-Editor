@@ -44,6 +44,8 @@ import validation.validators.ValidatorError;
  */
 public class ValidationLogDialog extends JFXDialog {
 
+    ListView<ValidatorError> validationLog;
+
     /**
      * Build a ValidationLogDialog with the current validation results and use the supplied StackPane as it's container.
      *
@@ -59,7 +61,7 @@ public class ValidationLogDialog extends JFXDialog {
         content.setPrefSize(450, 300);
         content.getStyleClass().add("validationDialog");
 
-        ListView<ValidatorError> validationLog = new ListView<>();
+        validationLog = new ListView<>();
         validationLog.setCellFactory(c -> new ValidationListCell());
 
         AnchorPane.setRightAnchor(validationLog, 0D);
@@ -67,14 +69,18 @@ public class ValidationLogDialog extends JFXDialog {
         AnchorPane.setLeftAnchor(validationLog, 0D);
         AnchorPane.setTopAnchor(validationLog, 0D);
 
-        ValidationService.getService().getLatestValidation().ifPresent(validation -> {
-            validationLog.setItems(FXCollections.observableArrayList(validation.getAllErrors()));
-        });
+        refreshLog();
 
         content.getChildren().setAll(validationLog);
 
         //add content to dialog
         setContent(content);
+    }
+
+    public void refreshLog(){
+        ValidationService.getService().getLatestValidation().ifPresent(validation -> {
+            validationLog.setItems(FXCollections.observableArrayList(validation.getAllErrors()));
+        });
     }
 
 }

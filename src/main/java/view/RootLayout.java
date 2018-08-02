@@ -358,11 +358,14 @@ public class RootLayout extends BorderPane {
             validTip.setText(isValid ? validTipText : invalidTipText);
         });
 
+
+        final ValidationLogDialog validationLogDialog = new ValidationLogDialog(displayedContent);
+
         validationService.validProperty().addListener((obs, ov, valid) -> {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {
-                    if (me.getButton() == MouseButton.PRIMARY) {
-                        ValidationLogDialog validationLogDialog = new ValidationLogDialog(displayedContent);
+                    if (me.getButton() == MouseButton.PRIMARY && !validationLogDialog.isVisible()) {
+                        validationLogDialog.refreshLog();
                         validationLogDialog.show();
                     }
                 });
