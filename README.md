@@ -1,43 +1,38 @@
-# Yari Editor 2
+## Yari Editor
+Yari Editor is an tool to create and edit decision table XML files for the Yari rules engine. Yari Editor assists by providing users simple and familiar methods to manipulate data, while ensuring that the data entered will correctly run through the engine. 
 
-This revamp project started as a learning adventure into what JavaFX can provide the modern world such as extremely simple and fluid UI/UX utilizing material design-like patterns and the latest concepts in UX.
+Yari Editor provides additional tools such as Java code template generation for matching ‘’’Rule’’’ objects, printing of decision table data in an easy to understand format, and more. 
 
-## Description
+[View our wiki for guides and documentation.](/wiki)
 
-Yari Editor, in it's simplest form, is an XML editor developed specifically for the creation and editing of XML decision table files utilized by the Yari rules engine.
+### Build
+Yari Editor is made entirely in JavaFX and Java 10 utilizing Maven for build and dependency management. 
 
-### New Features:
+You can build Yari Editor by navigating to the project directory and using:
+
+```
+mvn clean install
+```
+
+**Latest Supported Version of Yari-Core:** ```0.3.1-SNAPSHOT```
+
+### New Features in 2.0
 
 * All-new modern UI/UX
-  * Splash screen: results in less user confusion when first launching the application
-  * Toast messages: instantly see important messages such as validation issues and file save status
-  * Data validation indicator: quickly see the current validation status of the table at a glance
+    * Splash screen: get started more quickly by utilizing the new recommended files feature, or choosing to open or create a new decision table.
+    * Toast messages: instantly see important information such as validation messages and file save status.
+    * Validation indicator: quickly see the current validation status of the decision table at a glance.
 * Asynchronous tasks
-  * Continuous data validation on any edit 
-  * Opening and saving files is now performed off FX thread resulting in a much smoother experience
+    * Continuous data validation on any edit.
+    * Many tasks have been designed to run asynchronously to provide a much smoother user experience.
 * Editing enhancements
-  * Pressing TAB while editing cells will commit the current cell and select the next cell to the right
-  * Pressing ESC will cancel the edit and deselect the cell
-  * Pressing ENTER or unfocusing the cell will commit the edit
-* Printing of table data   
+    * Pressing TAB while editing cells will commit the current cell and select the next cell to the right.
+    * Pressing ESC will cancel edit and deselect the cell.
+    * Pressing ENTER or unfocusing the cell will commit the edit.
+* Print decision table
 * Keyboard shortcuts
-  * Save: CTRL + S
-  * Print: CTRL + P
-  * Open: CTRL + O
-  * New: CTRL + N
-  * Re-Validate: CTRL + V
-  * Add Row: CTRL + R
-  * Delete Row: CTRL + DEL
-  * Move Row Up: CTRL + UP
-  * Move Row Down: CTRL + DOWN
-* Improved Validation
-  * Yari Editor provides additional, more detailed information on validation errors.
-  * Validation Error view lists all validation errors, double clicking on an error brings the user to the proper view to correct the issue. 
-
-
-
-## Project
-
-This project is made entirely in JavaFX and Java 10 utilizing Maven for build and dependency managenent.
-
-The UI/UX of the project is intended to be reminiscent of material design.
+    * For a list of currently supported keyboard shortcuts, [visit the wiki](/wiki#section-3-keyboard-shortcuts).
+* Improved validation
+    * Additional (useful) detail is provided on validation errors.
+    * Validation log can be utilized to see all validation errors.
+        * Double-clicking on any validation error will bring the user to the proper tool to correct the issue.
