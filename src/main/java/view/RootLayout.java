@@ -359,7 +359,7 @@ public class RootLayout extends BorderPane {
 
 
         final ValidationLogDialog validationLogDialog = new ValidationLogDialog(displayedContent);
-
+        loadingContent.addListener(c -> validationLogDialog.setVisible(false));
         validationService.validProperty().addListener((obs, ov, valid) -> {
             if (!valid) {
                 validIndicator.setOnMouseClicked(me -> {

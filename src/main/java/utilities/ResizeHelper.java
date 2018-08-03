@@ -135,36 +135,33 @@ public class ResizeHelper {
             } else if (MouseEvent.MOUSE_PRESSED.equals(mouseEventType)) {
                 startX = stage.getWidth() - mouseEventX;
                 startY = stage.getHeight() - mouseEventY;
-            } else if (MouseEvent.MOUSE_DRAGGED.equals(mouseEventType) && !Cursor.DEFAULT.equals(cursorEvent)) {
-                if (!Cursor.W_RESIZE.equals(cursorEvent) && !Cursor.E_RESIZE.equals(cursorEvent)) {
-                    double minimumHeight = stage.getMinHeight() > (border * 2) ? stage.getMinHeight() : (border * 2);
-                    if (Cursor.NW_RESIZE.equals(cursorEvent) || Cursor.N_RESIZE.equals(cursorEvent)
-                            || Cursor.NE_RESIZE.equals(cursorEvent)) {
-                        if (stage.getHeight() > minimumHeight || mouseEventY < 0) {
-                            setStageHeight(stage.getY() - mouseEvent.getScreenY() + stage.getHeight());
-                            stage.setY(mouseEvent.getScreenY());
+            } else if (MouseEvent.MOUSE_DRAGGED.equals(mouseEventType) && !Cursor.DEFAULT.equals(cursorEvent) && !Cursor.W_RESIZE.equals(cursorEvent) && !Cursor.E_RESIZE.equals(cursorEvent)) {
+                double minimumHeight = stage.getMinHeight() > (border * 2) ? stage.getMinHeight() : (border * 2);
+                if (Cursor.NW_RESIZE.equals(cursorEvent) || Cursor.N_RESIZE.equals(cursorEvent)
+                        || Cursor.NE_RESIZE.equals(cursorEvent)) {
+                    if (stage.getHeight() > minimumHeight || mouseEventY < 0) {
+                        setStageHeight(stage.getY() - mouseEvent.getScreenY() + stage.getHeight());
+                        stage.setY(mouseEvent.getScreenY());
+                    }
+                } else {
+                    if (stage.getHeight() > minimumHeight || mouseEventY + startY - stage.getHeight() > 0) {
+                        setStageHeight(mouseEventY + startY);
+                    }
+                }
+                if (!Cursor.N_RESIZE.equals(cursorEvent) && !Cursor.S_RESIZE.equals(cursorEvent)) {
+                    double minimumWidth = stage.getMinWidth() > (border * 2) ? stage.getMinWidth() : (border * 2);
+                    if (Cursor.NW_RESIZE.equals(cursorEvent) || Cursor.W_RESIZE.equals(cursorEvent)
+                            || Cursor.SW_RESIZE.equals(cursorEvent)) {
+                        if (stage.getWidth() > minimumWidth || mouseEventX < 0) {
+                            setStageWidth(stage.getX() - mouseEvent.getScreenX() + stage.getWidth());
+                            stage.setX(mouseEvent.getScreenX());
                         }
                     } else {
-                        if (stage.getHeight() > minimumHeight || mouseEventY + startY - stage.getHeight() > 0) {
-                            setStageHeight(mouseEventY + startY);
-                        }
-                    }
-                    if (!Cursor.N_RESIZE.equals(cursorEvent) && !Cursor.S_RESIZE.equals(cursorEvent)) {
-                        double minimumWidth = stage.getMinWidth() > (border * 2) ? stage.getMinWidth() : (border * 2);
-                        if (Cursor.NW_RESIZE.equals(cursorEvent) || Cursor.W_RESIZE.equals(cursorEvent)
-                                || Cursor.SW_RESIZE.equals(cursorEvent)) {
-                            if (stage.getWidth() > minimumWidth || mouseEventX < 0) {
-                                setStageWidth(stage.getX() - mouseEvent.getScreenX() + stage.getWidth());
-                                stage.setX(mouseEvent.getScreenX());
-                            }
-                        } else {
-                            if (stage.getWidth() > minimumWidth || mouseEventX + startX - stage.getWidth() > 0) {
-                                setStageWidth(mouseEventX + startX);
-                            }
+                        if (stage.getWidth() > minimumWidth || mouseEventX + startX - stage.getWidth() > 0) {
+                            setStageWidth(mouseEventX + startX);
                         }
                     }
                 }
-
             }
         }
 
