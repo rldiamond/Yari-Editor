@@ -27,13 +27,9 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.util.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class FXUtil {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FXUtil.class);
 
     /**
      * Run the provided runnable on the FX thread.

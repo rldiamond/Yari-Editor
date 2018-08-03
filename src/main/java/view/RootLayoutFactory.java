@@ -44,6 +44,13 @@ public class RootLayoutFactory {
         return rootLayout;
     }
 
+    /**
+     * Private constructor to hide the implicit public constructor.
+     */
+    private RootLayoutFactory() {
+
+    }
+
     public static void show(Stage stage) {
         scene = new Scene(getInstance());
         ThemeUtil.setThemeOnScene(scene);
@@ -94,7 +101,7 @@ public class RootLayoutFactory {
         return displayed;
     }
 
-    public static Scene getScene(){
+    public static Scene getScene() {
         return scene;
     }
 }
