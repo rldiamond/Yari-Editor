@@ -32,7 +32,7 @@ public enum DataType {
     private final String displayValue;
     private final String javaCodeCompatibleValue;
 
-    private DataType(String displayValue, String javaCodeCompatibleValue) {
+    DataType(String displayValue, String javaCodeCompatibleValue) {
         this.displayValue = displayValue;
         this.javaCodeCompatibleValue = javaCodeCompatibleValue;
     }
