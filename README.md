@@ -1,7 +1,7 @@
 ## Yari Editor
 
 [![Build Status](https://travis-ci.org/rldiamond/yariEditor.svg?branch=master)](https://travis-ci.org/rldiamond/yariEditor)
-![](https://sonarcloud.io/api/project_badges/measure?project=org.yari%3Aeditor&metric=alert_status)[![codecov](https://codecov.io/gh/rldiamond/yariEditor/branch/master/graph/badge.svg)](https://codecov.io/gh/rldiamond/yariEditor)
+![](https://sonarcloud.io/api/project_badges/measure?project=org.yari%3Aeditor&metric=alert_status) [![codecov](https://codecov.io/gh/rldiamond/yariEditor/branch/master/graph/badge.svg)](https://codecov.io/gh/rldiamond/yariEditor)
 
 Yari Editor is an tool to create and edit decision table XML files for the Yari rules engine. Yari Editor assists by providing users simple and familiar methods to manipulate data, while ensuring that the data entered will correctly run through the engine.
 
