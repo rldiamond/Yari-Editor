@@ -83,8 +83,6 @@
             <groupId>org.yari</groupId>
             <artifactId>yari-core</artifactId>
             <version>0.3.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/yari-core-0.3.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.jfoenix</groupId>
