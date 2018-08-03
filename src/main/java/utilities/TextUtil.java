@@ -23,13 +23,19 @@ package utilities;
 public class TextUtil {
 
     /**
+     * Private constructor to hide the implicit public constructor.
+     */
+    private TextUtil() {
+    }
+
+    /**
      * Modifies the supplied input value to Title Case.
      *
      * @param input the input String to modify.
      * @return a String formatted in Title Case.
      */
     public static String toTitleCase(String input) {
-        if (input == null){
+        if (input == null) {
             return "";
         }
         StringBuilder titleCase = new StringBuilder();

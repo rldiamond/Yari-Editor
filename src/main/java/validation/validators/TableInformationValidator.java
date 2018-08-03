@@ -28,23 +28,19 @@ public class TableInformationValidator extends TableValidator {
     public void run() {
 
         final String tableName = getDecisionTable().getTableName();
-        if (NAME_REQUIRED) {
-            if (tableName == null || "".equals(tableName)) {
-                ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.GENERAL);
-                ValidatorError validatorError = new ValidatorError("A table name is required and not provided", validatorErrorLocation);
-                addError(validatorError);
-            }
+        if (NAME_REQUIRED && tableName == null || "".equals(tableName)) {
+            ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+            validatorErrorLocation.setEditorView(EditorView.GENERAL);
+            ValidatorError validatorError = new ValidatorError("A table name is required and not provided", validatorErrorLocation);
+            addError(validatorError);
         }
 
         final String tableDescription = getDecisionTable().getTableDescription();
-        if (DESCRIPTION_REQUIRED) {
-            if (tableDescription == null || "".equals(tableDescription)) {
-                ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.GENERAL);
-                ValidatorError validatorError = new ValidatorError("A table description is required and not provided", validatorErrorLocation);
-                addError(validatorError);
-            }
+        if (DESCRIPTION_REQUIRED && tableDescription == null || "".equals(tableDescription)) {
+            ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
+            validatorErrorLocation.setEditorView(EditorView.GENERAL);
+            ValidatorError validatorError = new ValidatorError("A table description is required and not provided", validatorErrorLocation);
+            addError(validatorError);
         }
 
     }

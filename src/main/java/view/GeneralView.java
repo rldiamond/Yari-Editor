@@ -23,14 +23,13 @@ package view;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import components.Card;
-import validation.ValidateEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import validation.ValidateEvent;
 
 public class GeneralView extends StackPane {
 
@@ -99,14 +98,14 @@ public class GeneralView extends StackPane {
         applyButton.setButtonType(JFXButton.ButtonType.RAISED);
         applyButton.getStyleClass().add("button-flat-green");
 
-        applyButton.setOnMouseClicked(this::save);
+        applyButton.setOnMouseClicked(e -> save());
 
         JFXButton resetButton = new JFXButton();
         resetButton.setText("RESET");
         resetButton.setButtonType(JFXButton.ButtonType.RAISED);
         resetButton.getStyleClass().add("button-flat-red");
 
-        resetButton.setOnMouseClicked(this::reset);
+        resetButton.setOnMouseClicked(e -> reset());
 
         buttonBar.getChildren().addAll(resetButton, applyButton);
         card.setFooterContent(buttonBar);
@@ -114,14 +113,14 @@ public class GeneralView extends StackPane {
         getChildren().setAll(card);
     }
 
-    private void reset(MouseEvent mouseEvent) {
+    private void reset() {
         tableNameField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableName());
         tableDescriptionField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableDescription());
         ruleNameField.setText(RootLayoutFactory.getInstance().getRuleName());
         fireEvent(new ValidateEvent());
     }
 
-    private void save(MouseEvent mouseEvent) {
+    private void save() {
         RootLayoutFactory.getInstance().getDecisionTable().setName(tableNameField.getText());
         RootLayoutFactory.getInstance().getDecisionTable().setDescription(tableDescriptionField.getText());
         RootLayoutFactory.getInstance().setRuleName(ruleNameField.getText());

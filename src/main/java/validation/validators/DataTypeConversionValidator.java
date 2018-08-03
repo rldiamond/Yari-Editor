@@ -190,6 +190,7 @@ public class DataTypeConversionValidator extends TableValidator {
                     break;
                 default:
                     logger.error("Unsupported data type provided!");
+                    break;
             }
         } catch (Exception ex) {
             canConvert = false;

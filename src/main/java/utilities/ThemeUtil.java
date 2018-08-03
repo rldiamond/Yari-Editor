@@ -30,8 +30,16 @@ import view.RootLayoutFactory;
  */
 public class ThemeUtil {
 
-    private static Theme ACTIVE_THEME;
+    private static Theme activeTheme;
     private static final Image LOGO = new Image("/theme/YariLogo.png");
+
+    /**
+     * Private constructor to hide the implicit public constructor.
+     */
+    private ThemeUtil()
+    {
+
+    }
 
     /**
      * Sets the currently active theme.
@@ -39,7 +47,7 @@ public class ThemeUtil {
      * @param theme the theme to set.
      */
     public static void setActiveTheme(Theme theme) {
-        ACTIVE_THEME = theme;
+        activeTheme = theme;
         SettingsUtil.getSettings().setTheme(theme);
     }
 
@@ -49,11 +57,11 @@ public class ThemeUtil {
      * @return the active theme.
      */
     public static Theme getActiveTheme() {
-        if (ACTIVE_THEME == null) {
+        if (activeTheme == null) {
             //load theme from settings
-            ACTIVE_THEME = SettingsUtil.getSettings().getTheme();
+            activeTheme = SettingsUtil.getSettings().getTheme();
         }
-        return ACTIVE_THEME;
+        return activeTheme;
     }
 
     /**

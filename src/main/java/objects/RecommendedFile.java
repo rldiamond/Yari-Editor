@@ -68,11 +68,7 @@ public class RecommendedFile {
             return false;
         }
 
-        if (!other.getPath().equalsIgnoreCase(getPath())) {
-            return false;
-        }
-
-        return true;
+        return other.getPath().equalsIgnoreCase(getPath());
 
     }
 }

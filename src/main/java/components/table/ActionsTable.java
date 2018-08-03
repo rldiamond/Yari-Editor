@@ -30,7 +30,6 @@
 
 package components.table;
 
-import validation.ValidateEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -39,9 +38,10 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import org.yari.core.table.Action;
 import objects.DataType;
+import org.yari.core.table.Action;
 import utilities.TableUtil;
+import validation.ValidateEvent;
 
 import java.util.List;
 
@@ -69,11 +69,9 @@ public class ActionsTable extends YariTable<Action> {
 
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
-                if (db.hasContent(ACTION_EDITOR)) {
-                    if (row.getIndex() != ((Integer) db.getContent(ACTION_EDITOR)).intValue()) {
-                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        event.consume();
-                    }
+                if (db.hasContent(ACTION_EDITOR) && row.getIndex() != (Integer) db.getContent(ACTION_EDITOR)) {
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                    event.consume();
                 }
             });
 

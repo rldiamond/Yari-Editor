@@ -15,11 +15,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
+import utilities.TextUtil;
 
 /**
  * Simple extension of {@link ComboBox} allowing for {@link Enum} values to easily be populated. Supply the constructor
  * with the {@link Enum} class to use.
- *
+ * <p>
  * The method {@link EnumComboBox#setPrettyPrint(boolean)} can be utilized to turn on pretty printing of the {@link
  * Enum} values (Title Case utilizing the {@link Enum#toString()} method).
  *
@@ -58,7 +59,7 @@ public class EnumComboBox<T extends Enum> extends ComboBox<T> {
         return new StringConverter<T>() {
             @Override
             public String toString(T object) {
-                return toTitleCase(object.toString());
+                return TextUtil.toTitleCase(object.toString());
             }
 
             @Override
@@ -66,30 +67,6 @@ public class EnumComboBox<T extends Enum> extends ComboBox<T> {
                 return null;
             }
         };
-    }
-
-    /**
-     * Modifies the supplied input value to Title Case.
-     *
-     * @param input the input String to modify.
-     * @return a String formatted in Title Case.
-     */
-    private String toTitleCase(String input) {
-        StringBuilder titleCase = new StringBuilder();
-        boolean nextTitleCase = true;
-        input = input.toLowerCase();
-        for (char c : input.toCharArray()) {
-            if (Character.isSpaceChar(c)) {
-                nextTitleCase = true;
-            } else if (nextTitleCase) {
-                c = Character.toTitleCase(c);
-                nextTitleCase = false;
-            }
-
-            titleCase.append(c);
-        }
-
-        return titleCase.toString();
     }
 
     /**

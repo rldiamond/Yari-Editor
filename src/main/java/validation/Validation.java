@@ -48,8 +48,8 @@ public class Validation {
     public boolean isValid() {
         if (!validityChecked && ran) {
             //only run this once.
-            valid = !validators.stream()
-                    .anyMatch(validator -> !validator.isValid());
+            valid = validators.stream()
+                    .allMatch(Validator::isValid);
             validityChecked = true;
         }
         return valid;

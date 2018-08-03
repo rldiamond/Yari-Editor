@@ -30,7 +30,6 @@
 
 package components.table;
 
-import validation.ValidateEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -39,10 +38,11 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import org.yari.core.table.Condition;
 import objects.ComparatorType;
 import objects.DataType;
+import org.yari.core.table.Condition;
 import utilities.TableUtil;
+import validation.ValidateEvent;
 
 import java.util.List;
 
@@ -70,11 +70,9 @@ public class ConditionsTable extends YariTable<Condition> {
 
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
-                if (db.hasContent(CONDITION_EDITOR)) {
-                    if (row.getIndex() != ((Integer) db.getContent(CONDITION_EDITOR)).intValue()) {
-                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        event.consume();
-                    }
+                if (db.hasContent(CONDITION_EDITOR) && row.getIndex() != (Integer) db.getContent(CONDITION_EDITOR)) {
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                    event.consume();
                 }
             });
 
