@@ -37,7 +37,6 @@ public class SettingsView extends Card {
 
     private EnumComboBox<ValidationType> validationTypeComboBox;
     private EnumComboBox<Theme> themeComboBox;
-    private CheckBox automaticSavingCheckBox;
     private TextField projectDirectoryField;
     private JFXButton okayButton;
 

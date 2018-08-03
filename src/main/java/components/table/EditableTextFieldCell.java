@@ -53,12 +53,6 @@ public class EditableTextFieldCell<T extends Object> extends TableCell<T, String
     private TextField textField;
 
     /**
-     * Construct the cell with default settings.
-     */
-    public EditableTextFieldCell() {
-    }
-
-    /**
      * @inheritDoc
      */
     @Override

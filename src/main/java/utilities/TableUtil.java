@@ -21,6 +21,12 @@ import java.util.List;
 public class TableUtil {
 
     /**
+     * Private constructor to hide the implicit public one.
+     */
+    private TableUtil() {
+    }
+
+    /**
      * Update the decision table object to the latest values in the observable lists.
      */
     public static void updateTable() {

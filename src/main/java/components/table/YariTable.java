@@ -36,8 +36,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
-import validation.Validation;
-import validation.ValidationService;
 import view.RootLayoutFactory;
 
 import java.util.List;

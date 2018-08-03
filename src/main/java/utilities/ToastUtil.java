@@ -19,6 +19,13 @@ import view.RootLayoutFactory;
 public class ToastUtil {
 
     /**
+     * Private constructor to hide the implicit public constructor.
+     */
+    private ToastUtil() {
+
+    }
+
+    /**
      * Sends a persistent toast, which the user must dismiss with a dismiss button
      *
      * @param message the message to display in the toast.

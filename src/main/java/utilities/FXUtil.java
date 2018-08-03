@@ -25,13 +25,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 
 public class FXUtil {
@@ -53,27 +50,13 @@ public class FXUtil {
 
     /**
      * Run the supplied task on a non-fx thread thread.
+     *
      * @param run
      */
     public static void runAsync(Runnable run) {
         new Thread(run::run).start();
     }
 
-    /**
-     * Initialize FXML based on naming conventions.
-     */
-    public static void intializeFXML(Node view) {
-        String fxmlName = view.getClass().getSimpleName() + ".fxml";
-        FXMLLoader fxmlLoader = new FXMLLoader(view.getClass().getResource(fxmlName));
-        fxmlLoader.setController(view);
-        fxmlLoader.setRoot(view);
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            LOGGER.error("Failed to load FXML for view '{}'!", view.getClass().getSimpleName(), e);
-            throw new RuntimeException(e);
-        }
-    }
 
     // --------------- ANIMATIONS --------------------
 

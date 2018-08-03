@@ -43,6 +43,13 @@ public class FileUtil {
     private static ValidationService validationService = ValidationService.getService();
 
     /**
+     * Private constructor to hide the implicit public constructor.
+     */
+    private FileUtil() {
+
+    }
+
+    /**
      * Show a file chooser and attempt to open the selected file.
      *
      * @param stage the stage to base the file chooser on.
@@ -146,6 +153,7 @@ public class FileUtil {
         BasicRule basicRule = new BasicRule() {
             @Override
             public void lookupGlobals(Context globalContext) {
+                //NOTE: we do nothing here are we just need the BasicRule constructed to create the DecisionTable object.
             }
         };
 
@@ -183,7 +191,7 @@ public class FileUtil {
 
         PrinterJob job = PrinterJob.createPrinterJob();
         job.getJobSettings().setPageLayout(pageLayout);
-        if (job != null && job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())) {
+        if (job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())) {
             boolean success = job.printPage(tablePrintView);
             if (success) {
                 job.endJob();

@@ -82,15 +82,12 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
      */
     public class FileListCell extends ListCell<RecommendedFile> {
 
-        public FileListCell(Stage stage) {
-
+        FileListCell(Stage stage) {
             setOnMouseClicked(me -> {
-                if (me.getClickCount() == 2) {
-                    if (getItem() != null) {
-                        busy.set(true);
-                        FileUtil.openFile(new File(getItem().getPath()), stage);
-                        busy.set(false);
-                    }
+                if (me.getClickCount() == 2 && getItem() != null) {
+                    busy.set(true);
+                    FileUtil.openFile(new File(getItem().getPath()), stage);
+                    busy.set(false);
                 }
             });
         }

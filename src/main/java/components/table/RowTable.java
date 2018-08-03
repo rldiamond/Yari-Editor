@@ -20,7 +20,6 @@
 
 package components.table;
 
-import validation.ValidateEvent;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +36,7 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.Row;
 import utilities.TextUtil;
+import validation.ValidateEvent;
 
 import java.util.List;
 
@@ -63,11 +63,9 @@ public class RowTable extends YariTable<Row> {
 
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
-                if (db.hasContent(ROW_EDITOR)) {
-                    if (row.getIndex() != ((Integer) db.getContent(ROW_EDITOR)).intValue()) {
-                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        event.consume();
-                    }
+                if (db.hasContent(ROW_EDITOR) && row.getIndex() != (Integer) db.getContent(ROW_EDITOR)) {
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                    event.consume();
                 }
             });
 
