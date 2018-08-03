@@ -131,7 +131,6 @@ public class RootLayout extends BorderPane {
         setCenter(mainPanel);
 
         //validate table anytime changes are made to the lists
-        //TODO: Evaluate if the following three lines are necessary
         actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> validationService.requestValidation());
         conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> validationService.requestValidation());
         rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> validationService.requestValidation());
@@ -195,36 +194,36 @@ public class RootLayout extends BorderPane {
         fileMenuPopUp.setAutoHide(true);
         JFXListView<HBox> fileMenuList = new JFXListView<>();
         //file menu
-        PopupMenuEntry file_new_pane = new PopupMenuEntry("New", KeyboardShortcut.NEW);
-        file_new_pane.setOnMouseClicked(me -> {
+        PopupMenuEntry fileNewMenuEntry = new PopupMenuEntry("New", KeyboardShortcut.NEW);
+        fileNewMenuEntry.setOnMouseClicked(me -> {
             if (FileUtil.isDirty()) {
                 handleDirty();
             }
             FileUtil.newFile();
             fileMenuPopUp.hide();
         });
-        Tooltip.install(file_new_pane, new Tooltip("Start a new document."));
-        PopupMenuEntry file_open_pane = new PopupMenuEntry("Open", KeyboardShortcut.OPEN);
-        file_open_pane.setOnMouseClicked(me -> {
+        Tooltip.install(fileNewMenuEntry, new Tooltip("Start a new document."));
+        PopupMenuEntry fileOpenMenuEntry = new PopupMenuEntry("Open", KeyboardShortcut.OPEN);
+        fileOpenMenuEntry.setOnMouseClicked(me -> {
             open();
             fileMenuPopUp.hide();
         });
-        Tooltip.install(file_open_pane, new Tooltip("Open a previously saved document."));
-        PopupMenuEntry file_save_pane = new PopupMenuEntry("Save", KeyboardShortcut.SAVE);
-        file_save_pane.setOnMouseClicked(me -> {
+        Tooltip.install(fileOpenMenuEntry, new Tooltip("Open a previously saved document."));
+        PopupMenuEntry fileSaveMenuEntry = new PopupMenuEntry("Save", KeyboardShortcut.SAVE);
+        fileSaveMenuEntry.setOnMouseClicked(me -> {
             save(false);
             fileMenuPopUp.hide();
         });
-        Tooltip.install(file_save_pane, new Tooltip("Save the current document."));
-        file_save_pane.disableProperty().bind(FileUtil.fileProperty().isNull());
-        PopupMenuEntry file_saveAs_pane = new PopupMenuEntry("Save As..");
-        file_saveAs_pane.setOnMouseClicked(me -> {
+        Tooltip.install(fileSaveMenuEntry, new Tooltip("Save the current document."));
+        fileSaveMenuEntry.disableProperty().bind(FileUtil.fileProperty().isNull());
+        PopupMenuEntry fileSaveAsMenuEntry = new PopupMenuEntry("Save As..");
+        fileSaveAsMenuEntry.setOnMouseClicked(me -> {
             save(true);
             fileMenuPopUp.hide();
         });
-        Tooltip.install(file_saveAs_pane, new Tooltip("Save the current document as a new file."));
-        PopupMenuEntry file_settings_pane = new PopupMenuEntry("Settings");
-        file_settings_pane.setOnMouseClicked(me -> {
+        Tooltip.install(fileSaveAsMenuEntry, new Tooltip("Save the current document as a new file."));
+        PopupMenuEntry fileSettingsMenuEntry = new PopupMenuEntry("Settings");
+        fileSettingsMenuEntry.setOnMouseClicked(me -> {
             Stage stage = new Stage();
             Scene scene = new Scene(new SettingsView(SettingsUtil.getSettings(), stage));
             ThemeUtil.setThemeOnScene(scene);
@@ -232,20 +231,20 @@ public class RootLayout extends BorderPane {
             stage.show();
 
         });
-        PopupMenuEntry file_print_pane = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
-        file_print_pane.setOnMouseClicked(me -> {
+        PopupMenuEntry filePrintMenuEntry = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
+        filePrintMenuEntry.setOnMouseClicked(me -> {
             FileUtil.print();
             fileMenuPopUp.hide();
         });
-        Tooltip.install(file_print_pane, new Tooltip("Print the current document."));
-        PopupMenuEntry file_exit_pane = new PopupMenuEntry("Exit");
-        file_exit_pane.setOnMouseClicked(me -> {
+        Tooltip.install(filePrintMenuEntry, new Tooltip("Print the current document."));
+        PopupMenuEntry fileExitMenuEntry = new PopupMenuEntry("Exit");
+        fileExitMenuEntry.setOnMouseClicked(me -> {
             fileMenuPopUp.hide();
             Platform.exit();
         });
-        Tooltip.install(file_exit_pane, new Tooltip("Exit the application."));
+        Tooltip.install(fileExitMenuEntry, new Tooltip("Exit the application."));
 
-        fileMenuList.getItems().addAll(file_new_pane, file_open_pane, file_save_pane, file_saveAs_pane, file_settings_pane, file_print_pane, file_exit_pane);
+        fileMenuList.getItems().addAll(fileNewMenuEntry, fileOpenMenuEntry, fileSaveMenuEntry, fileSaveAsMenuEntry, fileSettingsMenuEntry, filePrintMenuEntry, fileExitMenuEntry);
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
         fileMenuPopUp.setPopupContent(fileMenuList);
 
