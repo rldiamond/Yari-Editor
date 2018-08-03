@@ -170,6 +170,13 @@ public class WelcomeView extends VBox {
         openContainer.disableProperty().bind(busy);
         rightContent.getChildren().add(openContainer);
 
+        //busy indicator
+        var busySpinner = new JFXSpinner();
+        busySpinner.setRadius(25);
+        busySpinner.visibleProperty().bind(busy);
+        busySpinner.managedProperty().bind(busy);
+        rightContent.getChildren().add(busySpinner);
+
         //settings icon
         StackPane settingsContainer = new StackPane();
         VBox.setVgrow(settingsContainer, Priority.ALWAYS);
@@ -189,13 +196,6 @@ public class WelcomeView extends VBox {
         settingsButton.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
         settingsContainer.getChildren().add(settingsButton);
         rightContent.getChildren().add(settingsContainer);
-
-        //busy indicator
-        var busySpinner = new JFXSpinner();
-        busySpinner.setRadius(25);
-        busySpinner.visibleProperty().bind(busy);
-        busySpinner.managedProperty().bind(busy);
-        rightContent.getChildren().add(busySpinner);
 
 
         getChildren().setAll(contentContainer);
