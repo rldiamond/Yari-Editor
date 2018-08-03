@@ -3,7 +3,7 @@ Yari Editor is an tool to create and edit decision table XML files for the Yari 
 
 Yari Editor provides additional tools such as Java code template generation for matching ‘’’Rule’’’ objects, printing of decision table data in an easy to understand format, and more. 
 
-[View our wiki for guides and documentation.](/wiki)
+[View our wiki for guides and documentation.](../../wiki)
 
 ### Build
 Yari Editor is made entirely in JavaFX and Java 10 utilizing Maven for build and dependency management. 
@@ -31,7 +31,7 @@ mvn clean install
     * Pressing ENTER or unfocusing the cell will commit the edit.
 * Print decision table
 * Keyboard shortcuts
-    * For a list of currently supported keyboard shortcuts, [visit the wiki](/wiki#section-3-keyboard-shortcuts).
+    * For a list of currently supported keyboard shortcuts, [visit the wiki](../../wiki#section-3-keyboard-shortcuts).
 * Improved validation
     * Additional (useful) detail is provided on validation errors.
     * Validation log can be utilized to see all validation errors.
