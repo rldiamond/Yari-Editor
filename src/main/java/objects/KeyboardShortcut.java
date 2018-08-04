@@ -35,7 +35,7 @@ public enum KeyboardShortcut {
 
     private final KeyCombination keyCombination;
     private final String displayLabel;
-    private final Runnable action;
+    private Runnable action;
 
     /**
      * KeyboardShortcut with its associated key combination, display label, and action.
@@ -75,4 +75,5 @@ public enum KeyboardShortcut {
     public String getDisplayLabel() {
         return displayLabel;
     }
+
 }

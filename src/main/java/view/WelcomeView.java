@@ -94,7 +94,7 @@ public class WelcomeView extends VBox {
         leftContainerPane.setMinSize(USE_PREF_SIZE, USE_COMPUTED_SIZE);
         leftContainerPane.setMaxSize(USE_PREF_SIZE, USE_COMPUTED_SIZE);
         contentContainer.getChildren().add(leftContainerPane);
-        RecommendedFileListView recommendedFileListView = new RecommendedFileListView(stage, busy);
+        RecommendedFileListView recommendedFileListView = new RecommendedFileListView(stage, busy, SettingsUtil.getSettings());
         recommendedFileListView.disableProperty().bind(busy);
         HBox.setHgrow(recommendedFileListView, Priority.ALWAYS);
         leftContainerPane.getChildren().setAll(recommendedFileListView);

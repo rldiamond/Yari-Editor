@@ -112,18 +112,15 @@ public class MenuOption extends StackPane {
             pseudoClassStateChanged(selected, isSelected); //trigger pseudoclass update
             if (isSelected) {
                 selectedTransition.play();
+                if (runnable != null) {
+                    runnable.run();
+                }
             } else if (wasSelected && !isSelected) {
                 unselectedTransition.play();
             }
         });
 
         this.getChildren().setAll(wrapper);
-
-        this.setOnMouseReleased(me -> {
-            if (runnable != null) {
-                runnable.run();
-            }
-        });
 
     }
 

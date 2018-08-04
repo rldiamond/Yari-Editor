@@ -8,20 +8,39 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package objects;
+package components;
 
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.junit.Test;
+import org.testfx.framework.junit.ApplicationTest;
 
 import static org.junit.Assert.assertEquals;
 
-public class ThemeTest {
+public class EnumComboBoxTest extends ApplicationTest {
+
+    private enum testType {
+        ALPHA, BETA, CHARLIE
+    }
+
+    private EnumComboBox<testType> enumComboBox;
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        enumComboBox = new EnumComboBox<>(testType.class);
+        Scene scene = new Scene(enumComboBox);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
     @Test
-    public void getCss() {
+    public void testConstruction(){
+        assertEquals(testType.values().length, enumComboBox.getItems().size());
+    }
 
-        String expected = "theme/dark.css";
-        String result = Theme.DARK.getCss();
-        assertEquals(expected, result);
-
+    @Test
+    public void setPrettyPrint() {
+        enumComboBox.setPrettyPrint(true);
     }
 }

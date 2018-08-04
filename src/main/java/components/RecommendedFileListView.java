@@ -17,8 +17,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import objects.RecommendedFile;
+import settings.Settings;
 import utilities.FileUtil;
-import utilities.SettingsUtil;
 
 import java.io.File;
 import java.util.Arrays;
@@ -40,13 +40,13 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
      * @param stage the stage to utilize in actions.
      * @param busy  will notify when busy.
      */
-    public RecommendedFileListView(Stage stage, BooleanProperty busy) {
+    public RecommendedFileListView(Stage stage, BooleanProperty busy, Settings settings) {
         this.busy = busy;
 
         getStyleClass().add("fileList");
 
         File[] matchingFiles = null;
-        String path = SettingsUtil.getSettings().getProjectDirectory();
+        String path = settings.getProjectDirectory();
         if (path != null) {
             File f = new File(path);
             matchingFiles = f.listFiles((dir, name) -> name.endsWith("xml"));
@@ -62,7 +62,7 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
                     .collect(Collectors.toSet());
         }
 
-        List<RecommendedFile> filesFromSettings = SettingsUtil.getSettings().getRecommendedFiles();
+        List<RecommendedFile> filesFromSettings = settings.getRecommendedFiles();
         if (filesFromSettings != null) {
             projectDirFiles.addAll(filesFromSettings);
 

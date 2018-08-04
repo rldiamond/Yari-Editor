@@ -78,12 +78,4 @@ public class Dialog extends JFXDialog {
         this.text.set(text);
     }
 
-    /**
-     * The text property of the dialog.
-     *
-     * @return the text property of the dialog.
-     */
-    public StringProperty textProperty() {
-        return text;
-    }
 }
