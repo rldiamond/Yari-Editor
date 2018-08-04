@@ -10,7 +10,7 @@
 
 package validation.validators;
 
-import objects.EditorView;
+import objects.ToolView;
 import org.yari.core.table.Row;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class UniqueRowValidator extends TableValidator {
                 // Check if rows are unique
                 if (compare.equals(comparisonRow.getValues())) {
                     ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                    validatorErrorLocation.setEditorView(EditorView.ROWS_EDITOR);
+                    validatorErrorLocation.setToolView(ToolView.ROWS);
                     validatorErrorLocation.setRow(comparisonRow);
                     String errMsg = "Two rows of data were found to have the same data! Check rows " + comparisonRow + " and " + currentRow + ".";
                     ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);

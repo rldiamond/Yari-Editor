@@ -37,12 +37,12 @@ import utilities.ToastUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public class JavaCodeView extends StackPane {
+public class JavaCodeToolView extends StackPane {
 
     private DecisionTable dt = RootLayoutFactory.getInstance().getDecisionTable();
     private String ruleName = RootLayoutFactory.getInstance().getRuleName();
 
-    public JavaCodeView() {
+    public JavaCodeToolView() {
 
         setPadding(new Insets(20, 20, 20, 20));
 

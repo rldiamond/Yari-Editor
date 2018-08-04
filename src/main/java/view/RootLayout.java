@@ -56,7 +56,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import objects.EditorView;
+import objects.ToolView;
 import objects.KeyboardShortcut;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
@@ -67,10 +67,10 @@ import utilities.*;
 import validation.ValidateEvent;
 import validation.ValidationService;
 import validation.view.ValidationLogDialog;
-import view.editors.ActionsDataEditor;
-import view.editors.ConditionsDataEditor;
+import view.editors.ActionsToolView;
+import view.editors.ConditionsToolView;
 import view.editors.DataEditor;
-import view.editors.RowsDataEditor;
+import view.editors.RowsToolView;
 
 import java.io.File;
 import java.util.Optional;
@@ -294,22 +294,22 @@ public class RootLayout extends BorderPane {
         var actionsOption = new MenuOption("Actions", "mdTab-actions");
         Tooltip.install(actionsOption, new Tooltip("Open the Actions Editor"));
         actionsOption.setOnMouseClicked(me -> selectTab("actions"));
-        actionsOption.setOnSelectAction(() -> showView(EditorView.ACTIONS_EDITOR));
+        actionsOption.setOnSelectAction(() -> showView(ToolView.ACTIONS));
         var conditionsOption = new MenuOption("Conditions", "mdTab-conditions");
         Tooltip.install(conditionsOption, new Tooltip("Open the Conditions Editor"));
         conditionsOption.setOnMouseClicked(me -> selectTab("conditions"));
-        conditionsOption.setOnSelectAction(() -> showView(EditorView.CONDITIONS_EDITOR));
+        conditionsOption.setOnSelectAction(() -> showView(ToolView.CONDITIONS));
         var rowsOption = new MenuOption("Rows", "mdTab-rows");
         Tooltip.install(rowsOption, new Tooltip("Open the Rows Editor"));
         rowsOption.setOnMouseClicked(me -> selectTab("rows"));
-        rowsOption.setOnSelectAction(() -> showView(EditorView.ROWS_EDITOR));
+        rowsOption.setOnSelectAction(() -> showView(ToolView.ROWS));
         var generalOption = new MenuOption("General", "mdTab-general");
         Tooltip.install(generalOption, new Tooltip("Open the General Table Setting Editor"));
         generalOption.setOnMouseClicked(me -> selectTab("general"));
-        generalOption.setOnSelectAction(() -> showView(EditorView.GENERAL));
+        generalOption.setOnSelectAction(() -> showView(ToolView.GENERAL));
         var skeletonCode = new MenuOption("Java Code", "mdTab-code");
         Tooltip.install(skeletonCode, new Tooltip("View Skeleton Java Code"));
-        skeletonCode.setOnSelectAction(() -> showView(EditorView.SKELETON_CODE));
+        skeletonCode.setOnSelectAction(() -> showView(ToolView.JAVA_CODE));
         skeletonCode.setOnMouseClicked(me -> selectTab("java code"));
 
         menuOptions.addAll(actionsOption, conditionsOption, rowsOption, generalOption, skeletonCode);
@@ -407,26 +407,26 @@ public class RootLayout extends BorderPane {
         alert.showAndWait();
     }
 
-    public void showView(EditorView editorView) {
+    public void showView(ToolView toolView) {
         loadingContent.set(true);
 
         FXUtil.runAsync(() -> {
             Pane displayPane;
-            switch (editorView) {
+            switch (toolView) {
                 case GENERAL:
-                    displayPane = new GeneralView();
+                    displayPane = new GeneralToolView();
                     break;
-                case ROWS_EDITOR:
-                    displayPane = new RowsDataEditor();
+                case ROWS:
+                    displayPane = new RowsToolView();
                     break;
-                case ACTIONS_EDITOR:
-                    displayPane = new ActionsDataEditor();
+                case ACTIONS:
+                    displayPane = new ActionsToolView();
                     break;
-                case CONDITIONS_EDITOR:
-                    displayPane = new ConditionsDataEditor();
+                case CONDITIONS:
+                    displayPane = new ConditionsToolView();
                     break;
-                case SKELETON_CODE:
-                    displayPane = new JavaCodeView();
+                case JAVA_CODE:
+                    displayPane = new JavaCodeToolView();
                     break;
                 default:
                     displayPane = new StackPane(new Label("An error occurred. Please contact the developer."));

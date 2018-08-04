@@ -10,26 +10,34 @@
 
 package objects;
 
-import view.GeneralView;
-import view.JavaCodeView;
-import view.editors.ActionsDataEditor;
-import view.editors.ConditionsDataEditor;
-import view.editors.RowsDataEditor;
+import view.GeneralToolView;
+import view.JavaCodeToolView;
+import view.editors.ActionsToolView;
+import view.editors.ConditionsToolView;
+import view.editors.RowsToolView;
 
-public enum EditorView {
+/**
+ * Enumeration of different Tool views
+ */
+public enum ToolView {
 
-    GENERAL(GeneralView.class),
-    SKELETON_CODE(JavaCodeView.class),
-    ACTIONS_EDITOR(ActionsDataEditor.class),
-    CONDITIONS_EDITOR(ConditionsDataEditor.class),
-    ROWS_EDITOR(RowsDataEditor.class);
+    GENERAL(GeneralToolView.class),
+    JAVA_CODE(JavaCodeToolView.class),
+    ACTIONS(ActionsToolView.class),
+    CONDITIONS(ConditionsToolView.class),
+    ROWS(RowsToolView.class);
 
     private Class viewClass;
 
-    private EditorView(Class viewClass) {
+    ToolView(Class viewClass) {
         this.viewClass = viewClass;
     }
 
+    /**
+     * Returns the view class associated with the tool view.
+     *
+     * @return the view class associated with the tool view.
+     */
     public Class getViewClass() {
         return viewClass;
     }

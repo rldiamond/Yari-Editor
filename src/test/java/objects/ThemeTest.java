@@ -8,25 +8,20 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package components;
+package objects;
 
-import javafx.application.Application;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import utilities.ThemeUtil;
+import org.junit.jupiter.api.Test;
 
-public class DirectoryFileListDemo extends Application {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+class ThemeTest {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(new RecommendedFileListView(primaryStage, new SimpleBooleanProperty(false)));
-        ThemeUtil.setThemeOnScene(scene);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    @Test
+    void getCss() {
+
+        String expected = "theme/dark.css";
+        String result = Theme.DARK.getCss();
+        assertEquals(expected, result);
+
     }
 }

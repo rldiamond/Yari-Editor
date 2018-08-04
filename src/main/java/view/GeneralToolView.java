@@ -31,13 +31,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import validation.ValidateEvent;
 
-public class GeneralView extends StackPane {
+public class GeneralToolView extends StackPane {
 
     private final JFXTextField tableNameField = new JFXTextField();
     private final JFXTextField tableDescriptionField = new JFXTextField();
     private final JFXTextField ruleNameField = new JFXTextField();
 
-    public GeneralView() {
+    public GeneralToolView() {
         setPadding(new Insets(20, 20, 20, 20));
 
         Card card = new Card("General Table Settings");

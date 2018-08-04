@@ -28,7 +28,7 @@ public enum ComparatorType {
 
     private final String displayValue;
 
-    private ComparatorType(String displayValue) {
+    ComparatorType(String displayValue) {
         this.displayValue = displayValue;
     }
 
