@@ -34,23 +34,23 @@ public class CardTest extends ApplicationTest {
 
     @Test
     public void setDisplayedContent() {
-
-        Label contentToDisplay = new Label("Test");
-        contentToDisplay.setId("label");
-        FXUtil.runOnFXThread(() -> card.setDisplayedContent(contentToDisplay));
-        assertThat(card).hasChild("#label");
-        assertThat(contentToDisplay).isVisible();
-
+        FXUtil.runOnFXThread(() -> {
+            Label contentToDisplay = new Label("Test");
+            contentToDisplay.setId("label");
+            card.setDisplayedContent(contentToDisplay);
+            assertThat(card).hasChild("#label");
+            assertThat(contentToDisplay).isVisible();
+        });
     }
 
     @Test
     public void setFooterContent() {
-
-        Label footerContent = new Label("Footer");
-        footerContent.setId("footer");
-        FXUtil.runOnFXThread(() -> card.setFooterContent(footerContent));
-        assertThat(footerContent).isVisible();
-
+        FXUtil.runOnFXThread(() -> {
+            Label footerContent = new Label("Footer");
+            footerContent.setId("footer");
+            FXUtil.runOnFXThread(() -> card.setFooterContent(footerContent));
+            assertThat(footerContent).isVisible();
+        });
     }
 
 }
