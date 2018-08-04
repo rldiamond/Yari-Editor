@@ -110,6 +110,7 @@ public class FileUtil {
         DecisionTable decisionTable = new DecisionTable();
         decisionTable.setDescription("MyTable Description");
         decisionTable.setName("MyTable");
+        RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
 
     }
 
