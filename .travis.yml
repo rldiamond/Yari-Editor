@@ -16,5 +16,5 @@ deploy:
   api_key: $github_token
   file: "target/YariEditor.jar"
   skip_cleanup: true
-  # on:
-  #   tags: true
+  on:
+    tags: true
