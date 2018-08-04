@@ -16,7 +16,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
-import utilities.FXUtil;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
@@ -39,7 +38,7 @@ public class DialogTest extends ApplicationTest {
 
         String text = "This is some test content";
         assertThat(dialog).isVisible();
-        FXUtil.runOnFXThread(() -> dialog.setText(text));
+        dialog.setText(text);
 
         //pull the text area out using css selector
         TextArea textArea = lookup(".text-area").query();
