@@ -10,14 +10,14 @@
 
 package objects;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
-class ThemeTest {
+public class ThemeTest {
 
     @Test
-    void getCss() {
+    public void getCss() {
 
         String expected = "theme/dark.css";
         String result = Theme.DARK.getCss();

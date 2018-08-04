@@ -20,19 +20,20 @@
 
 package objects;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import view.GeneralToolView;
 import view.JavaCodeToolView;
 import view.editors.ActionsToolView;
 import view.editors.ConditionsToolView;
 import view.editors.RowsToolView;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
-class ToolViewTest {
+
+public class ToolViewTest {
 
     @Test
-    void getViewClass() {
+    public void getViewClass() {
 
         Class expected;
         Class result;

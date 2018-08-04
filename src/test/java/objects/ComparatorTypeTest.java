@@ -10,19 +10,20 @@
 
 package objects;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-class ComparatorTypeTest {
+public class ComparatorTypeTest {
 
     @Test
-    void getDisplayValue() {
+    public void getDisplayValue() {
 
         String expected;
         String result;
@@ -60,7 +61,7 @@ class ComparatorTypeTest {
     }
 
     @Test
-    void getFXCompatibleList() {
+    public void getFXCompatibleList() {
 
         final List<String> expectedValues = new ArrayList<>();
         Collections.addAll(expectedValues, "==", "!=", "GT", "GE", "LT", "LE");

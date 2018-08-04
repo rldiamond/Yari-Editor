@@ -10,21 +10,22 @@
 
 package objects;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-class DataTypeTest {
+public class DataTypeTest {
 
     @Test
-    void getDisplayValue() {
+    public void getDisplayValue() {
 
         String expected;
         String result;
@@ -77,7 +78,7 @@ class DataTypeTest {
     }
 
     @Test
-    void getJavaCodeCompatibleValue() {
+    public void getJavaCodeCompatibleValue() {
 
         String expected;
         String result;
@@ -130,7 +131,7 @@ class DataTypeTest {
     }
 
     @Test
-    void getFXCompatibleList() {
+    public void getFXCompatibleList() {
         final List<String> expectedValues = new ArrayList<>();
         Collections.addAll(expectedValues, "boolean", "byte", "char", "double", "float", "integer", "long", "short", "string");
 
@@ -142,7 +143,7 @@ class DataTypeTest {
     }
 
     @Test
-    void getFromTableString() {
+    public void getFromTableString() {
 
         //expect null
         String failureInput = "fail";

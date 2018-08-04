@@ -20,21 +20,21 @@
 
 package objects;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Calendar;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
-class RecommendedFileTest {
+public class RecommendedFileTest {
 
     private RecommendedFile recommendedFile;
     private Calendar calendar;
 
-    @BeforeEach
-    void prepareTest() {
+    @Before
+    public void prepareTest() {
         recommendedFile = new RecommendedFile(new File("/path"));
         recommendedFile.setName("test file");
         recommendedFile.setPath("/test/path");
@@ -43,46 +43,46 @@ class RecommendedFileTest {
     }
 
     @Test
-    void getPath() {
+    public void getPath() {
         String path = recommendedFile.getPath();
         assertEquals("/test/path", path);
     }
 
     @Test
-    void setPath() {
+    public void setPath() {
         String input = "/new/path";
         recommendedFile.setPath(input);
         assertEquals(input, recommendedFile.getPath());
     }
 
     @Test
-    void getName() {
+    public void getName() {
         String name = recommendedFile.getName();
         assertEquals("test file", name);
     }
 
     @Test
-    void setName() {
+    public void setName() {
         String input = "new name";
         recommendedFile.setName(input);
         assertEquals(input, recommendedFile.getName());
     }
 
     @Test
-    void getTime() {
+    public void getTime() {
         Calendar time = recommendedFile.getTime();
         assertEquals(calendar, time);
     }
 
     @Test
-    void setTime() {
+    public void setTime() {
         Calendar input = Calendar.getInstance();
         recommendedFile.setTime(input);
         assertEquals(input, recommendedFile.getTime());
     }
 
     @Test
-    void equals() {
+    public void equals() {
 
         boolean expected;
         boolean result;

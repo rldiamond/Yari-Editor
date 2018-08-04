@@ -21,19 +21,41 @@
 package objects;
 
 import javafx.scene.input.KeyCombination;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-class KeyboardShortcutTest {
+
+@RunWith(MockitoJUnitRunner.class)
+public class KeyboardShortcutTest {
+
+    @Mock
+    Runnable action;
+
+    @InjectMocks
+    KeyboardShortcut shortcut = KeyboardShortcut.NEW;
 
     @Test
-    void getKeyCombination() {
+    public void runShortcutAction() {
+
+        Mockito.doNothing().when(action).run();
+        shortcut.runShortcutAction();
+        Mockito.verify(action, Mockito.times(1)).run();
+
+    }
+
+    @Test
+    public void getKeyCombination() {
 
         List<KeyCombination> duplicateFinder = new ArrayList<>();
 
@@ -48,7 +70,7 @@ class KeyboardShortcutTest {
     }
 
     @Test
-    void getDisplayLabel() {
+    public void getDisplayLabel() {
 
         String startsWith = "Ctrl+";
 
