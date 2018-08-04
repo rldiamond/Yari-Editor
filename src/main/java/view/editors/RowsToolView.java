@@ -22,8 +22,8 @@ package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
-import validation.ValidateEvent;
-import components.table.ActionsTable;
+import components.table.RowTable;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,27 +32,38 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import org.yari.core.table.Action;
+import org.yari.core.table.Row;
 import utilities.FXUtil;
-import utilities.TableUtil;
 import view.RootLayoutFactory;
 
 import java.util.Collections;
 
+/**
+ * Display a table of {@link Row} to allow for creation of additional rows, editing available rows, and removing rows.
+ */
+public class RowsToolView extends StackPane implements DataEditor {
 
-public class ActionsDataEditor extends StackPane implements DataEditor {
+    private ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
+    private RowTable rowTable = new RowTable();
 
-    private ObservableList<Action> actionList = RootLayoutFactory.getInstance().getActionsList();
-    private ActionsTable actionsTable = new ActionsTable();
-
-    public ActionsDataEditor() {
+    /**
+     * Construct a RowsToolView with default settings.
+     */
+    public RowsToolView() {
         setPadding(new Insets(20, 20, 20, 20));
-        Card tableCard = new Card("Actions Editor");
+        Card tableCard = new Card("Rows Editor");
         getChildren().setAll(tableCard);
 
         //table
-        actionsTable.setItems(actionList);
-        tableCard.setDisplayedContent(actionsTable);
+        rowTable.setItems(rowsList);
+        tableCard.setDisplayedContent(rowTable);
+
+        //renumber rows on change
+        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> {
+            while (c.next()) {
+                renumberRows();
+            }
+        });
 
         ContextMenu contextMenu = new ContextMenu();
         var addMenuItem = new MenuItem("ADD");
@@ -60,27 +71,36 @@ public class ActionsDataEditor extends StackPane implements DataEditor {
         var removeMenuItem = new MenuItem("REMOVE");
         removeMenuItem.setOnAction(a -> removeSelectedRow());
         contextMenu.getItems().setAll(addMenuItem, removeMenuItem);
-        actionsTable.setContextMenu(contextMenu);
+        rowTable.setContextMenu(contextMenu);
 
         //buttons
         JFXButton addAction = new JFXButton();
-        addAction.setOnMouseClicked(a -> addNewRow());
+        addAction.setOnMouseClicked(me -> addNewRow());
         addAction.setText("ADD");
         addAction.getStyleClass().add("button-flat-green");
-        Tooltip.install(addAction, new Tooltip("Add new action"));
+        Tooltip.install(addAction, new Tooltip("Add new row"));
 
         JFXButton removeAction = new JFXButton();
-        removeAction.disableProperty().bind(actionsTable.getSelectionModel().selectedItemProperty().isNull());
+        removeAction.disableProperty().bind(rowTable.getSelectionModel().selectedItemProperty().isNull());
         removeAction.setOnMouseClicked(me -> removeSelectedRow());
         removeAction.setText("REMOVE");
         removeAction.getStyleClass().add("button-flat-red");
-        Tooltip.install(removeAction, new Tooltip("Remove selected action"));
+        Tooltip.install(removeAction, new Tooltip("Remove selected row"));
 
         HBox buttonWrapper = new HBox(5);
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
         buttonWrapper.getChildren().setAll(removeAction, addAction);
         tableCard.setFooterContent(buttonWrapper);
+    }
 
+    /**
+     * Rows need to be renumbered when added, removed, or re-arranged.
+     */
+    private void renumberRows() {
+        var rowNumber = 0;
+        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
+            row.setRowNumber(rowNumber++);
+        }
     }
 
     /**
@@ -88,12 +108,12 @@ public class ActionsDataEditor extends StackPane implements DataEditor {
      */
     @Override
     public void removeSelectedRow() {
-        if (actionsTable.getSelectionModel().getSelectedItem() == null) {
+        if (rowTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        Action selectedItem = actionsTable.getSelectionModel().getSelectedItem();
-        if (actionList.contains(selectedItem)) {
-            actionList.remove(selectedItem);
+        Row selectedItem = rowTable.getSelectionModel().getSelectedItem();
+        if (rowsList.contains(selectedItem)) {
+            rowsList.remove(selectedItem);
         }
     }
 
@@ -102,10 +122,10 @@ public class ActionsDataEditor extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        actionList.add(new Action());
+        rowsList.add(new Row());
         FXUtil.runOnFXThread(() -> {
-            actionsTable.requestFocus();
-            actionsTable.getSelectionModel().selectLast();
+            rowTable.requestFocus();
+            rowTable.getSelectionModel().selectLast();
         });
     }
 
@@ -114,14 +134,12 @@ public class ActionsDataEditor extends StackPane implements DataEditor {
      */
     @Override
     public void moveRowUp() {
-        if (actionsTable.getSelectionModel().getSelectedItem() == null) {
+        if (rowTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        int selectedIndex = actionsTable.getSelectionModel().getSelectedIndex();
+        int selectedIndex = rowTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
-            Collections.swap(actionsTable.getItems(), selectedIndex, selectedIndex - 1);
-            TableUtil.reorderActions(selectedIndex, selectedIndex - 1);
-            fireEvent(new ValidateEvent());
+            Collections.swap(rowTable.getItems(), selectedIndex, selectedIndex - 1);
         }
     }
 
@@ -130,14 +148,12 @@ public class ActionsDataEditor extends StackPane implements DataEditor {
      */
     @Override
     public void moveRowDown() {
-        if (actionsTable.getSelectionModel().getSelectedItem() == null) {
+        if (rowTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        int selectedIndex = actionsTable.getSelectionModel().getSelectedIndex();
-        if (selectedIndex < actionsTable.getItems().size() - 1) {
-            Collections.swap(actionsTable.getItems(), selectedIndex, selectedIndex + 1);
-            TableUtil.reorderActions(selectedIndex, selectedIndex + 1);
-            fireEvent(new ValidateEvent());
+        int selectedIndex = rowTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < rowTable.getItems().size() - 1) {
+            Collections.swap(rowTable.getItems(), selectedIndex, selectedIndex + 1);
         }
     }
 }

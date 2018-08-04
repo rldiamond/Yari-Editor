@@ -10,7 +10,7 @@
 
 package validation.validators;
 
-import objects.EditorView;
+import objects.ToolView;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.Row;
@@ -37,12 +37,12 @@ public class MinimumRequiredDataValidator extends TableValidator {
         if (MIN_ROWS_REQUIRED > 0) {
             if (rows == null || rows.isEmpty()) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.ROWS_EDITOR);
+                validatorErrorLocation.setToolView(ToolView.ROWS);
                 ValidatorError validatorError = new ValidatorError("Rows are required. There currently aren't any", validatorErrorLocation);
                 addError(validatorError);
             } else if (rows.size() < MIN_ROWS_REQUIRED) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.ROWS_EDITOR);
+                validatorErrorLocation.setToolView(ToolView.ROWS);
                 ValidatorError validatorError = new ValidatorError("At least " + MIN_ROWS_REQUIRED + " rows are required. There currently are " + rows.size(), validatorErrorLocation);
                 addError(validatorError);
             }
@@ -51,12 +51,12 @@ public class MinimumRequiredDataValidator extends TableValidator {
         if (MIN_CONDITIONS_REQUIRED > 0) {
             if (conditions == null || conditions.isEmpty()) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.CONDITIONS_EDITOR);
+                validatorErrorLocation.setToolView(ToolView.CONDITIONS);
                 ValidatorError validatorError = new ValidatorError("Conditions are required. There currently aren't any.", validatorErrorLocation);
                 addError(validatorError);
             } else if (conditions.size() < MIN_CONDITIONS_REQUIRED) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.CONDITIONS_EDITOR);
+                validatorErrorLocation.setToolView(ToolView.CONDITIONS);
                 ValidatorError validatorError = new ValidatorError("At least " + MIN_CONDITIONS_REQUIRED + " conditions are required. There currently are " + conditions.size(), validatorErrorLocation);
                 addError(validatorError);
             }
@@ -65,12 +65,12 @@ public class MinimumRequiredDataValidator extends TableValidator {
         if (MIN_ACTIONS_REQUIRED > 0) {
             if (actions == null || actions.isEmpty()) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.ACTIONS_EDITOR);
+                validatorErrorLocation.setToolView(ToolView.ACTIONS);
                 ValidatorError validatorError = new ValidatorError("Actions are required. There currently aren't any", validatorErrorLocation);
                 addError(validatorError);
             } else if (actions.size() < MIN_ACTIONS_REQUIRED) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                validatorErrorLocation.setEditorView(EditorView.ACTIONS_EDITOR);
+                validatorErrorLocation.setToolView(ToolView.ACTIONS);
                 ValidatorError validatorError = new ValidatorError("At least " + MIN_ACTIONS_REQUIRED + " actions are required. There currently are " + actions.size(), validatorErrorLocation);
                 addError(validatorError);
             }

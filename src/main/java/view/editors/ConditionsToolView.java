@@ -22,8 +22,8 @@ package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
-import components.table.RowTable;
-import javafx.collections.ListChangeListener;
+import validation.ValidateEvent;
+import components.table.ConditionsTable;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,38 +32,27 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import org.yari.core.table.Row;
+import org.yari.core.table.Condition;
 import utilities.FXUtil;
+import utilities.TableUtil;
 import view.RootLayoutFactory;
 
 import java.util.Collections;
 
-/**
- * Display a table of {@link Row} to allow for creation of additional rows, editing available rows, and removing rows.
- */
-public class RowsDataEditor extends StackPane implements DataEditor {
 
-    private ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
-    private RowTable rowTable = new RowTable();
+public class ConditionsToolView extends StackPane implements DataEditor {
 
-    /**
-     * Construct a RowsDataEditor with default settings.
-     */
-    public RowsDataEditor() {
+    private ObservableList<Condition> conditionList = RootLayoutFactory.getInstance().getConditionsList();
+    private ConditionsTable conditionsTable = new ConditionsTable();
+
+    public ConditionsToolView() {
         setPadding(new Insets(20, 20, 20, 20));
-        Card tableCard = new Card("Rows Editor");
+        Card tableCard = new Card("Conditions Editor");
         getChildren().setAll(tableCard);
 
         //table
-        rowTable.setItems(rowsList);
-        tableCard.setDisplayedContent(rowTable);
-
-        //renumber rows on change
-        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> {
-            while (c.next()) {
-                renumberRows();
-            }
-        });
+        conditionsTable.setItems(conditionList);
+        tableCard.setDisplayedContent(conditionsTable);
 
         ContextMenu contextMenu = new ContextMenu();
         var addMenuItem = new MenuItem("ADD");
@@ -71,21 +60,21 @@ public class RowsDataEditor extends StackPane implements DataEditor {
         var removeMenuItem = new MenuItem("REMOVE");
         removeMenuItem.setOnAction(a -> removeSelectedRow());
         contextMenu.getItems().setAll(addMenuItem, removeMenuItem);
-        rowTable.setContextMenu(contextMenu);
+        conditionsTable.setContextMenu(contextMenu);
 
         //buttons
         JFXButton addAction = new JFXButton();
-        addAction.setOnMouseClicked(me -> addNewRow());
+        addAction.setOnMouseClicked(a -> addNewRow());
         addAction.setText("ADD");
         addAction.getStyleClass().add("button-flat-green");
-        Tooltip.install(addAction, new Tooltip("Add new row"));
+        Tooltip.install(addAction, new Tooltip("Add new condition"));
 
         JFXButton removeAction = new JFXButton();
-        removeAction.disableProperty().bind(rowTable.getSelectionModel().selectedItemProperty().isNull());
+        removeAction.disableProperty().bind(conditionsTable.getSelectionModel().selectedItemProperty().isNull());
         removeAction.setOnMouseClicked(me -> removeSelectedRow());
         removeAction.setText("REMOVE");
         removeAction.getStyleClass().add("button-flat-red");
-        Tooltip.install(removeAction, new Tooltip("Remove selected row"));
+        Tooltip.install(removeAction, new Tooltip("Remove selected condition"));
 
         HBox buttonWrapper = new HBox(5);
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
@@ -94,26 +83,16 @@ public class RowsDataEditor extends StackPane implements DataEditor {
     }
 
     /**
-     * Rows need to be renumbered when added, removed, or re-arranged.
-     */
-    private void renumberRows() {
-        var rowNumber = 0;
-        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
-            row.setRowNumber(rowNumber++);
-        }
-    }
-
-    /**
      * @inheritDoc
      */
     @Override
     public void removeSelectedRow() {
-        if (rowTable.getSelectionModel().getSelectedItem() == null) {
+        if (conditionsTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        Row selectedItem = rowTable.getSelectionModel().getSelectedItem();
-        if (rowsList.contains(selectedItem)) {
-            rowsList.remove(selectedItem);
+        Condition selectedItem = conditionsTable.getSelectionModel().getSelectedItem();
+        if (conditionList.contains(selectedItem)) {
+            conditionList.remove(selectedItem);
         }
     }
 
@@ -122,10 +101,10 @@ public class RowsDataEditor extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        rowsList.add(new Row());
+        conditionList.add(new Condition());
         FXUtil.runOnFXThread(() -> {
-            rowTable.requestFocus();
-            rowTable.getSelectionModel().selectLast();
+            conditionsTable.requestFocus();
+            conditionsTable.getSelectionModel().selectLast();
         });
     }
 
@@ -134,12 +113,14 @@ public class RowsDataEditor extends StackPane implements DataEditor {
      */
     @Override
     public void moveRowUp() {
-        if (rowTable.getSelectionModel().getSelectedItem() == null) {
+        if (conditionsTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        int selectedIndex = rowTable.getSelectionModel().getSelectedIndex();
+        int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
-            Collections.swap(rowTable.getItems(), selectedIndex, selectedIndex - 1);
+            Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex - 1);
+            TableUtil.reorderConditions(selectedIndex, selectedIndex - 1);
+            fireEvent(new ValidateEvent());
         }
     }
 
@@ -148,12 +129,14 @@ public class RowsDataEditor extends StackPane implements DataEditor {
      */
     @Override
     public void moveRowDown() {
-        if (rowTable.getSelectionModel().getSelectedItem() == null) {
+        if (conditionsTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        int selectedIndex = rowTable.getSelectionModel().getSelectedIndex();
-        if (selectedIndex < rowTable.getItems().size() - 1) {
-            Collections.swap(rowTable.getItems(), selectedIndex, selectedIndex + 1);
+        int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < conditionsTable.getItems().size() - 1) {
+            Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex + 1);
+            TableUtil.reorderConditions(selectedIndex, selectedIndex + 1);
+            fireEvent(new ValidateEvent());
         }
     }
 }

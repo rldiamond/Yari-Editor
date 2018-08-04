@@ -55,7 +55,7 @@ public class ValidationListCell extends ListCell<ValidatorError> {
         setOnMouseClicked(me -> {
             if (me.getClickCount() == 2 && getItem() != null && getItem().getValidatorErrorLocation() != null) {
                 // show the appropriate view
-                RootLayoutFactory.getInstance().showView(getItem().getValidatorErrorLocation().getEditorView());
+                RootLayoutFactory.getInstance().showView(getItem().getValidatorErrorLocation().getToolView());
             }
         });
     }
