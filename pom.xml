@@ -51,7 +51,8 @@
                             <finalName>YariEditor</finalName>
                             <!--<shadedArtifactAttached>true</shadedArtifactAttached>-->
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>application.YariEditor</mainClass>
                                 </transformer>
                             </transformers>
@@ -78,7 +79,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -86,7 +87,7 @@
                 <configuration>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
-            </configuration>
+                </configuration>
             </plugin>
         </plugins>
     </build>
