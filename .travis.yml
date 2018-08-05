@@ -2,6 +2,9 @@ language: java
 jdk: oraclejdk10
 before_install:
   - mvn install:install-file -Dfile=lib/yari-core-0.3.1-SNAPSHOT.jar -DgroupId=org.yari -DartifactId=yari-core -Dversion=0.3.1-SNAPSHOT -Dpackaging=jar
+install:
+
+
 jobs:
   include:
     - stage: "Tests"
@@ -10,7 +13,7 @@ jobs:
         - test $TRAVIS_BRANCH = "master" && bash <(curl -s https://codecov.io/bash)
     - stage: "Sonarqube"
       if: branch = master
-      script: "mvn sonar:sonar -Dsonar.organization=rldiamond-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=0d6954569adf5829df1f616ddbd320e68f6823ff"
+      script: "mvn sonar:sonar -Dsonar.organization=rldiamond-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$sonar_token"
 deploy:
   provider: releases
   api_key: $github_token
