@@ -9,8 +9,11 @@ jobs:
     - stage: "SonarQube"
       if: branch = master
       script: "mvn sonar:sonar -Dsonar.organization=rldiamond-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=0d6954569adf5829df1f616ddbd320e68f6823ff"
-after_success:
-  - test $TRAVIS_BRANCH = "master" && bash <(curl -s https://codecov.io/bash)
+    - stage: Codecov
+      if: branch = master
+      script: test $TRAVIS_BRANCH = "master" && bash <(curl -s https://codecov.io/bash)
+# after_success:
+  # - test $TRAVIS_BRANCH = "master" && bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: releases
   api_key: $github_token
