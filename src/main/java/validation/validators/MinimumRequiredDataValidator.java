@@ -29,7 +29,7 @@ public class MinimumRequiredDataValidator extends TableValidator {
 
     @Override
     protected void runValidation() {
-        List<Row> rows = getDecisionTable().getRowData();
+        List<Row> rows = getDecisionTable().getRawRowData();
         List<Condition> conditions = getDecisionTable().getConditions();
         List<Action> actions = getDecisionTable().getActions();
 

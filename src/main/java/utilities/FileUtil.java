@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Contains several file-management utilities such as save, open, and new files.
@@ -84,35 +83,85 @@ public class FileUtil {
             if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
                 ValidationService.getService().setEnabled(false);
             }
-            try {
-                importFromFile(file); //want off thread
-                if (!RootLayoutFactory.isDisplayed()) {
-                    FXUtil.runOnFXThread(() -> {
-                        RootLayoutFactory.show(stage);
-                        if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
-                            validationService.setEnabled(true);
-                        }
-                    });
 
+            //start simplified logic
+            //load the file
+            clearData();
+            DecisionTable decisionTable = loadObjectFromFile(DecisionTable.class, file.getPath());
+            if (decisionTable == null) {
+                logger.warn("DecisionTable failed to load.");
+                if (RootLayoutFactory.isDisplayed()) {
+                    ToastUtil.sendPersistentToast("Failed to load the file. Is it a decision table file?");
+                } else {
+                    FXUtil.runOnFXThread(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("ValidatorError");
+                        alert.setHeaderText("Could not load table data");
+                        alert.setContentText("Could not load table data from file. Is it a decision table file?");
+                        alert.showAndWait();
+                    });
                 }
-            } catch (Exception ex) {
-                logger.warn("Failed to open file!", ex);
-                FXUtil.runOnFXThread(() -> {
-                    if (busy != null){
-                        busy.setValue(false);
-                    }
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("ValidatorError");
-                    alert.setHeaderText("Could not load table data");
-                    alert.setContentText("Could not load table data from file.\n" + ex.getMessage());
-                    alert.showAndWait();
-                });
+                if (busy != null) {
+                    busy.setValue(false);
+                }
                 if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
-                    validationService.setEnabled(true);
+                    ValidationService.getService().setEnabled(true);
                 }
+                newFile();
+                return;
+            }
+
+            //ensure data is valid
+            RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
+            for (Condition condition : decisionTable.getConditions()) {
+                RootLayoutFactory.getInstance().getConditionsList().add(condition);
+            }
+            for (Action action : decisionTable.getActions()) {
+                RootLayoutFactory.getInstance().getActionsList().add(action);
+            }
+            var rowNumber = 0;
+            for (Row row : decisionTable.getRawRowData()) {
+                row.setRowNumber(rowNumber++);
+                RootLayoutFactory.getInstance().getRowsList().add(row);
+            }
+
+            validationService.runValidationImmediately();
+
+            if (!validationService.isValid()) {
+                logger.debug("The table that was loaded is not valid.");
+                clearData();
+                if (busy != null) {
+                    busy.setValue(false);
+                }
+                if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
+                    ValidationService.getService().setEnabled(true);
+                }
+                if (RootLayoutFactory.isDisplayed()) {
+                    ToastUtil.sendPersistentToast("Could not load table data from file. The table from the file is was invalid.");
+                } else {
+                    FXUtil.runOnFXThread(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("ValidatorError");
+                        alert.setHeaderText("Could not load table data");
+                        alert.setContentText("Could not load table data from file. The table from the file is was invalid.");
+                        alert.showAndWait();
+                    });
+                }
+                newFile();
+                return;
+            }
+
+            if (!RootLayoutFactory.isDisplayed()){
+                FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
+            }
+
+            setDirty(false);
+            if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
+                ValidationService.getService().setEnabled(true);
             }
         });
     }
+
 
     /**
      * Create a new file.
@@ -206,41 +255,6 @@ public class FileUtil {
         });
     }
 
-    private static boolean importFromFile(File file) throws FileNotFoundException, YariException {
-        clearData();
-
-        validationService.validateXML(file.getPath());
-
-        DecisionTable decisionTable;
-
-        //get around some weird yari stuff to import the table
-        BasicRule basicRule = new BasicRule() {
-            @Override
-            public void lookupGlobals(Context globalContext) {
-                //NOTE: we do nothing here are we just need the BasicRule constructed to create the DecisionTable object.
-            }
-        };
-
-        currentFile.setValue(file);
-
-        decisionTable = basicRule.createDecisionTable(file.getPath());
-        for (Condition condition : decisionTable.getConditions()) {
-            RootLayoutFactory.getInstance().getConditionsList().add(condition);
-        }
-        for (Action action : decisionTable.getActions()) {
-            RootLayoutFactory.getInstance().getActionsList().add(action);
-        }
-        var rowNumber = 0;
-        for (Row row : decisionTable.getRawRowData()) {
-            row.setRowNumber(rowNumber++);
-            RootLayoutFactory.getInstance().getRowsList().add(row);
-        }
-
-
-        RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
-        setDirty(false);
-        return true;
-    }
 
     /**
      * Print the table.
@@ -303,8 +317,10 @@ public class FileUtil {
             xStream = new XStream();
             //configure XStream
             xStream.autodetectAnnotations(true);
+            xStream.alias("DecisionTable", DecisionTable.class);
             xStream.allowTypesByWildcard(new String[]{
-                    "org.yari.editor.**"
+                    "org.yari.editor.**",
+                    "org.yari.core.**"
             });
         }
         return xStream;

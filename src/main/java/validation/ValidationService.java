@@ -19,6 +19,7 @@ import org.yari.core.TableValidator;
 import org.yari.core.YariException;
 import utilities.FileUtil;
 import utilities.SettingsUtil;
+import utilities.TableUtil;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
