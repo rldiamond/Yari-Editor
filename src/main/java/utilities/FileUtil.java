@@ -182,8 +182,12 @@ public class FileUtil {
     /**
      * Print the table.
      */
-    public static void print() {
-        TablePrintView tablePrintView = new TablePrintView();
+    public static void print(DecisionTable decisionTable) {
+        if (decisionTable == null) {
+            ToastUtil.sendToast("An error occurred. Please report to developers. The DecisionTable was null.");
+            return;
+        }
+        TablePrintView tablePrintView = new TablePrintView(decisionTable);
         Printer printer = Printer.getDefaultPrinter();
         PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.LANDSCAPE, Printer.MarginType.HARDWARE_MINIMUM);
         double scaleX = pageLayout.getPrintableWidth() / 1920;
@@ -192,10 +196,12 @@ public class FileUtil {
 
         PrinterJob job = PrinterJob.createPrinterJob();
         job.getJobSettings().setPageLayout(pageLayout);
-        if (job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())) {
-            boolean success = job.printPage(tablePrintView);
-            if (success) {
-                job.endJob();
+        if (RootLayoutFactory.getInstance().getScene() != null && RootLayoutFactory.getInstance().getScene().getWindow() != null) {
+            if (job.showPrintDialog(RootLayoutFactory.getInstance().getScene().getWindow())) {
+                boolean success = job.printPage(tablePrintView);
+                if (success) {
+                    job.endJob();
+                }
             }
         }
     }

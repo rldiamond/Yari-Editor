@@ -26,7 +26,7 @@ public enum KeyboardShortcut {
     NEW(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN), "Ctrl+N", FileUtil::newFile),
     SAVE(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), "Ctrl+S", () -> RootLayoutFactory.getInstance().save(false)),
     OPEN(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN), "Ctrl+O", () -> RootLayoutFactory.getInstance().open()),
-    PRINT(new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN), "Ctrl+P", FileUtil::print),
+    PRINT(new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN), "Ctrl+P", () -> FileUtil.print(RootLayoutFactory.getInstance().getDecisionTable())),
     VALIDATE(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN), "Ctrl+V", () -> ValidationService.getService().requestValidation()),
     ADD_ROW(new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN), "Ctrl+R", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::addNewRow)),
     DELETE_ROW(new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN), "Ctrl+Del", () -> RootLayoutFactory.getInstance().getDataEditor().ifPresent(DataEditor::removeSelectedRow)),

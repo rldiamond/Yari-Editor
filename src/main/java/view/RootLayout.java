@@ -233,7 +233,7 @@ public class RootLayout extends BorderPane {
         });
         PopupMenuEntry filePrintMenuEntry = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
         filePrintMenuEntry.setOnMouseClicked(me -> {
-            FileUtil.print();
+            FileUtil.print(decisionTable);
             fileMenuPopUp.hide();
         });
         Tooltip.install(filePrintMenuEntry, new Tooltip("Print the current document."));
