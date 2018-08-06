@@ -56,7 +56,7 @@ public class SettingsUtil {
      *
      * @param file the file to add.
      */
-    public static void addRecommendedFile(File file) {
+    static void addRecommendedFile(File file) {
         Settings settings = getSettings();
         settings.addRecentFile(file);
         saveSettings(settings);

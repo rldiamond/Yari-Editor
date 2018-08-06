@@ -41,10 +41,6 @@ public class FileUtilTest extends ApplicationTest {
         FileUtil.saveToFile(new File("/"));
     }
 
-    @Test
-    public void print() {
-        FileUtil.print(new DecisionTable());
-    }
 
     @Test
     public void getCurrentFile() {
