@@ -17,6 +17,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yari.core.BasicRule;
 import org.yari.core.Context;
 import org.yari.core.YariException;
@@ -37,6 +39,8 @@ import java.io.FileOutputStream;
  * Contains several file-management utilities such as save, open, and new files.
  */
 public class FileUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     private static ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
     private static BooleanProperty dirty = new SimpleBooleanProperty(false);
@@ -64,6 +68,7 @@ public class FileUtil {
         // Show save file dialog
         File file = fileChooser.showOpenDialog(stage); //must be on fx thread
         if (file == null) {
+            logger.debug("A file was not chosen. Aborting open.");
             return false;
         }
         openFile(file, stage);
@@ -87,6 +92,7 @@ public class FileUtil {
 
                 }
             } catch (Exception ex) {
+                logger.warn("Failed to open file!", ex);
                 FXUtil.runOnFXThread(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("ValidatorError");
@@ -125,6 +131,7 @@ public class FileUtil {
             validationService.runValidationImmediately();
 
             if (!validationService.validProperty().get()) {
+                logger.debug("The DecisionTable does not pass validation. Aborting save.");
                 return;
             }
 
@@ -138,6 +145,7 @@ public class FileUtil {
                 setDirty(false);
                 ToastUtil.sendToast("File saved.");
             } catch (Exception ex) {
+                logger.error("Failed to save the file!", ex);
                 ToastUtil.sendPersistentToast("Failed to save file! " + ex.getMessage());
             }
         });
@@ -184,7 +192,8 @@ public class FileUtil {
      */
     public static void print(DecisionTable decisionTable) {
         if (decisionTable == null) {
-            ToastUtil.sendToast("An error occurred. Please report to developers. The DecisionTable was null.");
+            logger.warn("The DecisionTable was null. Cannot print!");
+            ToastUtil.sendToast("An error occurred! Could not print the file.");
             return;
         }
         TablePrintView tablePrintView = new TablePrintView(decisionTable);
