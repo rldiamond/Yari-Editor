@@ -19,20 +19,17 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yari.core.BasicRule;
-import org.yari.core.Context;
-import org.yari.core.YariException;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
+import settings.Settings;
 import validation.ValidationService;
 import validation.ValidationType;
 import view.RootLayoutFactory;
 import view.TablePrintView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 
@@ -111,7 +108,7 @@ public class FileUtil {
                 return;
             }
 
-            //ensure data is valid
+            //load data into our own lists
             RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
             for (Condition condition : decisionTable.getConditions()) {
                 RootLayoutFactory.getInstance().getConditionsList().add(condition);
@@ -125,8 +122,8 @@ public class FileUtil {
                 RootLayoutFactory.getInstance().getRowsList().add(row);
             }
 
+            //ensure data is valid
             validationService.runValidationImmediately();
-
             if (!validationService.isValid()) {
                 logger.debug("The table that was loaded is not valid.");
                 clearData();
@@ -151,13 +148,15 @@ public class FileUtil {
                 return;
             }
 
-            if (!RootLayoutFactory.isDisplayed()){
-                FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
-            }
-
             setDirty(false);
+            currentFile.setValue(file);
+            SettingsUtil.addRecommendedFile(file);
             if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
                 ValidationService.getService().setEnabled(true);
+            }
+
+            if (!RootLayoutFactory.isDisplayed()) {
+                FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
             }
         });
     }
@@ -173,7 +172,7 @@ public class FileUtil {
         decisionTable.setDescription("MyTable Description");
         decisionTable.setName("MyTable");
         RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
-
+        setDirty(false);
     }
 
     /**
@@ -318,9 +317,10 @@ public class FileUtil {
             //configure XStream
             xStream.autodetectAnnotations(true);
             xStream.alias("DecisionTable", DecisionTable.class);
-            xStream.allowTypesByWildcard(new String[]{
-                    "org.yari.editor.**",
-                    "org.yari.core.**"
+            XStream.setupDefaultSecurity(xStream);
+            xStream.allowTypesByWildcard(new String[] {
+                    "org.yari.core.table.**",
+                    "settings.**"
             });
         }
         return xStream;
