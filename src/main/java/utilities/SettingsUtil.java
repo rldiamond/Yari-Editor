@@ -10,7 +10,6 @@
 
 package utilities;
 
-import com.thoughtworks.xstream.XStream;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import objects.RecommendedFile;
@@ -22,8 +21,7 @@ import validation.ValidationService;
 import validation.ValidationType;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
+
 
 /**
  * Loads, saves, and maintains the active user {@link Settings}.
@@ -34,9 +32,7 @@ public class SettingsUtil {
     private static ObjectProperty<Settings> settingsProperty = new SimpleObjectProperty<>(null);
 
     private SettingsUtil() {
-        settingsProperty.addListener((obs, ov, nv) -> {
-            updateApplicationServices();
-        });
+        settingsProperty.addListener(c -> updateApplicationServices());
     }
 
     /**
@@ -78,13 +74,7 @@ public class SettingsUtil {
      * Load settings from the User directory.
      */
     private static void loadSettings() {
-        XStream xStream = new XStream();
-        Settings settings = null;
-        try (FileReader reader = new FileReader(getUserDirectory())) {
-            settings = (Settings) xStream.fromXML(reader);
-        } catch (Exception ex) {
-            logger.error("Failed to load settings from the user directory.");
-        }
+        Settings settings = FileUtil.loadObjectFromFile(Settings.class, getUserDirectory());
 
         if (settings == null) {
             //settings not found, let's save the default settings
@@ -100,16 +90,8 @@ public class SettingsUtil {
      * @param settings settings to save.
      */
     public static void saveSettings(Settings settings) {
-        String dir = getUserDirectory();
-        File file = new File(dir);
-
-        XStream xStream = new XStream();
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            xStream.toXML(settings, out);
-            setSettings(settings);
-        } catch (Exception ex) {
-            logger.error("Failed to save settings to the user directory.", ex);
-        }
+        FileUtil.saveObjectToFile(settings, getUserDirectory());
+        setSettings(settings);
     }
 
     private static void setSettings(Settings settings) {
@@ -126,7 +108,7 @@ public class SettingsUtil {
     }
 
     private static String getUserDirectory() {
-        return System.getProperty("user.home") + File.separator + ".yariEditorSettings" + File.separator;
+        return System.getProperty("user.home") + File.separator + ".yariEditorSettings";
     }
 
     /**

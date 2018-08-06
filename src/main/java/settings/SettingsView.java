@@ -129,7 +129,7 @@ public class SettingsView extends Card {
 
     private void saveSettings() {
         Settings updatedSettings = new Settings();
-        if (!projectDirectoryField.getText().equalsIgnoreCase("Select a directory.")) {
+        if (projectDirectoryField.getText() != null && !projectDirectoryField.getText().equalsIgnoreCase("Select a directory.")) {
             updatedSettings.setProjectDirectory(projectDirectoryField.getText());
         }
         updatedSettings.setTheme(themeComboBox.getValue());

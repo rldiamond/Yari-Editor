@@ -34,6 +34,8 @@ import view.TablePrintView;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Contains several file-management utilities such as save, open, and new files.
@@ -42,9 +44,11 @@ public class FileUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
-    private static ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
-    private static BooleanProperty dirty = new SimpleBooleanProperty(false);
-    private static ValidationService validationService = ValidationService.getService();
+    private static final ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
+    private static final BooleanProperty dirty = new SimpleBooleanProperty(false);
+    private static final ValidationService validationService = ValidationService.getService();
+    private static XStream xStream;
+
 
     /**
      * Private constructor to hide the implicit public constructor.
@@ -58,7 +62,7 @@ public class FileUtil {
      *
      * @param stage the stage to base the file chooser on.
      */
-    public static boolean openFile(Stage stage) {
+    public static boolean openDecisionTableFile(Stage stage, BooleanProperty busy) {
         FileChooser fileChooser = new FileChooser();
 
         // Set the extension filter
@@ -71,11 +75,11 @@ public class FileUtil {
             logger.debug("A file was not chosen. Aborting open.");
             return false;
         }
-        openFile(file, stage);
+        openDecisionTableFile(file, stage, busy);
         return true;
     }
 
-    public static void openFile(File file, Stage stage) {
+    public static void openDecisionTableFile(File file, Stage stage, BooleanProperty busy) {
         FXUtil.runAsync(() -> {
             if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
                 ValidationService.getService().setEnabled(false);
@@ -94,6 +98,9 @@ public class FileUtil {
             } catch (Exception ex) {
                 logger.warn("Failed to open file!", ex);
                 FXUtil.runOnFXThread(() -> {
+                    if (busy != null){
+                        busy.setValue(false);
+                    }
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("ValidatorError");
                     alert.setHeaderText("Could not load table data");
@@ -121,32 +128,80 @@ public class FileUtil {
     }
 
     /**
+     * Load an object of type T from file located at the supplied path value. May return null if the load failed.
+     *
+     * @param type the class type the object is expected to be.
+     * @param path the path of the file to attempt load from.
+     * @param <T>  the type of file to return.
+     * @return object of type T loaded from file.
+     */
+    public static <T extends Object> T loadObjectFromFile(Class<T> type, String path) {
+
+        T loadedObj = null;
+
+        try (FileReader reader = new FileReader(path)) {
+            loadedObj = (T) getXStream().fromXML(reader);
+        } catch (Exception ex) {
+            logger.error("Failed to load file from path: " + path + ", of type " + type.getSimpleName() + ".", ex);
+        }
+
+        return loadedObj;
+
+    }
+
+    /**
+     * Save the supplied object value to a file located at the supplied path.
+     *
+     * @param object the object to save.
+     * @param path   the path to save the object to.
+     * @return true if save succeeded, false if failed.
+     */
+    public static boolean saveObjectToFile(Object object, String path) {
+        return saveObjectToFile(object, new File(path));
+    }
+
+    /**
+     * Save the supplied object value to a file located at the supplied path.
+     *
+     * @param object the object to save.
+     * @param file   the file to save the object to.
+     * @return true if save succeeded, false if failed.
+     */
+    public static boolean saveObjectToFile(Object object, File file) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            getXStream().toXML(object, out);
+        } catch (Exception ex) {
+            logger.error("Failed to save file to path: " + file.getPath() + ".");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Save the file.
      *
      * @param file the file to save.
      */
-    public static void saveToFile(File file) {
+    public static void saveDecisionTableToFile(File file) {
         FXUtil.runAsync(() -> {
             TableUtil.updateTable();
             validationService.runValidationImmediately();
 
             if (!validationService.validProperty().get()) {
                 logger.debug("The DecisionTable does not pass validation. Aborting save.");
+                ToastUtil.sendToast("Cannot save! The DecisionTable does not pass validation.");
                 return;
             }
 
-            XStream xstream = new XStream();
-            xstream.processAnnotations(DecisionTable.class);
-
-            try (FileOutputStream out = new FileOutputStream(file)) {
-                xstream.toXML(RootLayoutFactory.getInstance().getDecisionTable(), out);
+            boolean success = saveObjectToFile(RootLayoutFactory.getInstance().getDecisionTable(), file);
+            if (success) {
                 currentFile.setValue(file);
                 SettingsUtil.addRecommendedFile(file);
                 setDirty(false);
                 ToastUtil.sendToast("File saved.");
-            } catch (Exception ex) {
-                logger.error("Failed to save the file!", ex);
-                ToastUtil.sendPersistentToast("Failed to save file! " + ex.getMessage());
+            } else {
+                logger.error("Failed to save the file!");
+                ToastUtil.sendPersistentToast("Failed to save file!");
             }
         });
     }
@@ -240,5 +295,18 @@ public class FileUtil {
 
     public static ReadOnlyObjectProperty<File> fileProperty() {
         return currentFile;
+    }
+
+    private static XStream getXStream() {
+        if (xStream == null) {
+            //create and configure xStream
+            xStream = new XStream();
+            //configure XStream
+            xStream.autodetectAnnotations(true);
+            xStream.allowTypesByWildcard(new String[]{
+                    "org.yari.editor.**"
+            });
+        }
+        return xStream;
     }
 }
