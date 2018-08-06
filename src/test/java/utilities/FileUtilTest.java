@@ -31,11 +31,6 @@ public class FileUtilTest extends ApplicationTest {
     }
 
     @Test
-    public void openFile1() {
-        FXUtil.runOnFXThread(() -> FileUtil.openFile(null));
-    }
-
-    @Test
     public void newFile() {
         FileUtil.newFile();
         assertNull(FileUtil.getCurrentFile());
