@@ -19,6 +19,7 @@ import org.yari.core.table.Row;
 import view.RootLayoutFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TableUtil {
@@ -40,16 +41,13 @@ public class TableUtil {
             logger.error("Cannot update table! The DecisionTable object is null!");
             return;
         }
-        List<Row> updatedRows = new ArrayList<>();
-        updatedRows.addAll(RootLayoutFactory.getInstance().getRowsList());
+        List<Row> updatedRows = new ArrayList<>(RootLayoutFactory.getInstance().getRowsList());
         decisionTable.setRows(updatedRows);
 
-        List<Condition> updatedConditions = new ArrayList<>();
-        updatedConditions.addAll(RootLayoutFactory.getInstance().getConditionsList());
+        List<Condition> updatedConditions = new ArrayList<>(RootLayoutFactory.getInstance().getConditionsList());
         decisionTable.setConditions(updatedConditions);
 
-        List<Action> updatedActions = new ArrayList<>();
-        updatedActions.addAll(RootLayoutFactory.getInstance().getActionsList());
+        List<Action> updatedActions = new ArrayList<>(RootLayoutFactory.getInstance().getActionsList());
         decisionTable.setActions(updatedActions);
     }
 

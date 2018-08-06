@@ -48,7 +48,7 @@ public class SettingsUtilTest extends ApplicationTest {
         Settings settings = new Settings();
         settings.setValidationType(ValidationType.STRICT);
         settings.setTheme(Theme.DARK);
-        settings.setProjectDirectory("");
+        settings.setProjectDirectory(null);
         SettingsUtil.saveSettings(settings);
     }
 }
