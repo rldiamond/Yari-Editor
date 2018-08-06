@@ -10,6 +10,8 @@
 
 package validation.validators;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
 import utilities.TableUtil;
 import view.RootLayoutFactory;
@@ -20,18 +22,37 @@ import java.util.List;
 
 public abstract class TableValidator implements Validator {
 
+    private static final Logger logger = LoggerFactory.getLogger(TableValidator.class);
+
     private final DecisionTable decisionTable;
     private final String validatorName;
     private final boolean strict;
     private List<ValidatorError> errors;
+    private boolean hasRun = false;
 
-    public TableValidator(String validatorName, boolean strict) {
+    TableValidator(String validatorName, boolean strict) {
         // update the table with the latest data
         TableUtil.updateTable();
         this.decisionTable = RootLayoutFactory.getInstance().getDecisionTable();
         this.validatorName = validatorName;
         this.strict = strict;
     }
+
+    @Override
+    public void run() {
+        if (getDecisionTable() == null) {
+            logger.warn("The DecisionTable object provided to the validator " + getClass().getSimpleName() + " was null.");
+            ValidatorError validatorError = new ValidatorError("An error occurred: the DecisionTable was null.");
+            addError(validatorError);
+            hasRun = true;
+        }
+        if (!hasRun) {
+            runValidation();
+            hasRun = true;
+        }
+    }
+
+    protected abstract void runValidation();
 
     /**
      * Retrieve the current {@link DecisionTable}.
