@@ -47,7 +47,7 @@ public class FXUtil {
     /**
      * Run the supplied task on a non-fx thread thread.
      *
-     * @param run
+     * @param run the task to run asynchronously.
      */
     public static void runAsync(Runnable run) {
         new Thread(run::run).start();

@@ -25,7 +25,7 @@ public class UniqueRowValidator extends TableValidator {
     }
 
     @Override
-    public void run() {
+    protected void runValidation() {
         List<Row> rows = getDecisionTable().getRawRowData();
 
         // Validate Rows

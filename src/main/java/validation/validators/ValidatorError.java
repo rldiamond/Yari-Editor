@@ -19,6 +19,10 @@ public class ValidatorError {
 
     }
 
+    public ValidatorError(String message) {
+        this.message = message;
+    }
+
     public ValidatorError(String message, ValidatorErrorLocation validatorErrorLocation) {
         this.message = message;
         this.validatorErrorLocation = validatorErrorLocation;

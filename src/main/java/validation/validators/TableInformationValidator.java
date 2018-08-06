@@ -25,9 +25,10 @@ public class TableInformationValidator extends TableValidator {
     }
 
     @Override
-    public void run() {
+    protected void runValidation() {
 
         final String tableName = getDecisionTable().getTableName();
+
         if (NAME_REQUIRED && tableName == null || "".equals(tableName)) {
             ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
             validatorErrorLocation.setToolView(ToolView.GENERAL);

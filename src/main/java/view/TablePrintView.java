@@ -21,12 +21,12 @@ import components.table.RowTable;
 
 public class TablePrintView extends StackPane {
 
-    public TablePrintView(){
+    public TablePrintView(DecisionTable decisionTable){
         setPrefSize(1920, 1080);
-        final DecisionTable decisionTable = RootLayoutFactory.getInstance().getDecisionTable();
 
         Label tableNameLabel = new Label("Table Name:");
         tableNameLabel.setPrefWidth(150);
+
         Label tableName = new Label(decisionTable.getTableName());
         HBox nameWrapper = new HBox(tableNameLabel, tableName);
 

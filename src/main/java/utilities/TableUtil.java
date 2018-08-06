@@ -10,15 +10,21 @@
 
 package utilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
+import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
 import view.RootLayoutFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TableUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(TableUtil.class);
 
     /**
      * Private constructor to hide the implicit public one.
@@ -30,17 +36,19 @@ public class TableUtil {
      * Update the decision table object to the latest values in the observable lists.
      */
     public static void updateTable() {
-        List<Row> updatedRows = new ArrayList<>();
-        updatedRows.addAll(RootLayoutFactory.getInstance().getRowsList());
-        RootLayoutFactory.getInstance().getDecisionTable().setRows(updatedRows);
+        DecisionTable decisionTable = RootLayoutFactory.getInstance().getDecisionTable();
+        if (decisionTable == null) {
+            logger.error("Cannot update table! The DecisionTable object is null!");
+            return;
+        }
+        List<Row> updatedRows = new ArrayList<>(RootLayoutFactory.getInstance().getRowsList());
+        decisionTable.setRows(updatedRows);
 
-        List<Condition> updatedConditions = new ArrayList<>();
-        updatedConditions.addAll(RootLayoutFactory.getInstance().getConditionsList());
-        RootLayoutFactory.getInstance().getDecisionTable().setConditions(updatedConditions);
+        List<Condition> updatedConditions = new ArrayList<>(RootLayoutFactory.getInstance().getConditionsList());
+        decisionTable.setConditions(updatedConditions);
 
-        List<Action> updatedActions = new ArrayList<>();
-        updatedActions.addAll(RootLayoutFactory.getInstance().getActionsList());
-        RootLayoutFactory.getInstance().getDecisionTable().setActions(updatedActions);
+        List<Action> updatedActions = new ArrayList<>(RootLayoutFactory.getInstance().getActionsList());
+        decisionTable.setActions(updatedActions);
     }
 
 

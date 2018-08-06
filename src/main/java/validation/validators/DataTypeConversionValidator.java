@@ -34,7 +34,7 @@ public class DataTypeConversionValidator extends TableValidator {
     }
 
     @Override
-    public void run() {
+    protected void runValidation() {
         List<Row> rows = getDecisionTable().getRawRowData();
         List<Condition> conditions = getDecisionTable().getConditions();
         List<Action> actions = getDecisionTable().getActions();

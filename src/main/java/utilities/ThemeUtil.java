@@ -46,7 +46,7 @@ public class ThemeUtil {
      *
      * @param theme the theme to set.
      */
-    public static void setActiveTheme(Theme theme) {
+    static void setActiveTheme(Theme theme) {
         activeTheme = theme;
         SettingsUtil.getSettings().setTheme(theme);
     }
@@ -84,7 +84,7 @@ public class ThemeUtil {
     /**
      * Refresh the themes on active scenes. Call if changing theme.
      */
-    public static void refreshThemes() {
+    static void refreshThemes() {
         setThemeOnScene(RootLayoutFactory.getScene());
     }
 
