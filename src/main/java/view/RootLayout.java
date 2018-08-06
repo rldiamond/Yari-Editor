@@ -443,7 +443,7 @@ public class RootLayout extends BorderPane {
         if (FileUtil.isDirty()) {
             handleDirty();
         }
-        FileUtil.openFile((Stage) getScene().getWindow());
+        FileUtil.openDecisionTableFile((Stage) getScene().getWindow(), null);
     }
 
 
@@ -466,12 +466,12 @@ public class RootLayout extends BorderPane {
                 if (!file.getPath().endsWith(".xml")) {
                     file = new File(file.getPath() + ".xml");
                 }
-                FileUtil.saveToFile(file);
+                FileUtil.saveDecisionTableToFile(file);
             }
         } else {
             File tableFile = FileUtil.getCurrentFile();
             if (tableFile != null) {
-                FileUtil.saveToFile(FileUtil.getCurrentFile());
+                FileUtil.saveDecisionTableToFile(FileUtil.getCurrentFile());
             } else {
                 save(true); //recurse
             }

@@ -13,7 +13,6 @@ package utilities;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
-import org.yari.core.table.DecisionTable;
 
 import java.io.File;
 
@@ -27,7 +26,7 @@ public class FileUtilTest extends ApplicationTest {
 
     @Test
     public void openFile() {
-        FileUtil.openFile(new File(""), null);
+        FileUtil.openDecisionTableFile(new File(""), null, null);
     }
 
     @Test
@@ -38,7 +37,7 @@ public class FileUtilTest extends ApplicationTest {
 
     @Test
     public void saveToFile() {
-        FileUtil.saveToFile(new File("/"));
+        FileUtil.saveDecisionTableToFile(new File("/"));
     }
 
 

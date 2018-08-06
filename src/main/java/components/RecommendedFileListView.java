@@ -86,7 +86,7 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
             setOnMouseClicked(me -> {
                 if (me.getClickCount() == 2 && getItem() != null) {
                     busy.set(true);
-                    FileUtil.openFile(new File(getItem().getPath()), stage);
+                    FileUtil.openDecisionTableFile(new File(getItem().getPath()), stage, busy);
                     busy.set(false);
                 }
             });

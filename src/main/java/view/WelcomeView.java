@@ -161,7 +161,7 @@ public class WelcomeView extends VBox {
         openLabel.setId("splashLink");
         openLabel.setOnMouseClicked(me -> {
             busy.set(true);
-            boolean success = FileUtil.openFile(stage);
+            boolean success = FileUtil.openDecisionTableFile(stage, busy);
             if (!success) {
                 busy.set(false);
             }
