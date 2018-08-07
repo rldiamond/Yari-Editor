@@ -31,7 +31,7 @@ import view.RootLayoutFactory;
 public class ThemeUtil {
 
     private static Theme activeTheme;
-    private static final Image LOGO = new Image("/theme/YariLogo.png");
+    private static final String LOGO = "/theme/YariLogo.png";
 
     /**
      * Private constructor to hide the implicit public constructor.
@@ -78,7 +78,7 @@ public class ThemeUtil {
     }
 
     public static Image getLogo() {
-        return LOGO;
+        return new Image(LOGO);
     }
 
     /**

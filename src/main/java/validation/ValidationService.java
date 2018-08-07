@@ -59,8 +59,16 @@ public class ValidationService {
      */
     private ValidationService() {
         // load from user settings
-        isStrict = SettingsUtil.getSettings().getValidationType().equals(ValidationType.STRICT);
-        enabledProperty.set(!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED));
+        boolean strict = true;
+        if (SettingsUtil.getSettings() != null) {
+            strict = SettingsUtil.getSettings().getValidationType().equals(ValidationType.STRICT);
+        }
+        isStrict = strict;
+        boolean enabled = true;
+        if (SettingsUtil.getSettings() != null) {
+            enabled = !SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED);
+        }
+        enabledProperty.set(enabled);
         // while the queue has stuff, lets be busy
         busyProperty.bind(Bindings.isNotEmpty(validationQueue));
         // meanwhile, anything added to the queue is added to the executor service

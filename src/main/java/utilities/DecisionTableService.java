@@ -46,7 +46,7 @@ public class DecisionTableService {
     //</editor-fold>
 
     private static final Logger logger = LoggerFactory.getLogger(DecisionTableService.class);
-    private final ValidationService validationService;
+    private final ValidationService validationService = ValidationService.getService();
 
     private ObjectProperty<DecisionTable> decisionTable = new SimpleObjectProperty<>(null);
 
@@ -61,8 +61,6 @@ public class DecisionTableService {
      * Private constructor.
      */
     private DecisionTableService() {
-        validationService = ValidationService.getService();
-
         //update listeners - always keep the decision table in sync with FX lists
         rows.addListener((ListChangeListener.Change<? extends Row> c) -> {
             c.next();

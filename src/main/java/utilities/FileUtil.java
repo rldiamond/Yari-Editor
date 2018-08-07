@@ -320,7 +320,8 @@ public class FileUtil {
             XStream.setupDefaultSecurity(xStream);
             xStream.allowTypesByWildcard(new String[]{
                     "org.yari.core.table.**",
-                    "settings.**"
+                    "settings.**",
+                    "objects.**"
             });
         }
         return xStream;
