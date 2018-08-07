@@ -86,7 +86,7 @@ public class DataTypeConversionValidator extends TableValidator {
                         validatorErrorLocation.setRow(row);
                         validatorErrorLocation.setRowNumber(row.getRowNumber());
                         String errMsg = "The value '" + data + "' in row " + row.getRowNumber() + ", column " + condition.getName() + " cannot be converted to " +
-                                "the specified data type of " + dataType.getDisplayValue();
+                                "the specified data type";
                         ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                         addError(validatorError);
                     }
@@ -136,7 +136,7 @@ public class DataTypeConversionValidator extends TableValidator {
                         validatorErrorLocation.setRow(row);
                         validatorErrorLocation.setRowNumber(row.getRowNumber());
                         String errMsg = "The value '" + data + "' in row " + row.getRowNumber() + ", column " + action.getName() + " cannot be converted to " +
-                                "the specified data type of " + dataType.getDisplayValue();
+                                "the specified data type";
                         ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                         addError(validatorError);
                     }
@@ -161,6 +161,11 @@ public class DataTypeConversionValidator extends TableValidator {
             switch (dataType) {
                 case BOOLEAN:
                     Boolean.parseBoolean(data);
+                    if (!(data.equalsIgnoreCase("true") || data.equalsIgnoreCase("false"))) {
+                        //note: Boolean.parseBoolean does not throw exception if fail, only returns false.
+                        throw new Exception("Invalid boolean data");
+                    }
+                    break;
                 case DOUBLE:
                     Double.parseDouble(data);
                     break;
@@ -171,7 +176,7 @@ public class DataTypeConversionValidator extends TableValidator {
                     data.charAt(0);
                     break;
                 case BYTE:
-                    data.getBytes();
+                    Byte.parseByte(data);
                     break;
                 case FLOAT:
                     Float.parseFloat(data);

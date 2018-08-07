@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UniqueRowValidatorTest {
-    
+
     @Mock
     DecisionTable decisionTable;
 
@@ -68,7 +68,6 @@ public class UniqueRowValidatorTest {
 
         assertTrue(!uniqueRowValidator.isValid());
         assertEquals(2, uniqueRowValidator.getErrors().size());
-
     }
 
 }
