@@ -18,7 +18,7 @@ public enum ValidationType {
 
     private final String displayLabel;
 
-    private ValidationType(String displayLabel) {
+    ValidationType(String displayLabel) {
         this.displayLabel = displayLabel;
     }
 }
