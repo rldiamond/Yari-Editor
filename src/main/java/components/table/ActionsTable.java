@@ -40,7 +40,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import objects.DataType;
 import org.yari.core.table.Action;
-import utilities.TableUtil;
 import validation.ValidateEvent;
 
 import java.util.List;
@@ -110,7 +109,7 @@ public class ActionsTable extends YariTable<Action> {
                     event.setDropCompleted(true);
                     getSelectionModel().select(dropIndex);
 
-                    TableUtil.reorderActions(draggedIndex, dropIndex);
+                    DECISION_TABLE_SERVICE.reorderActions(draggedIndex, dropIndex);
                     event.consume();
                     fireEvent(new ValidateEvent());
                 }

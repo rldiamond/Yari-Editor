@@ -27,35 +27,35 @@ public class TableUtilTest extends ApplicationTest {
     public void setUp() throws Exception {
 
         DecisionTable decisionTable = new DecisionTable();
-        RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
+        DecisionTableService.getService().setDecisionTable(decisionTable);
 
     }
 
     @Test
     public void updateTable() {
-        DecisionTable decisionTable = RootLayoutFactory.getInstance().getDecisionTable();
+        DecisionTable decisionTable = DecisionTableService.getService().getDecisionTable();
         assertTrue(decisionTable.getActions().isEmpty());
         assertTrue(decisionTable.getConditions().isEmpty());
-        RootLayoutFactory.getInstance().getActionsList().add(new Action());
-        RootLayoutFactory.getInstance().getConditionsList().add(new Condition());
-        TableUtil.updateTable();
+        DecisionTableService.getService().getActions().add(new Action());
+        DecisionTableService.getService().getConditions().add(new Condition());
+        DecisionTableService.getService().updateTable();
         assertEquals(1, decisionTable.getActions().size());
         assertEquals(1, decisionTable.getConditions().size());
     }
 
     @Test
     public void reorderActions() {
-        RootLayoutFactory.getInstance().setDecisionTable(new DecisionTable());
-        DecisionTable decisionTable = RootLayoutFactory.getInstance().getDecisionTable();
+        DecisionTableService.getService().setDecisionTable(new DecisionTable());
+        DecisionTable decisionTable = DecisionTableService.getService().getDecisionTable();
 
-        final ObservableList<Action> actionsList = RootLayoutFactory.getInstance().getActionsList();
+        final ObservableList<Action> actionsList = DecisionTableService.getService().getActions();
 
-        TableUtil.reorderActions(0, 1);
+        DecisionTableService.getService().reorderActions(0, 1);
     }
 
     @Test
     public void reorderConditions() {
-        TableUtil.reorderConditions(0, 1);
+        DecisionTableService.getService().reorderConditions(0, 1);
 
     }
 }

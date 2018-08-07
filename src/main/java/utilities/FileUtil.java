@@ -23,7 +23,6 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
-import settings.Settings;
 import validation.ValidationService;
 import validation.ValidationType;
 import view.RootLayoutFactory;
@@ -43,6 +42,7 @@ public class FileUtil {
     private static final ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
     private static final BooleanProperty dirty = new SimpleBooleanProperty(false);
     private static final ValidationService validationService = ValidationService.getService();
+    private static final DecisionTableService decisionTableService = DecisionTableService.getService();
     private static XStream xStream;
 
 
@@ -109,17 +109,17 @@ public class FileUtil {
             }
 
             //load data into our own lists
-            RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
+            decisionTableService.setDecisionTable(decisionTable);
             for (Condition condition : decisionTable.getConditions()) {
-                RootLayoutFactory.getInstance().getConditionsList().add(condition);
+                decisionTableService.getConditions().add(condition);
             }
             for (Action action : decisionTable.getActions()) {
-                RootLayoutFactory.getInstance().getActionsList().add(action);
+                decisionTableService.getActions().add(action);
             }
             var rowNumber = 0;
             for (Row row : decisionTable.getRawRowData()) {
                 row.setRowNumber(rowNumber++);
-                RootLayoutFactory.getInstance().getRowsList().add(row);
+                decisionTableService.getRows().add(row);
             }
 
             //ensure data is valid
@@ -171,7 +171,7 @@ public class FileUtil {
         DecisionTable decisionTable = new DecisionTable();
         decisionTable.setDescription("MyTable Description");
         decisionTable.setName("MyTable");
-        RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
+        decisionTableService.setDecisionTable(decisionTable);
         setDirty(false);
     }
 
@@ -232,7 +232,7 @@ public class FileUtil {
      */
     public static void saveDecisionTableToFile(File file) {
         FXUtil.runAsync(() -> {
-            TableUtil.updateTable();
+            decisionTableService.updateTable();
             validationService.runValidationImmediately();
 
             if (!validationService.validProperty().get()) {
@@ -241,7 +241,7 @@ public class FileUtil {
                 return;
             }
 
-            boolean success = saveObjectToFile(RootLayoutFactory.getInstance().getDecisionTable(), file);
+            boolean success = saveObjectToFile(decisionTableService.getDecisionTable(), file);
             if (success) {
                 currentFile.setValue(file);
                 SettingsUtil.addRecommendedFile(file);
@@ -284,10 +284,10 @@ public class FileUtil {
     }
 
     private static void clearData() {
-        RootLayoutFactory.getInstance().getRowsList().clear();
-        RootLayoutFactory.getInstance().getActionsList().clear();
-        RootLayoutFactory.getInstance().getConditionsList().clear();
-        RootLayoutFactory.getInstance().setDecisionTable(null);
+        decisionTableService.getRows().clear();
+        decisionTableService.getActions().clear();
+        decisionTableService.getConditions().clear();
+        decisionTableService.setDecisionTable(null);
     }
 
     public static File getCurrentFile() {
@@ -318,7 +318,7 @@ public class FileUtil {
             xStream.autodetectAnnotations(true);
             xStream.alias("DecisionTable", DecisionTable.class);
             XStream.setupDefaultSecurity(xStream);
-            xStream.allowTypesByWildcard(new String[] {
+            xStream.allowTypesByWildcard(new String[]{
                     "org.yari.core.table.**",
                     "settings.**"
             });

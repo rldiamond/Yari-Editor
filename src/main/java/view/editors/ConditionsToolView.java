@@ -22,9 +22,7 @@ package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
-import validation.ValidateEvent;
 import components.table.ConditionsTable;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
@@ -33,16 +31,16 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Condition;
+import utilities.DecisionTableService;
 import utilities.FXUtil;
-import utilities.TableUtil;
-import view.RootLayoutFactory;
+import validation.ValidateEvent;
 
 import java.util.Collections;
 
 
 public class ConditionsToolView extends StackPane implements DataEditor {
 
-    private ObservableList<Condition> conditionList = RootLayoutFactory.getInstance().getConditionsList();
+    private DecisionTableService decisionTableService = DecisionTableService.getService();
     private ConditionsTable conditionsTable = new ConditionsTable();
 
     public ConditionsToolView() {
@@ -51,7 +49,7 @@ public class ConditionsToolView extends StackPane implements DataEditor {
         getChildren().setAll(tableCard);
 
         //table
-        conditionsTable.setItems(conditionList);
+        conditionsTable.setItems(decisionTableService.getConditions());
         tableCard.setDisplayedContent(conditionsTable);
 
         ContextMenu contextMenu = new ContextMenu();
@@ -91,9 +89,7 @@ public class ConditionsToolView extends StackPane implements DataEditor {
             return;
         }
         Condition selectedItem = conditionsTable.getSelectionModel().getSelectedItem();
-        if (conditionList.contains(selectedItem)) {
-            conditionList.remove(selectedItem);
-        }
+        decisionTableService.getConditions().remove(selectedItem);
     }
 
     /**
@@ -101,7 +97,7 @@ public class ConditionsToolView extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        conditionList.add(new Condition());
+        decisionTableService.getConditions().add(new Condition());
         FXUtil.runOnFXThread(() -> {
             conditionsTable.requestFocus();
             conditionsTable.getSelectionModel().selectLast();
@@ -119,7 +115,7 @@ public class ConditionsToolView extends StackPane implements DataEditor {
         int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
             Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex - 1);
-            TableUtil.reorderConditions(selectedIndex, selectedIndex - 1);
+            decisionTableService.reorderConditions(selectedIndex, selectedIndex - 1);
             fireEvent(new ValidateEvent());
         }
     }
@@ -135,7 +131,7 @@ public class ConditionsToolView extends StackPane implements DataEditor {
         int selectedIndex = conditionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex < conditionsTable.getItems().size() - 1) {
             Collections.swap(conditionsTable.getItems(), selectedIndex, selectedIndex + 1);
-            TableUtil.reorderConditions(selectedIndex, selectedIndex + 1);
+            decisionTableService.reorderConditions(selectedIndex, selectedIndex + 1);
             fireEvent(new ValidateEvent());
         }
     }

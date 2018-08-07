@@ -41,7 +41,6 @@ import javafx.scene.input.TransferMode;
 import objects.ComparatorType;
 import objects.DataType;
 import org.yari.core.table.Condition;
-import utilities.TableUtil;
 import validation.ValidateEvent;
 
 import java.util.List;
@@ -111,7 +110,7 @@ public class ConditionsTable extends YariTable<Condition> {
                     event.setDropCompleted(true);
                     getSelectionModel().select(dropIndex);
 
-                    TableUtil.reorderConditions(draggedIndex, dropIndex);
+                    DECISION_TABLE_SERVICE.reorderConditions(draggedIndex, dropIndex);
 
                     event.consume();
                     fireEvent(new ValidateEvent());

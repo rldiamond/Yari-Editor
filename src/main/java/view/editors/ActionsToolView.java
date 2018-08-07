@@ -22,9 +22,7 @@ package view.editors;
 
 import com.jfoenix.controls.JFXButton;
 import components.Card;
-import validation.ValidateEvent;
 import components.table.ActionsTable;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
@@ -33,16 +31,16 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Action;
+import utilities.DecisionTableService;
 import utilities.FXUtil;
-import utilities.TableUtil;
-import view.RootLayoutFactory;
+import validation.ValidateEvent;
 
 import java.util.Collections;
 
 
 public class ActionsToolView extends StackPane implements DataEditor {
 
-    private ObservableList<Action> actionList = RootLayoutFactory.getInstance().getActionsList();
+    private DecisionTableService decisionTableService = DecisionTableService.getService();
     private ActionsTable actionsTable = new ActionsTable();
 
     public ActionsToolView() {
@@ -51,7 +49,7 @@ public class ActionsToolView extends StackPane implements DataEditor {
         getChildren().setAll(tableCard);
 
         //table
-        actionsTable.setItems(actionList);
+        actionsTable.setItems(decisionTableService.getActions());
         tableCard.setDisplayedContent(actionsTable);
 
         ContextMenu contextMenu = new ContextMenu();
@@ -92,9 +90,7 @@ public class ActionsToolView extends StackPane implements DataEditor {
             return;
         }
         Action selectedItem = actionsTable.getSelectionModel().getSelectedItem();
-        if (actionList.contains(selectedItem)) {
-            actionList.remove(selectedItem);
-        }
+        decisionTableService.getActions().remove(selectedItem);
     }
 
     /**
@@ -102,7 +98,7 @@ public class ActionsToolView extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        actionList.add(new Action());
+        decisionTableService.getActions().add(new Action());
         FXUtil.runOnFXThread(() -> {
             actionsTable.requestFocus();
             actionsTable.getSelectionModel().selectLast();
@@ -120,7 +116,7 @@ public class ActionsToolView extends StackPane implements DataEditor {
         int selectedIndex = actionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex > 0) {
             Collections.swap(actionsTable.getItems(), selectedIndex, selectedIndex - 1);
-            TableUtil.reorderActions(selectedIndex, selectedIndex - 1);
+            decisionTableService.reorderActions(selectedIndex, selectedIndex - 1);
             fireEvent(new ValidateEvent());
         }
     }
@@ -136,7 +132,7 @@ public class ActionsToolView extends StackPane implements DataEditor {
         int selectedIndex = actionsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex < actionsTable.getItems().size() - 1) {
             Collections.swap(actionsTable.getItems(), selectedIndex, selectedIndex + 1);
-            TableUtil.reorderActions(selectedIndex, selectedIndex + 1);
+            decisionTableService.reorderActions(selectedIndex, selectedIndex + 1);
             fireEvent(new ValidateEvent());
         }
     }
