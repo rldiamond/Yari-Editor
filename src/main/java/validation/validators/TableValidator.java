@@ -13,7 +13,7 @@ package validation.validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
-import utilities.TableUtil;
+import utilities.DecisionTableService;
 import view.RootLayoutFactory;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import java.util.List;
 public abstract class TableValidator implements Validator {
 
     private static final Logger logger = LoggerFactory.getLogger(TableValidator.class);
+    private static final DecisionTableService DECISION_TABLE_SERVICE = DecisionTableService.getService();
 
     private final DecisionTable decisionTable;
     private final String validatorName;
@@ -32,8 +33,8 @@ public abstract class TableValidator implements Validator {
 
     TableValidator(String validatorName, boolean strict) {
         // update the table with the latest data
-        TableUtil.updateTable();
-        this.decisionTable = RootLayoutFactory.getInstance().getDecisionTable();
+        DECISION_TABLE_SERVICE.updateTable();
+        this.decisionTable = DECISION_TABLE_SERVICE.getDecisionTable();
         this.validatorName = validatorName;
         this.strict = strict;
     }

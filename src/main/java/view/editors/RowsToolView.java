@@ -23,8 +23,6 @@ package view.editors;
 import com.jfoenix.controls.JFXButton;
 import components.Card;
 import components.table.RowTable;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
@@ -33,8 +31,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Row;
+import utilities.DecisionTableService;
 import utilities.FXUtil;
-import view.RootLayoutFactory;
 
 import java.util.Collections;
 
@@ -43,7 +41,7 @@ import java.util.Collections;
  */
 public class RowsToolView extends StackPane implements DataEditor {
 
-    private ObservableList<Row> rowsList = RootLayoutFactory.getInstance().getRowsList();
+    private final DecisionTableService decisionTableService = DecisionTableService.getService();
     private RowTable rowTable = new RowTable();
 
     /**
@@ -55,15 +53,8 @@ public class RowsToolView extends StackPane implements DataEditor {
         getChildren().setAll(tableCard);
 
         //table
-        rowTable.setItems(rowsList);
+        rowTable.setItems(decisionTableService.getRows());
         tableCard.setDisplayedContent(rowTable);
-
-        //renumber rows on change
-        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> {
-            while (c.next()) {
-                renumberRows();
-            }
-        });
 
         ContextMenu contextMenu = new ContextMenu();
         var addMenuItem = new MenuItem("ADD");
@@ -94,16 +85,6 @@ public class RowsToolView extends StackPane implements DataEditor {
     }
 
     /**
-     * Rows need to be renumbered when added, removed, or re-arranged.
-     */
-    private void renumberRows() {
-        var rowNumber = 0;
-        for (Row row : RootLayoutFactory.getInstance().getRowsList()) {
-            row.setRowNumber(rowNumber++);
-        }
-    }
-
-    /**
      * @inheritDoc
      */
     @Override
@@ -112,9 +93,7 @@ public class RowsToolView extends StackPane implements DataEditor {
             return;
         }
         Row selectedItem = rowTable.getSelectionModel().getSelectedItem();
-        if (rowsList.contains(selectedItem)) {
-            rowsList.remove(selectedItem);
-        }
+        decisionTableService.getRows().remove(selectedItem);
     }
 
     /**
@@ -122,7 +101,7 @@ public class RowsToolView extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        rowsList.add(new Row());
+        decisionTableService.getRows().add(new Row());
         FXUtil.runOnFXThread(() -> {
             rowTable.requestFocus();
             rowTable.getSelectionModel().selectLast();

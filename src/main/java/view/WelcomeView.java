@@ -136,10 +136,7 @@ public class WelcomeView extends VBox {
         createNewLabel.setId("splashLink");
         createNewLabel.setOnMouseClicked(me -> {
             FXUtil.runAsync(() -> {
-                DecisionTable decisionTable = new DecisionTable();
-                decisionTable.setName("MyTable");
-                decisionTable.setDescription("MyTable Description");
-                RootLayoutFactory.getInstance().setDecisionTable(decisionTable);
+                FileUtil.newFile();
                 FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
             });
         });

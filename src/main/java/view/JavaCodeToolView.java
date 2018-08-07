@@ -31,7 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
-import org.yari.core.table.DecisionTable;
+import utilities.DecisionTableService;
 import utilities.ToastUtil;
 
 import java.util.HashSet;
@@ -39,8 +39,7 @@ import java.util.Set;
 
 public class JavaCodeToolView extends StackPane {
 
-    private DecisionTable dt = RootLayoutFactory.getInstance().getDecisionTable();
-    private String ruleName = RootLayoutFactory.getInstance().getRuleName();
+    private final DecisionTableService decisionTableService = DecisionTableService.getService();
 
     public JavaCodeToolView() {
 
@@ -74,7 +73,7 @@ public class JavaCodeToolView extends StackPane {
 
     }
 
-    private String generateSkeletonCode(){
+    private String generateSkeletonCode() {
         StringBuilder sb = new StringBuilder();
 
         //imports
@@ -86,14 +85,14 @@ public class JavaCodeToolView extends StackPane {
         sb.append("import org.yari.core.Context;\n\n");
 
         // Create Class and Constructor
-        sb.append("public class ").append(ruleName).append(" () extends BasicRule {\n    public ").append(ruleName).append(" throws FileNotFoundException, YariException {\n");
-        sb.append("        super(\"").append(dt.getTableName()).append("\", \"").append(dt.getTableDescription()).append("\", \"XMLPATH\");\n    }\n\n");
+        sb.append("public class ").append(decisionTableService.getRuleName()).append(" () extends BasicRule {\n    public ").append(decisionTableService.getRuleName()).append(" throws FileNotFoundException, YariException {\n");
+        sb.append("        super(\"").append(decisionTableService.getDecisionTable().getTableName()).append("\", \"").append(decisionTableService.getDecisionTable().getTableDescription()).append("\", \"XMLPATH\");\n    }\n\n");
         // Create lookupGlobals
         sb.append("    @Override\n    public void lookupGlobals(Context globalContext){\n    }\n\n");
         // Create condition methods
         Set<String> conditionNames = new HashSet<>();
-        for (Condition condition : dt.getConditions()) {
-            if (conditionNames.contains(condition.getMethodName().toUpperCase())){
+        for (Condition condition : decisionTableService.getDecisionTable().getConditions()) {
+            if (conditionNames.contains(condition.getMethodName().toUpperCase())) {
                 continue;
             }
 
@@ -103,7 +102,7 @@ public class JavaCodeToolView extends StackPane {
             conditionNames.add(condition.getMethodName().toUpperCase());
         }
         // Create action methods
-        for (Action action : dt.getActions()) {
+        for (Action action : decisionTableService.getDecisionTable().getActions()) {
             sb.append("    @Action(\"").append(action.getMethodName()).append("\")\n");
             sb.append("    public void ").append(action.getMethodName()).append("(Context actionContext){\n");
             sb.append("        // TODO: do something\n    }\n\n");
@@ -115,7 +114,7 @@ public class JavaCodeToolView extends StackPane {
     }
 
     private String convertTypeToJava(String dataType) {
-        if (dataType == null){
+        if (dataType == null) {
             return "";
         }
         switch (dataType) {

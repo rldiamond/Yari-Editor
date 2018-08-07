@@ -16,6 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.yari.core.table.DecisionTable;
+import utilities.DecisionTableService;
 import utilities.ThemeUtil;
 import components.table.RowTable;
 
@@ -37,7 +38,7 @@ public class TablePrintView extends StackPane {
         HBox descriptionWrapper = new HBox(tableDescriptionLabel, tableDescription);
 
         RowTable rowTable = new RowTable();
-        rowTable.setItems(RootLayoutFactory.getInstance().getRowsList());
+        rowTable.setItems(DecisionTableService.getService().getRows());
         VBox.setVgrow(rowTable, Priority.ALWAYS);
 
         VBox vBox = new VBox(10);

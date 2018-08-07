@@ -126,7 +126,7 @@ public class RowTable extends YariTable<Row> {
 
         //conditions
         var columnNum = 0;
-        for (Condition condition : conditions) {
+        for (Condition condition : DECISION_TABLE_SERVICE.getConditions()) {
 
             TableColumn conditionCol = new TableColumn(TextUtil.toTitleCase(condition.getName() + " (" + condition.getDataType() + ", " + condition.getComparator() + ")"));
             final int column = columnNum;
@@ -161,7 +161,7 @@ public class RowTable extends YariTable<Row> {
         //actions
         columnNum = 0;
         // Create the action columns.
-        for (Action action : actions) {
+        for (Action action : DECISION_TABLE_SERVICE.getActions()) {
             TableColumn col = new TableColumn(TextUtil.toTitleCase(action.getName()) + " (" + action.getDataType() + ")");
 
             final int column = columnNum;

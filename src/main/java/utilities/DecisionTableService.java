@@ -10,10 +10,7 @@
 
 package utilities;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -23,6 +20,7 @@ import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.Row;
+import validation.ValidationService;
 
 import java.util.ArrayList;
 
@@ -48,6 +46,7 @@ public class DecisionTableService {
     //</editor-fold>
 
     private static final Logger logger = LoggerFactory.getLogger(DecisionTableService.class);
+    private final ValidationService validationService;
 
     private ObjectProperty<DecisionTable> decisionTable = new SimpleObjectProperty<>(null);
 
@@ -55,25 +54,30 @@ public class DecisionTableService {
     private final ObservableList<Row> rows = FXCollections.observableArrayList();
     private final ObservableList<Action> actions = FXCollections.observableArrayList();
     private final ObservableList<Condition> conditions = FXCollections.observableArrayList();
+    private final StringProperty ruleName = new SimpleStringProperty("MyTableRule");
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
     /**
      * Private constructor.
      */
     private DecisionTableService() {
+        validationService = ValidationService.getService();
 
         //update listeners - always keep the decision table in sync with FX lists
         rows.addListener((ListChangeListener.Change<? extends Row> c) -> {
             c.next();
             updateRows();
+            validationService.requestValidation();
         });
         conditions.addListener((ListChangeListener.Change<? extends Condition> c) -> {
             c.next();
             updateConditions();
+            validationService.requestValidation();
         });
         actions.addListener((ListChangeListener.Change<? extends Action> c) -> {
             c.next();
             updateActions();
+            validationService.requestValidation();
         });
 
     }
@@ -118,10 +122,17 @@ public class DecisionTableService {
      * <p>
      * TODO: This may be unnecessary with the new listeners.
      */
-    private void updateTable() {
+    public void updateTable() {
         updateRows();
         updateActions();
         updateConditions();
+    }
+
+    private void renumberRows() {
+        var rowNumber = 0;
+        for (Row row : rows) {
+            row.setRowNumber(rowNumber++);
+        }
     }
 
     private void updateRows() {
@@ -133,6 +144,7 @@ public class DecisionTableService {
             logger.debug("The decision table service is disabled. Not updating rows.");
             return;
         }
+        renumberRows();
         decisionTable.getValue().setRows(new ArrayList<>(rows));
     }
 
@@ -173,8 +185,27 @@ public class DecisionTableService {
         return decisionTable.get();
     }
 
-
     public void setDecisionTable(DecisionTable decisionTable) {
         this.decisionTable.set(decisionTable);
+    }
+
+    public String getRuleName() {
+        return ruleName.get();
+    }
+
+    public void setRuleName(String ruleName) {
+        this.ruleName.set(ruleName);
+    }
+
+    public ObservableList<Row> getRows() {
+        return rows;
+    }
+
+    public ObservableList<Action> getActions() {
+        return actions;
+    }
+
+    public ObservableList<Condition> getConditions() {
+        return conditions;
     }
 }
