@@ -36,6 +36,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.yari.core.table.Action;
 import org.yari.core.table.Condition;
+import utilities.DecisionTableService;
 import view.RootLayoutFactory;
 
 import java.util.List;
@@ -48,8 +49,7 @@ import java.util.List;
 public abstract class YariTable<T extends Object> extends TableView<T> {
 
     protected static final ObservableList<String> boolOptions = FXCollections.observableArrayList("True", "False");
-    protected final ObservableList<Condition> conditions = RootLayoutFactory.getInstance().getConditionsList();
-    protected final ObservableList<Action> actions = RootLayoutFactory.getInstance().getActionsList();
+    protected static final DecisionTableService DECISION_TABLE_SERVICE = DecisionTableService.getService();
 
 
     public YariTable() {

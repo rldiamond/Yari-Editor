@@ -29,10 +29,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import utilities.DecisionTableService;
 import validation.ValidateEvent;
 
 public class GeneralToolView extends StackPane {
 
+    private final DecisionTableService decisionTableService = DecisionTableService.getService();
     private final JFXTextField tableNameField = new JFXTextField();
     private final JFXTextField tableDescriptionField = new JFXTextField();
     private final JFXTextField ruleNameField = new JFXTextField();
@@ -54,7 +56,7 @@ public class GeneralToolView extends StackPane {
                 fireEvent(new ValidateEvent());
             }
         });
-        tableNameField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableName());
+        tableNameField.setText(decisionTableService.getDecisionTable().getTableName());
         HBox tableNameContainer = new HBox(10);
         tableNameContainer.setAlignment(Pos.CENTER_LEFT);
         tableNameContainer.getChildren().setAll(tableNameLabel, tableNameField);
@@ -69,7 +71,7 @@ public class GeneralToolView extends StackPane {
                 fireEvent(new ValidateEvent());
             }
         });
-        tableDescriptionField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableDescription());
+        tableDescriptionField.setText(decisionTableService.getDecisionTable().getTableDescription());
         HBox tableDescriptionContainer = new HBox(10);
         tableDescriptionContainer.setAlignment(Pos.CENTER_LEFT);
         tableDescriptionContainer.getChildren().setAll(tableDescriptionLabel, tableDescriptionField);
@@ -79,7 +81,7 @@ public class GeneralToolView extends StackPane {
         ruleNameLabel.setPrefWidth(150);
         ruleNameLabel.setAlignment(Pos.CENTER_RIGHT);
         ruleNameField.setPrefWidth(350);
-        ruleNameField.setText(RootLayoutFactory.getInstance().getRuleName());
+        ruleNameField.setText(decisionTableService.getRuleName());
         HBox ruleNameContainer = new HBox(10);
         ruleNameContainer.setAlignment(Pos.CENTER_LEFT);
         ruleNameContainer.getChildren().setAll(ruleNameLabel, ruleNameField);
@@ -114,16 +116,16 @@ public class GeneralToolView extends StackPane {
     }
 
     private void reset() {
-        tableNameField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableName());
-        tableDescriptionField.setText(RootLayoutFactory.getInstance().getDecisionTable().getTableDescription());
-        ruleNameField.setText(RootLayoutFactory.getInstance().getRuleName());
+        tableNameField.setText(decisionTableService.getDecisionTable().getTableName());
+        tableDescriptionField.setText(decisionTableService.getDecisionTable().getTableDescription());
+        ruleNameField.setText(decisionTableService.getRuleName());
         fireEvent(new ValidateEvent());
     }
 
     private void save() {
-        RootLayoutFactory.getInstance().getDecisionTable().setName(tableNameField.getText());
-        RootLayoutFactory.getInstance().getDecisionTable().setDescription(tableDescriptionField.getText());
-        RootLayoutFactory.getInstance().setRuleName(ruleNameField.getText());
+        decisionTableService.getDecisionTable().setName(tableNameField.getText());
+        decisionTableService.getDecisionTable().setDescription(tableDescriptionField.getText());
+        decisionTableService.setRuleName(ruleNameField.getText());
         fireEvent(new ValidateEvent());
     }
 }

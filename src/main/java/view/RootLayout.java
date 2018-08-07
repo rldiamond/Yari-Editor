@@ -39,10 +39,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
@@ -56,12 +53,8 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import objects.ToolView;
 import objects.KeyboardShortcut;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
-import org.yari.core.table.DecisionTable;
-import org.yari.core.table.Row;
+import objects.ToolView;
 import settings.SettingsView;
 import utilities.*;
 import validation.ValidateEvent;
@@ -78,16 +71,13 @@ import java.util.Optional;
 
 public class RootLayout extends BorderPane {
 
-    private DecisionTable decisionTable;
-    private final ObservableList<Action> actionsList = FXCollections.observableArrayList();
-    private final ObservableList<Condition> conditionsList = FXCollections.observableArrayList();
-    private final ObservableList<Row> rowsList = FXCollections.observableArrayList();
-    private final StringProperty ruleName = new SimpleStringProperty("MyTableRule");
+    private final ValidationService validationService = ValidationService.getService();
+    private final DecisionTableService decisionTableService = DecisionTableService.getService();
     private final ObservableList<MenuOption> menuOptions = FXCollections.observableArrayList();
     private final BooleanProperty loadingContent = new SimpleBooleanProperty(false);
     private final StackPane displayedContent = new StackPane();
     private final AnchorPane header = new AnchorPane();
-    private final ValidationService validationService = ValidationService.getService();
+
     private Pane minimizeButton;
     private JFXSnackbar toastBar;
 
@@ -129,11 +119,6 @@ public class RootLayout extends BorderPane {
         prepareOptions();
         prepareHeader();
         setCenter(mainPanel);
-
-        //validate table anytime changes are made to the lists
-        actionsList.addListener((ListChangeListener.Change<? extends Action> c) -> validationService.requestValidation());
-        conditionsList.addListener((ListChangeListener.Change<? extends Condition> c) -> validationService.requestValidation());
-        rowsList.addListener((ListChangeListener.Change<? extends Row> c) -> validationService.requestValidation());
 
         addEventHandler(ValidateEvent.VALIDATE, e -> validationService.requestValidation());
 
@@ -233,7 +218,7 @@ public class RootLayout extends BorderPane {
         });
         PopupMenuEntry filePrintMenuEntry = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
         filePrintMenuEntry.setOnMouseClicked(me -> {
-            FileUtil.print(decisionTable);
+            FileUtil.print(decisionTableService.getDecisionTable());
             fileMenuPopUp.hide();
         });
         Tooltip.install(filePrintMenuEntry, new Tooltip("Print the current document."));
@@ -498,46 +483,6 @@ public class RootLayout extends BorderPane {
 
     public AnchorPane getHeader() {
         return header;
-    }
-
-
-    public ObservableList<Action> getActionsList() {
-        return actionsList;
-    }
-
-
-    public ObservableList<Condition> getConditionsList() {
-        return conditionsList;
-    }
-
-
-    public ObservableList<Row> getRowsList() {
-        return rowsList;
-    }
-
-
-    public DecisionTable getDecisionTable() {
-        return decisionTable;
-    }
-
-
-    public String getRuleName() {
-        return ruleName.get();
-    }
-
-
-    public StringProperty ruleNameProperty() {
-        return ruleName;
-    }
-
-
-    public void setRuleName(String ruleName) {
-        this.ruleName.set(ruleName);
-    }
-
-
-    public void setDecisionTable(DecisionTable decisionTable) {
-        this.decisionTable = decisionTable;
     }
 
 
