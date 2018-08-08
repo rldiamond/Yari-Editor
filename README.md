@@ -1,7 +1,7 @@
 ## Yari Editor
 
 [![Build Status](https://travis-ci.org/rldiamond/yariEditor.svg?branch=master)](https://travis-ci.org/rldiamond/yariEditor)
-[![](https://sonarcloud.io/api/project_badges/measure?project=org.yari%3Aeditor&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.yari%3Aeditor) [![codecov](https://codecov.io/gh/rldiamond/yariEditor/branch/master/graph/badge.svg)](https://codecov.io/gh/rldiamond/yariEditor)
+[![](https://sonarcloud.io/api/project_badges/measure?project=org.yari%3Aeditor&metric=bugs)](https://sonarcloud.io/dashboard?id=org.yari%3Aeditor) [![](https://sonarcloud.io/api/project_badges/measure?project=org.yari%3Aeditor&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=org.yari%3Aeditor) [![](https://sonarcloud.io/api/project_badges/measure?project=org.yari%3Aeditor&metric=code_smells)](https://sonarcloud.io/dashboard?id=org.yari%3Aeditor) [![codecov](https://codecov.io/gh/rldiamond/yariEditor/branch/master/graph/badge.svg)](https://codecov.io/gh/rldiamond/yariEditor)
 
 [Download Latest Release](../../releases)
 
