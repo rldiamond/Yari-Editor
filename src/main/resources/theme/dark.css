@@ -48,6 +48,7 @@
 
 #closeButton:hover {
     -fx-background-color: red;
+    -fx-cursor: hand;
 }
 
 #titleLabel {
