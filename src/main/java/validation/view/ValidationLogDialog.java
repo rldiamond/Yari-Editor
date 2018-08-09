@@ -58,7 +58,7 @@ public class ValidationLogDialog extends JFXDialog {
 
         //build content
         AnchorPane content = new AnchorPane();
-        content.setPrefSize(450, 300);
+        content.setPrefSize(600, 375);
         content.getStyleClass().add("validationDialog");
 
         validationLog = new ListView<>();
