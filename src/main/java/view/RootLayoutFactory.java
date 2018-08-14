@@ -77,7 +77,7 @@ public class RootLayoutFactory {
         getInstance().getMinimizeButton().setOnMouseClicked(me -> ResizeHelper.minimizeStage(stage));
 
         //allow maximize
-        getInstance().getMaximizeButton().setOnMouseClicked(me -> ResizeHelper.maximizeStage(stage));
+        ResizeHelper.addMaximizeResizeListener(stage, getInstance().getMaximizeButton());
 
         //allow resize
         ResizeHelper.addStageResizeListener(stage);

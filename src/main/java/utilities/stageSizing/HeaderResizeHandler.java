@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 public class HeaderResizeHandler implements EventHandler<MouseEvent> {
 
     private final Stage stage;
+    private final int clickCount;
 
     private double beforeX;
     private double beforeY;
@@ -45,13 +46,14 @@ public class HeaderResizeHandler implements EventHandler<MouseEvent> {
      *
      * @param stage the Stage object to resize.
      */
-    protected HeaderResizeHandler(Stage stage) {
+    protected HeaderResizeHandler(Stage stage, int clickCount) {
         this.stage = stage;
+        this.clickCount = clickCount;
     }
 
     @Override
     public void handle(MouseEvent event) {
-        if (event.getButton() != MouseButton.PRIMARY || event.getClickCount() != 2) {
+        if (event.getButton() != MouseButton.PRIMARY || event.getClickCount() != clickCount) {
             return;
         }
 

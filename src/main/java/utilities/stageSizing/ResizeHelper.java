@@ -22,11 +22,9 @@ package utilities.stageSizing;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class ResizeHelper {
@@ -46,7 +44,18 @@ public class ResizeHelper {
      * @param node  the Node to apply listeners to.
      */
     public static void addHeaderResizeListener(Stage stage, Node node) {
-        node.addEventHandler(MouseEvent.MOUSE_CLICKED, new HeaderResizeHandler(stage));
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, new HeaderResizeHandler(stage, 2));
+    }
+
+    /**
+     * Add an EventHandler to the provided node which will 'maximize' the provided Stage on single-click if not already,
+     * or return the stage to it's previous size otherwise.
+     *
+     * @param stage the Stage to resize.
+     * @param node  the Node to apply listeners to.
+     */
+    public static void addMaximizeResizeListener(Stage stage, Node node) {
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, new HeaderResizeHandler(stage, 1));
     }
 
     /**
@@ -71,17 +80,15 @@ public class ResizeHelper {
         addStageResizeListener(stage, 1000, 550, Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
+    /**
+     * Minimizes the provided Stage.
+     *
+     * @param stage the Stage to minimize.
+     */
     public static void minimizeStage(Stage stage) {
         stage.setIconified(true);
     }
 
-    public static void maximizeStage(Stage stage) {
-        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX(visualBounds.getMinX());
-        stage.setY(visualBounds.getMinY());
-        stage.setWidth(visualBounds.getWidth());
-        stage.setHeight(visualBounds.getHeight());
-    }
 
     private static void addStageResizeListener(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {
         ResizeListener resizeListener = new ResizeListener(stage);
