@@ -24,16 +24,14 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import objects.KeyboardShortcut;
-import utilities.ResizeHelper;
 import utilities.ThemeUtil;
+import utilities.stageSizing.ResizeHelper;
 
 import java.util.Arrays;
 
 public class RootLayoutFactory {
 
     private static RootLayout rootLayout;
-    private static double xOffset = 0;
-    private static double yOffset = 0;
     private static boolean displayed = false;
     private static Scene scene;
 
@@ -71,24 +69,18 @@ public class RootLayoutFactory {
                     .ifPresent(KeyboardShortcut::runShortcutAction);
         });
 
-        //make moveable
-        getInstance().getHeader().setOnMousePressed(event -> {
-            xOffset = stage.getX() - event.getScreenX();
-            yOffset = stage.getY() - event.getScreenY();
-        });
-
-        getInstance().getHeader().setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() + xOffset);
-            stage.setY(event.getScreenY() + yOffset);
-        });
+        //allow dragging and header double-click to resize
+        ResizeHelper.addHeaderResizeListener(stage, getInstance().getHeader());
+        ResizeHelper.addUndecoratedStageDragListener(stage, getInstance().getHeader());
 
         //allow minimize
-        getInstance().getMinimizeButton().setOnMouseClicked(me -> {
-            stage.setIconified(true);
-        });
+        getInstance().getMinimizeButton().setOnMouseClicked(me -> ResizeHelper.minimizeStage(stage));
+
+        //allow maximize
+        ResizeHelper.addMaximizeResizeListener(stage, getInstance().getMaximizeButton());
 
         //allow resize
-        ResizeHelper.addResizeListener(stage);
+        ResizeHelper.addStageResizeListener(stage);
 
         stage.setX(oldXCenterPosition - stage.getWidth() / 2d);
         stage.setY(oldYCenterPosition - stage.getHeight() / 2d);

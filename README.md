@@ -13,7 +13,7 @@ Yari Editor provides additional tools such as Java code template generation for 
 
 ### Build
 
-Yari Editor is made entirely in JavaFX and Java 10 utilizing Maven for build and dependency management.
+Yari Editor is made entirely in JavaFX and Java 8 utilizing Maven for build and dependency management.
 
 You can build Yari Editor by navigating to the project directory and using:
 
