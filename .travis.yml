@@ -10,7 +10,7 @@ jobs:
       script:
         - mvn test -B -Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500
     - stage: "Sonarqube"
-      if: branch = master
+      if: tag IS present
       script: "mvn sonar:sonar -Dsonar.organization=rldiamond-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$sonar_token"
 after_success:
   - test $TRAVIS_BRANCH = "master" && bash <(curl -s https://codecov.io/bash)
