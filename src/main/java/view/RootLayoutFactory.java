@@ -20,8 +20,10 @@
 
 package view;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import objects.KeyboardShortcut;
 import utilities.ResizeHelper;
@@ -83,8 +85,15 @@ public class RootLayoutFactory {
         });
 
         //allow minimize
-        getInstance().getMinimizeButton().setOnMouseClicked(me -> {
-            stage.setIconified(true);
+        getInstance().getMinimizeButton().setOnMouseClicked(me -> stage.setIconified(true));
+
+        //allow maximize
+        getInstance().getMaximizeButton().setOnMouseClicked(me -> {
+            Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+            stage.setX(visualBounds.getMinX());
+            stage.setY(visualBounds.getMinY());
+            stage.setWidth(visualBounds.getWidth());
+            stage.setHeight(visualBounds.getHeight());
         });
 
         //allow resize

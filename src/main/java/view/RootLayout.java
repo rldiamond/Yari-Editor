@@ -80,6 +80,7 @@ public class RootLayout extends BorderPane {
     private final AnchorPane header = new AnchorPane();
 
     private Pane minimizeButton;
+    private Pane maximizeButton;
     private JFXSnackbar toastBar;
 
 
@@ -258,7 +259,14 @@ public class RootLayout extends BorderPane {
         minimizeButton.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
         Tooltip.install(minimizeButton, new Tooltip("Minimize"));
 
-        controls.getChildren().addAll(minimizeButton, closeButton);
+        //maximize
+        maximizeButton = new Pane();
+        maximizeButton.setId("windowMaximize");
+        maximizeButton.setPrefSize(16, 16);
+        maximizeButton.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        Tooltip.install(maximizeButton, new Tooltip("Maximize"));
+
+        controls.getChildren().addAll(minimizeButton, maximizeButton, closeButton);
 
         header.getChildren().addAll(branding, menuWrapper, controls);
 
@@ -481,6 +489,9 @@ public class RootLayout extends BorderPane {
         return minimizeButton;
     }
 
+    public Pane getMaximizeButton() {
+        return maximizeButton;
+    }
 
     public AnchorPane getHeader() {
         return header;
