@@ -7,7 +7,7 @@
 
 Yari Editor is a tool to create and edit decision table XML files for the Yari rules engine. Yari Editor assists by providing users simple and familiar methods to manipulate data, while ensuring that the data entered will correctly run through the engine.
 
-Yari Editor provides additional tools such as Java code template generation for matching ‘’’Rule’’’ objects, printing of decision table data in an easy to understand format, and more.
+Yari Editor provides additional tools such as Java code template generation for matching ```Rule``` objects, printing of decision table data in an easy to understand format, and more.
 
 [View our wiki for guides and documentation.](../../wiki)
 
@@ -21,7 +21,7 @@ You can build Yari Editor by navigating to the project directory and using:
 mvn clean install
 ```
 
-**Latest Supported Version of Yari-Core:** `0.3.1-SNAPSHOT`
+**Latest Supported Version of Yari-Core:** `0.3.4`
 
 ### New Features in 2.0
 
