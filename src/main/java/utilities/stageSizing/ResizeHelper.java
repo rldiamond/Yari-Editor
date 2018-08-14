@@ -44,7 +44,7 @@ public class ResizeHelper {
      * @param node  the Node to apply listeners to.
      */
     public static void addHeaderResizeListener(Stage stage, Node node) {
-        node.addEventHandler(MouseEvent.MOUSE_CLICKED, new HeaderResizeHandler(stage, 2));
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, new MaximizeHandler(stage, 2));
     }
 
     /**
@@ -55,7 +55,7 @@ public class ResizeHelper {
      * @param node  the Node to apply listeners to.
      */
     public static void addMaximizeResizeListener(Stage stage, Node node) {
-        node.addEventHandler(MouseEvent.MOUSE_CLICKED, new HeaderResizeHandler(stage, 1));
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, new MaximizeHandler(stage, 1));
     }
 
     /**

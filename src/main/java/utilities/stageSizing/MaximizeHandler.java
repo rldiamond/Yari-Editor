@@ -31,7 +31,7 @@ import javafx.stage.Stage;
  * An EventHandler listening for double-clicks on the node. If double clicked and primary button, the stage will be
  * resized. The stage will 'maximize' if not already, or return to a previous state otherwise.
  */
-public class HeaderResizeHandler implements EventHandler<MouseEvent> {
+public class MaximizeHandler implements EventHandler<MouseEvent> {
 
     private final Stage stage;
     private final int clickCount;
@@ -42,11 +42,11 @@ public class HeaderResizeHandler implements EventHandler<MouseEvent> {
     private double beforeHeight;
 
     /**
-     * Create a new HeaderResizeHandler with the provided Stage object.
+     * Create a new MaximizeHandler with the provided Stage object.
      *
      * @param stage the Stage object to resize.
      */
-    protected HeaderResizeHandler(Stage stage, int clickCount) {
+    protected MaximizeHandler(Stage stage, int clickCount) {
         this.stage = stage;
         this.clickCount = clickCount;
     }
