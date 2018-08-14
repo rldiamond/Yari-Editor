@@ -26,7 +26,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import objects.KeyboardShortcut;
-import utilities.ResizeHelper;
+import utilities.sizing.HeaderResizeHandler;
+import utilities.sizing.ResizeHelper;
 import utilities.ThemeUtil;
 
 import java.util.Arrays;
@@ -78,6 +79,8 @@ public class RootLayoutFactory {
             xOffset = stage.getX() - event.getScreenX();
             yOffset = stage.getY() - event.getScreenY();
         });
+
+        HeaderResizeHandler.addResizeHandler(stage,getInstance().getHeader());
 
         getInstance().getHeader().setOnMouseDragged(event -> {
             stage.setX(event.getScreenX() + xOffset);
