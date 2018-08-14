@@ -27,6 +27,7 @@ import utilities.FXUtil;
 import utilities.FileUtil;
 import utilities.SettingsUtil;
 import utilities.ThemeUtil;
+import utilities.stageSizing.ResizeHelper;
 
 /**
  * View displayed when the application is first launched. Provides extra
@@ -36,9 +37,6 @@ import utilities.ThemeUtil;
 public class WelcomeView extends VBox {
 
     private BooleanProperty busy = new SimpleBooleanProperty(false);
-    private final Stage stage;
-    private double xOffset = 0;
-    private double yOffset = 0;
 
     /**
      * Construct the WelcomeView with the supplied stage.
@@ -46,8 +44,6 @@ public class WelcomeView extends VBox {
      * @param stage the stage to utilize in various tasks.
      */
     public WelcomeView(Stage stage) {
-        this.stage = stage;
-
         setId("welcomeSplash");
         super.setPrefSize(575, 350);
         super.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
@@ -63,14 +59,7 @@ public class WelcomeView extends VBox {
         dragBar.setPadding(new Insets(5, 5, 5, 5));
 
         //allow dragging
-        dragBar.setOnMousePressed(event -> {
-            xOffset = event.getSceneX();
-            yOffset = event.getSceneY();
-        });
-        dragBar.setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() - xOffset);
-            stage.setY(event.getScreenY() - yOffset);
-        });
+        ResizeHelper.addUndecoratedStageDragListener(stage, dragBar);
 
         //close button
         Pane closeButton = new Pane();

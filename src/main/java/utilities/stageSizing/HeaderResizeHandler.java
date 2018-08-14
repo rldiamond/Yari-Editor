@@ -18,7 +18,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package utilities.sizing;
+package utilities.stageSizing;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
