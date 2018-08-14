@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -27,9 +27,9 @@
  *
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package components.table;
 
+import java.util.Arrays;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -39,12 +39,12 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import objects.DataType;
-import org.yari.core.table.Action;
+import org.yari.core.table.TableAction;
 import validation.ValidateEvent;
 
 import java.util.List;
 
-public class ActionsTable extends YariTable<Action> {
+public class ActionsTable extends YariTable<TableAction> {
 
     private static final DataFormat ACTION_EDITOR = new DataFormat("application/x-java-serialized-object-action-editor");
 
@@ -52,7 +52,7 @@ public class ActionsTable extends YariTable<Action> {
         setPlaceholder(new Label("Add one or more actions to continue"));
 
         setRowFactory(tv -> {
-            TableRow<Action> row = new TableRow<>();
+            TableRow<TableAction> row = new TableRow<>();
 
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty()) {
@@ -94,7 +94,7 @@ public class ActionsTable extends YariTable<Action> {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(ACTION_EDITOR)) {
                     int draggedIndex = (Integer) db.getContent(ACTION_EDITOR);
-                    Action draggedRow = getItems().remove(draggedIndex);
+                    TableAction draggedRow = getItems().remove(draggedIndex);
 
                     int dropIndex;
 
@@ -120,9 +120,8 @@ public class ActionsTable extends YariTable<Action> {
     }
 
     @Override
-    protected List<TableColumn<Action, ?>> buildColumns() {
-
-        TableColumn<Action, String> nameCol = new TableColumn<>("NAME");
+    protected List<TableColumn<TableAction, ?>> buildColumns() {
+        TableColumn<TableAction, String> nameCol = new TableColumn<>("NAME");
         nameCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getName() == null ? "ENTER A NAME" : cellData.getValue().getName();
             return new SimpleStringProperty(content);
@@ -133,7 +132,7 @@ public class ActionsTable extends YariTable<Action> {
             edit.getRowValue().setName(newContent);
         });
 
-        TableColumn<Action, String> methodNameCol = new TableColumn<>("METHOD NAME");
+        TableColumn<TableAction, String> methodNameCol = new TableColumn<>("METHOD NAME");
         methodNameCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getMethodName() == null ? "ENTER A METHOD NAME" : cellData.getValue().getMethodName();
             return new SimpleStringProperty(content);
@@ -144,7 +143,7 @@ public class ActionsTable extends YariTable<Action> {
             edit.getRowValue().setMethodname(newContent);
         });
 
-        TableColumn<Action, String> dataTypeCol = new TableColumn<>("DATA TYPE");
+        TableColumn<TableAction, String> dataTypeCol = new TableColumn<>("DATA TYPE");
         dataTypeCol.setCellFactory(c -> new EditableComboBoxCell<>(DataType.getFXCompatibleList()));
         dataTypeCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT DATA TYPE" : cellData.getValue().getDataType();
@@ -156,6 +155,6 @@ public class ActionsTable extends YariTable<Action> {
             fireEvent(new ValidateEvent());
         });
 
-        return List.of(nameCol, methodNameCol, dataTypeCol);
+        return Arrays.asList(nameCol, methodNameCol, dataTypeCol);
     }
 }

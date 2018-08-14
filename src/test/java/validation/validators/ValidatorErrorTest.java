@@ -46,7 +46,7 @@ public class ValidatorErrorTest extends ApplicationTest {
     @Test
     public void setValidatorErrorLocation() {
         ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-        validatorErrorLocation.setRowNumber(56);
+        validatorErrorLocation.setTableRowNumber(56);
         validatorError.setValidatorErrorLocation(validatorErrorLocation);
         assertEquals(validatorErrorLocation, validatorError.getValidatorErrorLocation());
     }

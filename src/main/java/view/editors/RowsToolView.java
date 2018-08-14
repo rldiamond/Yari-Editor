@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,7 +17,6 @@
  *
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package view.editors;
 
 import com.jfoenix.controls.JFXButton;
@@ -30,14 +29,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableRow;
 import utilities.DecisionTableService;
 import utilities.FXUtil;
 
 import java.util.Collections;
 
 /**
- * Display a table of {@link Row} to allow for creation of additional rows, editing available rows, and removing rows.
+ * Display a table of {@link Row} to allow for creation of additional rows,
+ * editing available rows, and removing rows.
  */
 public class RowsToolView extends StackPane implements DataEditor {
 
@@ -50,16 +50,16 @@ public class RowsToolView extends StackPane implements DataEditor {
     public RowsToolView() {
         setPadding(new Insets(20, 20, 20, 20));
         Card tableCard = new Card("Rows Editor");
-        getChildren().setAll(tableCard);
+        super.getChildren().setAll(tableCard);
 
         //table
         rowTable.setItems(decisionTableService.getRows());
         tableCard.setDisplayedContent(rowTable);
 
         ContextMenu contextMenu = new ContextMenu();
-        var addMenuItem = new MenuItem("ADD");
+        MenuItem addMenuItem = new MenuItem("ADD");
         addMenuItem.setOnAction(a -> addNewRow());
-        var removeMenuItem = new MenuItem("REMOVE");
+        MenuItem removeMenuItem = new MenuItem("REMOVE");
         removeMenuItem.setOnAction(a -> removeSelectedRow());
         contextMenu.getItems().setAll(addMenuItem, removeMenuItem);
         rowTable.setContextMenu(contextMenu);
@@ -92,7 +92,7 @@ public class RowsToolView extends StackPane implements DataEditor {
         if (rowTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        Row selectedItem = rowTable.getSelectionModel().getSelectedItem();
+        TableRow selectedItem = rowTable.getSelectionModel().getSelectedItem();
         decisionTableService.getRows().remove(selectedItem);
     }
 
@@ -101,7 +101,7 @@ public class RowsToolView extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        decisionTableService.getRows().add(new Row());
+        decisionTableService.getRows().add(new TableRow());
         FXUtil.runOnFXThread(() -> {
             rowTable.requestFocus();
             rowTable.getSelectionModel().selectLast();

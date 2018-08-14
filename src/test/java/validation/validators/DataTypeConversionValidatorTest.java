@@ -7,7 +7,6 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package validation.validators;
 
 import objects.DataType;
@@ -16,10 +15,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableRow;
 import utilities.DecisionTableService;
 
 import java.util.Arrays;
@@ -33,23 +32,22 @@ public class DataTypeConversionValidatorTest {
     @Mock
     DecisionTable decisionTable;
 
-
     @Test
     public void runValidationSuccessfully() {
 
         Arrays.stream(DataType.values()).forEach(dataType -> {
 
             String validString = getDataByDataType(true, dataType);
-            Condition condition = new Condition();
+            TableCondition condition = new TableCondition();
             condition.setDataType(dataType.getDisplayValue());
-            Action action = new Action();
+            TableAction action = new TableAction();
             action.setDatatype("string");
-            Row row = new Row();
+            TableRow row = new TableRow();
             row.setValues(Collections.singletonList(validString));
             row.setActionValues(Collections.singletonList("Test"));
             Mockito.when(decisionTable.getRawRowData()).thenReturn(Collections.singletonList(row));
-            Mockito.when(decisionTable.getConditions()).thenReturn(Collections.singletonList(condition));
-            Mockito.when(decisionTable.getActions()).thenReturn(Collections.singletonList(action));
+            Mockito.when(decisionTable.getTableConditions()).thenReturn(Collections.singletonList(condition));
+            Mockito.when(decisionTable.getTableActions()).thenReturn(Collections.singletonList(action));
             DecisionTableService.getService().setDecisionTable(decisionTable);
             DataTypeConversionValidator dataTypeConversionValidator = new DataTypeConversionValidator(true);
             dataTypeConversionValidator.runValidation();
@@ -65,16 +63,16 @@ public class DataTypeConversionValidatorTest {
         Arrays.stream(DataType.values()).forEach(dataType -> {
 
             String validString = getDataByDataType(false, dataType);
-            Condition condition = new Condition();
+            TableCondition condition = new TableCondition();
             condition.setDataType(dataType.getDisplayValue());
-            Action action = new Action();
+            TableAction action = new TableAction();
             action.setDatatype("string");
-            Row row = new Row();
+            TableRow row = new TableRow();
             row.setValues(Collections.singletonList(validString));
             row.setActionValues(Collections.singletonList("Test"));
             Mockito.when(decisionTable.getRawRowData()).thenReturn(Collections.singletonList(row));
-            Mockito.when(decisionTable.getConditions()).thenReturn(Collections.singletonList(condition));
-            Mockito.when(decisionTable.getActions()).thenReturn(Collections.singletonList(action));
+            Mockito.when(decisionTable.getTableConditions()).thenReturn(Collections.singletonList(condition));
+            Mockito.when(decisionTable.getTableActions()).thenReturn(Collections.singletonList(action));
             DecisionTableService.getService().setDecisionTable(decisionTable);
             DataTypeConversionValidator dataTypeConversionValidator = new DataTypeConversionValidator(true);
             dataTypeConversionValidator.runValidation();
@@ -89,23 +87,22 @@ public class DataTypeConversionValidatorTest {
     }
 
     @Test
-    public void testInvalidDataTypeFail(){
-        Condition condition = new Condition();
+    public void testInvalidDataTypeFail() {
+        TableCondition condition = new TableCondition();
         condition.setDataType("foo");
-        Action action = new Action();
+        TableAction action = new TableAction();
         action.setDatatype("foo");
-        Row row = new Row();
+        TableRow row = new TableRow();
         row.setValues(Collections.singletonList("Test"));
         row.setActionValues(Collections.singletonList("Test"));
         Mockito.when(decisionTable.getRawRowData()).thenReturn(Collections.singletonList(row));
-        Mockito.when(decisionTable.getConditions()).thenReturn(Collections.singletonList(condition));
-        Mockito.when(decisionTable.getActions()).thenReturn(Collections.singletonList(action));
+        Mockito.when(decisionTable.getTableConditions()).thenReturn(Collections.singletonList(condition));
+        Mockito.when(decisionTable.getTableActions()).thenReturn(Collections.singletonList(action));
         DecisionTableService.getService().setDecisionTable(decisionTable);
         DataTypeConversionValidator dataTypeConversionValidator = new DataTypeConversionValidator(true);
         dataTypeConversionValidator.runValidation();
         assertTrue(!dataTypeConversionValidator.isValid());
     }
-
 
     private String getDataByDataType(boolean valid, DataType dataType) {
         String data = null;
@@ -172,6 +169,5 @@ public class DataTypeConversionValidatorTest {
         }
         return data;
     }
-
 
 }

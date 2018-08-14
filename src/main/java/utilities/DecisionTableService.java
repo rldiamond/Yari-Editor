@@ -16,10 +16,10 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableRow;
 import validation.ValidationService;
 
 import java.util.ArrayList;
@@ -45,15 +45,15 @@ public class DecisionTableService {
     }
     //</editor-fold>
 
-    private static final Logger logger = LoggerFactory.getLogger(DecisionTableService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DecisionTableService.class);
     private final ValidationService validationService = ValidationService.getService();
 
     private ObjectProperty<DecisionTable> decisionTable = new SimpleObjectProperty<>(null);
 
     //fx
-    private final ObservableList<Row> rows = FXCollections.observableArrayList();
-    private final ObservableList<Action> actions = FXCollections.observableArrayList();
-    private final ObservableList<Condition> conditions = FXCollections.observableArrayList();
+    private final ObservableList<TableRow> rows = FXCollections.observableArrayList();
+    private final ObservableList<TableAction> actions = FXCollections.observableArrayList();
+    private final ObservableList<TableCondition> conditions = FXCollections.observableArrayList();
     private final StringProperty ruleName = new SimpleStringProperty("MyTableRule");
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
@@ -62,17 +62,17 @@ public class DecisionTableService {
      */
     private DecisionTableService() {
         //update listeners - always keep the decision table in sync with FX lists
-        rows.addListener((ListChangeListener.Change<? extends Row> c) -> {
+        rows.addListener((ListChangeListener.Change<? extends TableRow> c) -> {
             c.next();
             updateRows();
             validationService.requestValidation();
         });
-        conditions.addListener((ListChangeListener.Change<? extends Condition> c) -> {
+        conditions.addListener((ListChangeListener.Change<? extends TableCondition> c) -> {
             c.next();
             updateConditions();
             validationService.requestValidation();
         });
-        actions.addListener((ListChangeListener.Change<? extends Action> c) -> {
+        actions.addListener((ListChangeListener.Change<? extends TableAction> c) -> {
             c.next();
             updateActions();
             validationService.requestValidation();
@@ -127,48 +127,48 @@ public class DecisionTableService {
     }
 
     private void renumberRows() {
-        var rowNumber = 0;
-        for (Row row : rows) {
+        int rowNumber = 0;
+        for (TableRow row : rows) {
             row.setRowNumber(rowNumber++);
         }
     }
 
     private void updateRows() {
         if (decisionTable.getValue() == null) {
-            logger.warn("Could not update rows as the decision table was null.");
+            LOGGER.warn("Could not update rows as the decision table was null.");
             return;
         }
         if (!isEnabled()) {
-            logger.debug("The decision table service is disabled. Not updating rows.");
+            LOGGER.debug("The decision table service is disabled. Not updating rows.");
             return;
         }
         renumberRows();
-        decisionTable.getValue().setRows(new ArrayList<>(rows));
+        decisionTable.getValue().setTableRows(new ArrayList<>(rows));
     }
 
     private void updateActions() {
         if (decisionTable.getValue() == null) {
-            logger.warn("Could not update actions as the decision table was null.");
+            LOGGER.warn("Could not update actions as the decision table was null.");
             return;
         }
         if (!isEnabled()) {
-            logger.debug("The decision table service is disabled. Not updating actions.");
+            LOGGER.debug("The decision table service is disabled. Not updating actions.");
             return;
         }
-        decisionTable.getValue().setActions(new ArrayList<>(actions));
+        decisionTable.getValue().setTableActions(new ArrayList<>(actions));
 
     }
 
     private void updateConditions() {
         if (decisionTable.getValue() == null) {
-            logger.warn("Could not update conditions as the decision table was null.");
+            LOGGER.warn("Could not update conditions as the decision table was null.");
             return;
         }
         if (!isEnabled()) {
-            logger.debug("The decision table service is disabled. Not updating conditions.");
+            LOGGER.debug("The decision table service is disabled. Not updating conditions.");
             return;
         }
-        decisionTable.getValue().setConditions(new ArrayList<>(conditions));
+        decisionTable.getValue().setTableConditions(new ArrayList<>(conditions));
     }
 
     private boolean isEnabled() {
@@ -195,15 +195,15 @@ public class DecisionTableService {
         this.ruleName.set(ruleName);
     }
 
-    public ObservableList<Row> getRows() {
+    public ObservableList<TableRow> getRows() {
         return rows;
     }
 
-    public ObservableList<Action> getActions() {
+    public ObservableList<TableAction> getActions() {
         return actions;
     }
 
-    public ObservableList<Condition> getConditions() {
+    public ObservableList<TableCondition> getConditions() {
         return conditions;
     }
 }

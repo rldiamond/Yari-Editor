@@ -31,6 +31,7 @@
 package components;
 
 import com.jfoenix.transitions.JFXFillTransition;
+import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -60,15 +61,15 @@ public class MenuOption extends StackPane {
         titleProperty.setValue(title);
         setPadding(new Insets(0, 0, 0, 10));
         setId("mdTab");
-        setPrefSize(USE_COMPUTED_SIZE, 50);
+        super.setPrefSize(USE_COMPUTED_SIZE, 50);
         setAlignment(Pos.CENTER_LEFT);
 
         //button label
-        var label = new Label();
+        Label label = new Label();
         label.textProperty().bind(titleProperty);
 
         //icon
-        var icon = new Pane();
+        Pane icon = new Pane();
         icon.getStyleClass().add("mdTab-icon");
         icon.setId(iconID);
         icon.setPrefSize(12, 12);
@@ -82,18 +83,18 @@ public class MenuOption extends StackPane {
         JFXFillTransition selectedTransition = new JFXFillTransition();
         selectedTransition.setDuration(Duration.millis(100));
         selectedTransition.setFromValue(Color.TRANSPARENT);
-        selectedTransition.setToValue(Color.DARKRED);
+        selectedTransition.setToValue(Color.ROSYBROWN);
         selectedTransition.setRegion(this);
 
         JFXFillTransition unselectedTransition = new JFXFillTransition();
         unselectedTransition.setDuration(Duration.millis(100));
-        unselectedTransition.setFromValue(Color.DARKRED);
+        unselectedTransition.setFromValue(Color.ROSYBROWN);
         unselectedTransition.setToValue(Color.TRANSPARENT);
         unselectedTransition.setRegion(this);
 
         //hover animate
-        var popOut = FXUtil.installBump(wrapper, FXUtil.AnimationDirection.RIGHT);
-        var popBack = FXUtil.installBumpBack(wrapper, FXUtil.AnimationDirection.RIGHT);
+        Timeline popOut = FXUtil.installBump(wrapper, FXUtil.AnimationDirection.RIGHT);
+        Timeline popBack = FXUtil.installBumpBack(wrapper, FXUtil.AnimationDirection.RIGHT);
 
         setOnMouseEntered(me -> {
             popBack.stop();
@@ -120,7 +121,7 @@ public class MenuOption extends StackPane {
             }
         });
 
-        this.getChildren().setAll(wrapper);
+        super.getChildren().setAll(wrapper);
 
     }
 

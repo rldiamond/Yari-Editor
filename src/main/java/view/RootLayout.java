@@ -67,6 +67,7 @@ import view.editors.RowsToolView;
 
 import java.io.File;
 import java.util.Optional;
+import javafx.animation.FadeTransition;
 
 
 public class RootLayout extends BorderPane {
@@ -85,15 +86,15 @@ public class RootLayout extends BorderPane {
     public RootLayout() {
 
         //when loadingContent, display a loading indicator
-        var loadingSpinner = new JFXSpinner();
+        JFXSpinner loadingSpinner = new JFXSpinner();
         loadingSpinner.setRadius(30);
         loadingSpinner.visibleProperty().bind(loadingContent);
         loadingSpinner.managedProperty().bind(loadingContent);
         //blank pane to cover up any displayed content
-        var loadingPane = new StackPane();
+        StackPane loadingPane = new StackPane();
         loadingPane.setStyle("-fx-background-color: white");
-        var fadePaneOut = FXUtil.installFade(loadingPane, FXUtil.AnimationFadeType.OUT);
-        var fadePaneIn = FXUtil.installFade(loadingPane, FXUtil.AnimationFadeType.IN);
+        FadeTransition fadePaneOut = FXUtil.installFade(loadingPane, FXUtil.AnimationFadeType.OUT);
+        FadeTransition fadePaneIn = FXUtil.installFade(loadingPane, FXUtil.AnimationFadeType.IN);
 
         loadingContent.addListener((obs, ov, loading) -> {
             if (loading) {
@@ -109,7 +110,7 @@ public class RootLayout extends BorderPane {
         });
 
         //encapsulate the displayedContent so that the loadingSpinner may always appear on top.
-        var mainPanel = new StackPane();
+        StackPane mainPanel = new StackPane();
         mainPanel.getChildren().setAll(displayedContent, loadingPane, loadingSpinner);
 
         toastBar = new JFXSnackbar(mainPanel);
@@ -276,30 +277,30 @@ public class RootLayout extends BorderPane {
 
 
     private void prepareOptions() {
-        var actionsOption = new MenuOption("Actions", "mdTab-actions");
+        MenuOption actionsOption = new MenuOption("Actions", "mdTab-actions");
         Tooltip.install(actionsOption, new Tooltip("Open the Actions Editor"));
         actionsOption.setOnMouseClicked(me -> selectTab("actions"));
         actionsOption.setOnSelectAction(() -> showView(ToolView.ACTIONS));
-        var conditionsOption = new MenuOption("Conditions", "mdTab-conditions");
+        MenuOption conditionsOption = new MenuOption("Conditions", "mdTab-conditions");
         Tooltip.install(conditionsOption, new Tooltip("Open the Conditions Editor"));
         conditionsOption.setOnMouseClicked(me -> selectTab("conditions"));
         conditionsOption.setOnSelectAction(() -> showView(ToolView.CONDITIONS));
-        var rowsOption = new MenuOption("Rows", "mdTab-rows");
+        MenuOption rowsOption = new MenuOption("Rows", "mdTab-rows");
         Tooltip.install(rowsOption, new Tooltip("Open the Rows Editor"));
         rowsOption.setOnMouseClicked(me -> selectTab("rows"));
         rowsOption.setOnSelectAction(() -> showView(ToolView.ROWS));
-        var generalOption = new MenuOption("General", "mdTab-general");
+        MenuOption generalOption = new MenuOption("General", "mdTab-general");
         Tooltip.install(generalOption, new Tooltip("Open the General Table Setting Editor"));
         generalOption.setOnMouseClicked(me -> selectTab("general"));
         generalOption.setOnSelectAction(() -> showView(ToolView.GENERAL));
-        var skeletonCode = new MenuOption("Java Code", "mdTab-code");
+        MenuOption skeletonCode = new MenuOption("Java Code", "mdTab-code");
         Tooltip.install(skeletonCode, new Tooltip("View Skeleton Java Code"));
         skeletonCode.setOnSelectAction(() -> showView(ToolView.JAVA_CODE));
         skeletonCode.setOnMouseClicked(me -> selectTab("java code"));
 
         menuOptions.addAll(actionsOption, conditionsOption, rowsOption, generalOption, skeletonCode);
 
-        var optionsContainer = new VBox();
+        VBox optionsContainer = new VBox();
         optionsContainer.getChildren().setAll(actionsOption, conditionsOption, rowsOption, generalOption, skeletonCode);
 
         optionsContainer.setPadding(new Insets(25, 0, 0, 0));
@@ -308,7 +309,7 @@ public class RootLayout extends BorderPane {
         AnchorPane.setRightAnchor(optionsContainer, 0D);
 
         //container
-        var leftMenu = new AnchorPane();
+        AnchorPane leftMenu = new AnchorPane();
         leftMenu.setId("leftMenu");
         leftMenu.getChildren().add(optionsContainer);
 

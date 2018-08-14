@@ -29,8 +29,8 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
 import utilities.DecisionTableService;
 import utilities.ToastUtil;
 
@@ -69,7 +69,7 @@ public class JavaCodeToolView extends StackPane {
 
         card.setFooterContent(buttonBar);
 
-        getChildren().add(card);
+        super.getChildren().add(card);
 
     }
 
@@ -91,7 +91,7 @@ public class JavaCodeToolView extends StackPane {
         sb.append("    @Override\n    public void lookupGlobals(Context globalContext){\n    }\n\n");
         // Create condition methods
         Set<String> conditionNames = new HashSet<>();
-        for (Condition condition : decisionTableService.getDecisionTable().getConditions()) {
+        for (TableCondition condition : decisionTableService.getDecisionTable().getTableConditions()) {
             if (conditionNames.contains(condition.getMethodName().toUpperCase())) {
                 continue;
             }
@@ -102,7 +102,7 @@ public class JavaCodeToolView extends StackPane {
             conditionNames.add(condition.getMethodName().toUpperCase());
         }
         // Create action methods
-        for (Action action : decisionTableService.getDecisionTable().getActions()) {
+        for (TableAction action : decisionTableService.getDecisionTable().getTableActions()) {
             sb.append("    @Action(\"").append(action.getMethodName()).append("\")\n");
             sb.append("    public void ").append(action.getMethodName()).append("(Context actionContext){\n");
             sb.append("        // TODO: do something\n    }\n\n");

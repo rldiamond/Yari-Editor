@@ -7,11 +7,10 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package validation.validators;
 
 import objects.ToolView;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableRow;
 
 import java.util.List;
 
@@ -26,12 +25,12 @@ public class UniqueRowValidator extends TableValidator {
 
     @Override
     protected void runValidation() {
-        List<Row> rows = getDecisionTable().getRawRowData();
+        List<TableRow> rows = getDecisionTable().getRawRowData();
 
         // Validate Rows
-        for (Row currentRow : rows) {
+        for (TableRow currentRow : rows) {
             List<String> compare = currentRow.getValues();
-            for (Row comparisonRow : rows) {
+            for (TableRow comparisonRow : rows) {
                 if (currentRow == comparisonRow) {
                     continue;
                 }
@@ -39,7 +38,7 @@ public class UniqueRowValidator extends TableValidator {
                 if (compare.equals(comparisonRow.getValues())) {
                     ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                     validatorErrorLocation.setToolView(ToolView.ROWS);
-                    validatorErrorLocation.setRow(comparisonRow);
+                    validatorErrorLocation.setTableRow(comparisonRow);
                     String errMsg = "Two rows of data were found to have the same data! Check rows " + comparisonRow + " and " + currentRow + ".";
                     ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                     addError(validatorError);

@@ -30,7 +30,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import org.yari.core.table.Action;
+import org.yari.core.table.TableAction;
 import utilities.DecisionTableService;
 import utilities.FXUtil;
 import validation.ValidateEvent;
@@ -46,16 +46,16 @@ public class ActionsToolView extends StackPane implements DataEditor {
     public ActionsToolView() {
         setPadding(new Insets(20, 20, 20, 20));
         Card tableCard = new Card("Actions Editor");
-        getChildren().setAll(tableCard);
+        super.getChildren().setAll(tableCard);
 
         //table
         actionsTable.setItems(decisionTableService.getActions());
         tableCard.setDisplayedContent(actionsTable);
 
         ContextMenu contextMenu = new ContextMenu();
-        var addMenuItem = new MenuItem("ADD");
+        MenuItem addMenuItem = new MenuItem("ADD");
         addMenuItem.setOnAction(a -> addNewRow());
-        var removeMenuItem = new MenuItem("REMOVE");
+        MenuItem removeMenuItem = new MenuItem("REMOVE");
         removeMenuItem.setOnAction(a -> removeSelectedRow());
         contextMenu.getItems().setAll(addMenuItem, removeMenuItem);
         actionsTable.setContextMenu(contextMenu);
@@ -89,7 +89,7 @@ public class ActionsToolView extends StackPane implements DataEditor {
         if (actionsTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        Action selectedItem = actionsTable.getSelectionModel().getSelectedItem();
+        TableAction selectedItem = actionsTable.getSelectionModel().getSelectedItem();
         decisionTableService.getActions().remove(selectedItem);
     }
 
@@ -98,7 +98,7 @@ public class ActionsToolView extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        decisionTableService.getActions().add(new Action());
+        decisionTableService.getActions().add(new TableAction());
         FXUtil.runOnFXThread(() -> {
             actionsTable.requestFocus();
             actionsTable.getSelectionModel().selectLast();
