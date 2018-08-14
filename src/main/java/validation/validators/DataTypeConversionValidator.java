@@ -14,9 +14,9 @@ import objects.DataType;
 import objects.ToolView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
+import org.yari.core.table.TableRow;
 
 import java.util.List;
 
@@ -35,9 +35,9 @@ public class DataTypeConversionValidator extends TableValidator {
 
     @Override
     protected void runValidation() {
-        List<Row> rows = getDecisionTable().getRawRowData();
-        List<Condition> conditions = getDecisionTable().getConditions();
-        List<Action> actions = getDecisionTable().getActions();
+        List<TableRow> rows = getDecisionTable().getRawRowData();
+        List<TableCondition> conditions = getDecisionTable().getTableConditions();
+        List<TableAction> actions = getDecisionTable().getTableActions();
 
         if (rows == null || conditions == null || actions == null) {
             //Note: this is taken care of in MinimumRequiredDataValidator
@@ -54,8 +54,8 @@ public class DataTypeConversionValidator extends TableValidator {
             if (dataType == null) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setToolView(ToolView.CONDITIONS);
-                validatorErrorLocation.setCondition(condition);
-                validatorErrorLocation.setColumnNumber(1 + conditionIndex);
+                validatorErrorLocation.setTableCondition(condition);
+                validatorErrorLocation.setTableColumnNumber(1 + conditionIndex);
                 String errMsg = "The condition '" + condition.getName() + "' has an invalid data type of '" + condition.getDataType() + "'";
                 ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                 addError(validatorError);
@@ -66,10 +66,10 @@ public class DataTypeConversionValidator extends TableValidator {
                 // this is likely a new row, and does not contain a value for the condition
                 if (row.getValues().size() <= conditionIndex) {
                     ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                    validatorErrorLocation.setRowNumber(row.getRowNumber());
-                    validatorErrorLocation.setRow(row);
+                    validatorErrorLocation.setTableRowNumber(row.getRowNumber());
+                    validatorErrorLocation.setTableRow(row);
                     validatorErrorLocation.setToolView(ToolView.ROWS);
-                    validatorErrorLocation.setColumnNumber(1 + conditionIndex);
+                    validatorErrorLocation.setTableColumnNumber(1 + conditionIndex);
                     String errMsg = "Row " + row.getRowNumber() + " does not have a value for condition column " + condition.getName();
                     ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                     addError(validatorError);
@@ -80,11 +80,11 @@ public class DataTypeConversionValidator extends TableValidator {
                         //.. we don't validate nulls non-strict
                     } else if (!canConvert(data, dataType)) {
                         ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                        validatorErrorLocation.setCondition(condition);
-                        validatorErrorLocation.setColumnNumber(1 + conditionIndex);
+                        validatorErrorLocation.setTableCondition(condition);
+                        validatorErrorLocation.setTableColumnNumber(1 + conditionIndex);
                         validatorErrorLocation.setToolView(ToolView.ROWS);
-                        validatorErrorLocation.setRow(row);
-                        validatorErrorLocation.setRowNumber(row.getRowNumber());
+                        validatorErrorLocation.setTableRow(row);
+                        validatorErrorLocation.setTableRowNumber(row.getRowNumber());
                         String errMsg = "The value '" + data + "' in row " + row.getRowNumber() + ", column " + condition.getName() + " cannot be converted to " +
                                 "the specified data type";
                         ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
@@ -104,8 +104,8 @@ public class DataTypeConversionValidator extends TableValidator {
             if (dataType == null) {
                 ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
                 validatorErrorLocation.setToolView(ToolView.ACTIONS);
-                validatorErrorLocation.setAction(action);
-                validatorErrorLocation.setColumnNumber(1 + conditions.size() + actionIndex);
+                validatorErrorLocation.setTableAction(action);
+                validatorErrorLocation.setTableColumnNumber(1 + conditions.size() + actionIndex);
                 String errMsg = "The action '" + action.getName() + "' has an invalid data type of '" + action.getDataType() + "'";
                 ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                 addError(validatorError);
@@ -116,10 +116,10 @@ public class DataTypeConversionValidator extends TableValidator {
                 // this is likely a new row, and does not contain a value for the condition
                 if (row.getResults().size() <= actionIndex) {
                     ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                    validatorErrorLocation.setRowNumber(row.getRowNumber());
-                    validatorErrorLocation.setRow(row);
+                    validatorErrorLocation.setTableRowNumber(row.getRowNumber());
+                    validatorErrorLocation.setTableRow(row);
                     validatorErrorLocation.setToolView(ToolView.ROWS);
-                    validatorErrorLocation.setColumnNumber(1 + conditions.size() + actionIndex);
+                    validatorErrorLocation.setTableColumnNumber(1 + conditions.size() + actionIndex);
                     String errMsg = "Row " + row.getRowNumber() + " does not have a value for action column " + action.getName();
                     ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
                     addError(validatorError);
@@ -130,11 +130,11 @@ public class DataTypeConversionValidator extends TableValidator {
                         //.. we don't validate nulls non-strict
                     } else if (!canConvert(data, dataType)) {
                         ValidatorErrorLocation validatorErrorLocation = new ValidatorErrorLocation();
-                        validatorErrorLocation.setAction(action);
-                        validatorErrorLocation.setColumnNumber(1 + conditions.size() + actionIndex);
+                        validatorErrorLocation.setTableAction(action);
+                        validatorErrorLocation.setTableColumnNumber(1 + conditions.size() + actionIndex);
                         validatorErrorLocation.setToolView(ToolView.ROWS);
-                        validatorErrorLocation.setRow(row);
-                        validatorErrorLocation.setRowNumber(row.getRowNumber());
+                        validatorErrorLocation.setTableRow(row);
+                        validatorErrorLocation.setTableRowNumber(row.getRowNumber());
                         String errMsg = "The value '" + data + "' in row " + row.getRowNumber() + ", column " + action.getName() + " cannot be converted to " +
                                 "the specified data type";
                         ValidatorError validatorError = new ValidatorError(errMsg, validatorErrorLocation);
@@ -198,7 +198,7 @@ public class DataTypeConversionValidator extends TableValidator {
                     break;
             }
         } catch (Exception ex) {
-            canConvert = false;
+            canConvert = false;            
         }
 
         return canConvert;

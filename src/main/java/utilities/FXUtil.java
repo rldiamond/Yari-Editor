@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,7 +17,6 @@
  *
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package utilities;
 
 import javafx.animation.FadeTransition;
@@ -27,7 +26,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.util.Duration;
-
 
 public class FXUtil {
 
@@ -53,12 +51,10 @@ public class FXUtil {
         new Thread(run::run).start();
     }
 
-
     // --------------- ANIMATIONS --------------------
-
     public static FadeTransition installFade(Node node, AnimationFadeType animationFadeType) {
-        var from = 0;
-        var to = 0;
+        int from = 0;
+        int to = 0;
 
         FadeTransition fade = new FadeTransition();
 
@@ -76,7 +72,7 @@ public class FXUtil {
                 });
                 break;
             default:
-                //..
+            //..
         }
 
         fade.setDuration(Duration.millis(200));
@@ -95,11 +91,11 @@ public class FXUtil {
     }
 
     public static Timeline installBump(Node node, AnimationDirection animationDirection) {
-        final var distance = 5;
-        final var startX = node.getTranslateX();
-        final var startY = node.getTranslateY();
-        var endX = node.getTranslateX();
-        var endY = node.getTranslateY();
+        final int distance = 5;
+        final double startX = node.getTranslateX();
+        final double startY = node.getTranslateY();
+        double endX = node.getTranslateX();
+        double endY = node.getTranslateY();
 
         switch (animationDirection) {
             case RIGHT:
@@ -115,7 +111,7 @@ public class FXUtil {
                 endY -= distance;
                 break;
             default:
-                //..
+            //..
         }
 
         Timeline bump = new Timeline();
@@ -133,11 +129,11 @@ public class FXUtil {
     }
 
     public static Timeline installBumpBack(Node node, AnimationDirection originatingDirection) {
-        final var distance = 5;
-        var startX = node.getTranslateX();
-        var startY = node.getTranslateY();
-        var endX = node.getTranslateX();
-        var endY = node.getTranslateY();
+        final int distance = 5;
+        double startX = node.getTranslateX();
+        double startY = node.getTranslateY();
+        double endX = node.getTranslateX();
+        double endY = node.getTranslateY();
 
         switch (originatingDirection) {
             case RIGHT:
@@ -153,7 +149,7 @@ public class FXUtil {
                 startY -= distance;
                 break;
             default:
-                //..
+            //..
         }
 
         Timeline bump = new Timeline();

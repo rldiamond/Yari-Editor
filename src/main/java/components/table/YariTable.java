@@ -34,10 +34,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
 import utilities.DecisionTableService;
-import view.RootLayoutFactory;
 
 import java.util.List;
 
@@ -48,7 +45,7 @@ import java.util.List;
  */
 public abstract class YariTable<T extends Object> extends TableView<T> {
 
-    protected static final ObservableList<String> boolOptions = FXCollections.observableArrayList("True", "False");
+    protected static final ObservableList<String> BOOLEAN_OPTIONS = FXCollections.observableArrayList("True", "False");
     protected static final DecisionTableService DECISION_TABLE_SERVICE = DecisionTableService.getService();
 
 
@@ -56,6 +53,7 @@ public abstract class YariTable<T extends Object> extends TableView<T> {
         setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
         setEditable(true);
 
+        @SuppressWarnings("OverridableMethodCallInConstructor")
         List<TableColumn<T, ?>> columns = buildColumns();
         getColumns().addAll(columns);
     }

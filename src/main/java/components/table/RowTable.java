@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,9 +17,9 @@
  *
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package components.table;
 
+import java.util.Arrays;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -32,15 +32,15 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
 import utilities.TextUtil;
 import validation.ValidateEvent;
 
 import java.util.List;
+import javafx.scene.control.Tooltip;
 
-public class RowTable extends YariTable<Row> {
+public class RowTable extends YariTable<org.yari.core.table.TableRow> {
 
     private static final DataFormat ROW_EDITOR = new DataFormat("application/x-java-serialized-object");
 
@@ -48,7 +48,7 @@ public class RowTable extends YariTable<Row> {
         setPlaceholder(new Label("Add one or more rows to continue"));
 
         setRowFactory(tv -> {
-            TableRow<Row> row = new TableRow<>();
+            TableRow<org.yari.core.table.TableRow> row = new TableRow<>();
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty()) {
                     Integer index = row.getIndex();
@@ -89,7 +89,7 @@ public class RowTable extends YariTable<Row> {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(ROW_EDITOR)) {
                     int draggedIndex = (Integer) db.getContent(ROW_EDITOR);
-                    Row draggedRow = getItems().remove(draggedIndex);
+                    org.yari.core.table.TableRow draggedRow = getItems().remove(draggedIndex);
 
                     int dropIndex;
 
@@ -113,26 +113,31 @@ public class RowTable extends YariTable<Row> {
     }
 
     @Override
-    protected List<TableColumn<Row, ?>> buildColumns() {
-
+    protected List<TableColumn<org.yari.core.table.TableRow, ?>> buildColumns() {
         //nested columns
         TableColumn conditionsCol = new TableColumn("CONDITIONS");
         TableColumn actionsCol = new TableColumn("ACTIONS");
-        TableColumn<Row, Integer> rowNumCol = new TableColumn("#");
+        TableColumn<org.yari.core.table.TableRow, Integer> rowNumCol = new TableColumn("#");
         rowNumCol.setPrefWidth(45);
         rowNumCol.setMaxWidth(45);
         rowNumCol.setMinWidth(45);
         rowNumCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getRowNumber()).asObject());
 
         //conditions
-        var columnNum = 0;
-        for (Condition condition : DECISION_TABLE_SERVICE.getConditions()) {
+        int columnNum = 0;
+        for (TableCondition condition : DECISION_TABLE_SERVICE.getConditions()) {
+            final String condTitle = TextUtil.toTitleCase(condition.getName() + " (" + condition.getDataType() + ", " + condition.getComparator() + ")");
 
-            TableColumn conditionCol = new TableColumn(TextUtil.toTitleCase(condition.getName() + " (" + condition.getDataType() + ", " + condition.getComparator() + ")"));
+            Label condLabel = new Label(condTitle);
+            Tooltip.install(condLabel, new Tooltip(condTitle));
+
+            TableColumn conditionCol = new TableColumn();
+            conditionCol.setGraphic(condLabel);
+
             final int column = columnNum;
             // Assign data to a column.
-            conditionCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<Row, String>, ObservableValue<String>>) param -> {
-                Row r = param.getValue();
+            conditionCol.setCellValueFactory((Callback<TableColumn.CellDataFeatures<org.yari.core.table.TableRow, String>, ObservableValue<String>>) param -> {
+                org.yari.core.table.TableRow r = param.getValue();
                 List<String> rowValues = r.getValues();
                 if (column >= rowValues.size()) {
                     return new SimpleStringProperty("UNDEFINED");
@@ -141,13 +146,13 @@ public class RowTable extends YariTable<Row> {
             });
             //edit
             if (condition.getDataType() != null && condition.getDataType().equalsIgnoreCase("boolean")) {
-                conditionCol.setCellFactory(c -> new EditableComboBoxCell<>(boolOptions));
+                conditionCol.setCellFactory(c -> new EditableComboBoxCell<>(BOOLEAN_OPTIONS));
             } else {
                 conditionCol.setCellFactory(c -> new EditableTextFieldCell<>());
             }
-            conditionCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Row, String>>) t -> {
+            conditionCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<org.yari.core.table.TableRow, String>>) t -> {
                 String s = t.getNewValue().trim();
-                Row row = t.getRowValue();
+                org.yari.core.table.TableRow row = t.getRowValue();
                 for (int i = row.getValues().size(); i <= column; i++) {
                     row.getValues().add("");
                 }
@@ -159,15 +164,20 @@ public class RowTable extends YariTable<Row> {
         }
 
         //actions
-        columnNum = 0;
         // Create the action columns.
-        for (Action action : DECISION_TABLE_SERVICE.getActions()) {
-            TableColumn col = new TableColumn(TextUtil.toTitleCase(action.getName()) + " (" + action.getDataType() + ")");
+        for (TableAction action : DECISION_TABLE_SERVICE.getActions()) {
+            final String actionTitle = TextUtil.toTitleCase(action.getName()) + " (" + action.getDataType() + ")";
 
-            final int column = columnNum;
+            Label actionLabel = new Label(actionTitle);
+            Tooltip.install(actionLabel, new Tooltip(actionTitle));
+
+            TableColumn col = new TableColumn();
+            col.setGraphic(actionLabel);
+
+            final int column = 0;
             // Assign data to a column.
-            col.setCellValueFactory((Callback<TableColumn.CellDataFeatures<Row, String>, ObservableValue<String>>) param -> {
-                Row r = param.getValue();
+            col.setCellValueFactory((Callback<TableColumn.CellDataFeatures<org.yari.core.table.TableRow, String>, ObservableValue<String>>) param -> {
+                org.yari.core.table.TableRow r = param.getValue();
                 List<String> rowValues = r.getResults();
                 if (column >= rowValues.size()) {
                     return new SimpleStringProperty("UNDEFINED");
@@ -177,25 +187,24 @@ public class RowTable extends YariTable<Row> {
 
             // Enables table editing
             if (action.getDataType() != null && action.getDataType().equalsIgnoreCase("boolean")) {
-                col.setCellFactory(c -> new EditableComboBoxCell<>(boolOptions));
+                col.setCellFactory(c -> new EditableComboBoxCell<>(BOOLEAN_OPTIONS));
             } else {
                 col.setCellFactory(c -> new EditableTextFieldCell<>());
             }
 
-            col.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<Row, String>>) t -> {
-                        String s = t.getNewValue().trim();
-                        Row row = t.getRowValue();
-                        for (int i = row.getResults().size(); i <= column; i++) {
-                            row.getResults().add("");
-                        }
-                        row.getResults().set(column, s);
-                    }
+            col.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<org.yari.core.table.TableRow, String>>) t -> {
+                String s = t.getNewValue().trim();
+                org.yari.core.table.TableRow row = t.getRowValue();
+                for (int i = row.getResults().size(); i <= column; i++) {
+                    row.getResults().add("");
+                }
+                row.getResults().set(column, s);
+            }
             );
             actionsCol.getColumns().addAll(col);
             columnNum++;
         }
 
-
-        return List.of(rowNumCol, conditionsCol, actionsCol);
+        return Arrays.asList(conditionsCol, actionsCol, rowNumCol);
     }
 }

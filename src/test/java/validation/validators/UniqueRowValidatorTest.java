@@ -7,16 +7,17 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package validation.validators;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.yari.core.table.DecisionTable;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableRow;
 import utilities.DecisionTableService;
 
 import java.util.List;
@@ -32,14 +33,14 @@ public class UniqueRowValidatorTest {
 
     @Test
     public void testSuccess() {
-        List<String> dataA = List.of("ALPHA", "BETA", "CHARLIE");
-        List<String> dataB = List.of("A", "B", "C");
-        Row rowA = new Row();
+        List<String> dataA = Arrays.asList("ALPHA", "BETA", "CHARLIE");
+        List<String> dataB = Arrays.asList("A", "B", "C");
+        TableRow rowA = new TableRow();
         rowA.setValues(dataA);
-        Row rowB = new Row();
+        TableRow rowB = new TableRow();
         rowB.setValues(dataB);
 
-        Mockito.when(decisionTable.getRawRowData()).thenReturn(List.of(rowA, rowB));
+        Mockito.when(decisionTable.getRawRowData()).thenReturn(Arrays.asList(rowA, rowB));
         DecisionTableService.getService().setDecisionTable(decisionTable);
 
         UniqueRowValidator uniqueRowValidator = new UniqueRowValidator(true);
@@ -53,13 +54,13 @@ public class UniqueRowValidatorTest {
 
     @Test
     public void testFailure() {
-        List<String> dataA = List.of("ALPHA", "BETA", "CHARLIE");
-        Row rowA = new Row();
+        List<String> dataA = Arrays.asList("ALPHA", "BETA", "CHARLIE");
+        TableRow rowA = new TableRow();
         rowA.setValues(dataA);
-        Row rowB = new Row();
+        TableRow rowB = new TableRow();
         rowB.setValues(dataA);
 
-        Mockito.when(decisionTable.getRawRowData()).thenReturn(List.of(rowA, rowB));
+        Mockito.when(decisionTable.getRawRowData()).thenReturn(Arrays.asList(rowA, rowB));
         DecisionTableService.getService().setDecisionTable(decisionTable);
 
         UniqueRowValidator uniqueRowValidator = new UniqueRowValidator(true);

@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -27,9 +27,9 @@
  *
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package components.table;
 
+import java.util.Arrays;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -40,12 +40,12 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import objects.ComparatorType;
 import objects.DataType;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableCondition;
 import validation.ValidateEvent;
 
 import java.util.List;
 
-public class ConditionsTable extends YariTable<Condition> {
+public class ConditionsTable extends YariTable<TableCondition> {
 
     private static final DataFormat CONDITION_EDITOR = new DataFormat("application/x-java-serialized-object-condition-editor");
 
@@ -53,7 +53,7 @@ public class ConditionsTable extends YariTable<Condition> {
         setPlaceholder(new Label("Add one or more conditions to continue"));
 
         setRowFactory(tv -> {
-            TableRow<Condition> row = new TableRow<>();
+            TableRow<TableCondition> row = new TableRow<>();
 
             row.setOnDragDetected(event -> {
                 if (!row.isEmpty()) {
@@ -95,7 +95,7 @@ public class ConditionsTable extends YariTable<Condition> {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(CONDITION_EDITOR)) {
                     int draggedIndex = (Integer) db.getContent(CONDITION_EDITOR);
-                    Condition draggedRow = getItems().remove(draggedIndex);
+                    TableCondition draggedRow = getItems().remove(draggedIndex);
 
                     int dropIndex;
 
@@ -122,9 +122,8 @@ public class ConditionsTable extends YariTable<Condition> {
     }
 
     @Override
-    protected List<TableColumn<Condition, ?>> buildColumns() {
-
-        TableColumn<Condition, String> nameCol = new TableColumn<>("NAME");
+    protected List<TableColumn<TableCondition, ?>> buildColumns() {
+        TableColumn<TableCondition, String> nameCol = new TableColumn<>("NAME");
         nameCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getName() == null ? "ENTER A NAME" : cellData.getValue().getName();
             return new SimpleStringProperty(content);
@@ -135,7 +134,7 @@ public class ConditionsTable extends YariTable<Condition> {
             edit.getRowValue().setName(newContent);
         });
 
-        TableColumn<Condition, String> methodNameCol = new TableColumn<>("METHOD NAME");
+        TableColumn<TableCondition, String> methodNameCol = new TableColumn<>("METHOD NAME");
         methodNameCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getMethodName() == null ? "ENTER A METHOD NAME" : cellData.getValue().getMethodName();
             return new SimpleStringProperty(content);
@@ -146,7 +145,7 @@ public class ConditionsTable extends YariTable<Condition> {
             edit.getRowValue().setMethodName(newContent);
         });
 
-        TableColumn<Condition, String> dataTypeCol = new TableColumn<>("DATA TYPE");
+        TableColumn<TableCondition, String> dataTypeCol = new TableColumn<>("DATA TYPE");
         dataTypeCol.setCellFactory(c -> new EditableComboBoxCell<>(DataType.getFXCompatibleList()));
         dataTypeCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT DATA TYPE" : cellData.getValue().getDataType();
@@ -158,7 +157,7 @@ public class ConditionsTable extends YariTable<Condition> {
             fireEvent(new ValidateEvent());
         });
 
-        TableColumn<Condition, String> comparatorCol = new TableColumn<>("COMPARATOR");
+        TableColumn<TableCondition, String> comparatorCol = new TableColumn<>("COMPARATOR");
         comparatorCol.setCellFactory(c -> new EditableComboBoxCell<>(ComparatorType.getFXCompatibleList()));
         comparatorCol.setCellValueFactory(cellData -> {
             String content = cellData.getValue().getDataType() == null ? "SELECT COMPARATOR" : cellData.getValue().getComparator();
@@ -170,7 +169,6 @@ public class ConditionsTable extends YariTable<Condition> {
             fireEvent(new ValidateEvent());
         });
 
-
-        return List.of(nameCol, methodNameCol, dataTypeCol, comparatorCol);
+        return Arrays.asList(nameCol, methodNameCol, dataTypeCol, comparatorCol);
     }
 }

@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  *  Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,39 +17,38 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package validation.validators;
 
 import objects.ToolView;
 import org.junit.Before;
 import org.junit.Test;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
+import org.yari.core.table.TableRow;
 
 import static org.junit.Assert.assertEquals;
 
 public class ValidatorErrorLocationTest {
 
     private ValidatorErrorLocation validatorErrorLocation;
-    private Action action;
-    private Condition condition;
-    private Row row;
+    private TableAction action;
+    private TableCondition condition;
+    private TableRow row;
 
     @Before
     public void setUp() {
         validatorErrorLocation = new ValidatorErrorLocation();
-        action = new Action();
+        action = new TableAction();
         action.setName("Test Action");
-        condition = new Condition();
+        condition = new TableCondition();
         condition.setName("Test Condition");
-        row = new Row();
+        row = new TableRow();
         row.setRowNumber(1);
-        validatorErrorLocation.setAction(action);
-        validatorErrorLocation.setCondition(condition);
-        validatorErrorLocation.setRow(row);
-        validatorErrorLocation.setRowNumber(row.getRowNumber());
-        validatorErrorLocation.setColumnNumber(1);
+        validatorErrorLocation.setTableAction(action);
+        validatorErrorLocation.setTableCondition(condition);
+        validatorErrorLocation.setTableRow(row);
+        validatorErrorLocation.setTableRowNumber(row.getRowNumber());
+        validatorErrorLocation.setTableColumnNumber(1);
         validatorErrorLocation.setToolView(ToolView.GENERAL);
     }
 
@@ -66,29 +65,29 @@ public class ValidatorErrorLocationTest {
 
     @Test
     public void getRow() {
-        assertEquals(row, validatorErrorLocation.getRow());
+        assertEquals(row, validatorErrorLocation.getTableRow());
     }
 
     @Test
     public void setRow() {
-        Row row = new Row();
-        row.setRowNumber(2);
-        validatorErrorLocation.setRow(row);
-        assertEquals(row, validatorErrorLocation.getRow());
+        TableRow tableRow = new TableRow();
+        tableRow.setRowNumber(2);
+        validatorErrorLocation.setTableRow(tableRow);
+        assertEquals(tableRow, validatorErrorLocation.getTableRow());
 
     }
 
     @Test
     public void getCondition() {
-        assertEquals(condition, validatorErrorLocation.getCondition());
+        assertEquals(condition, validatorErrorLocation.getTableCondition());
     }
 
     @Test
     public void setCondition() {
-        Condition condition = new Condition();
-        condition.setName("Test subject beta.");
-        validatorErrorLocation.setCondition(condition);
-        assertEquals(condition, validatorErrorLocation.getCondition());
+        TableCondition tableCondition = new TableCondition();
+        tableCondition.setName("Test subject beta.");
+        validatorErrorLocation.setTableCondition(tableCondition);
+        assertEquals(tableCondition, validatorErrorLocation.getTableCondition());
     }
 
     @Test
@@ -98,33 +97,33 @@ public class ValidatorErrorLocationTest {
 
     @Test
     public void setAction() {
-        Action action = new Action();
-        action.setName("Test subject charlie.");
-        validatorErrorLocation.setAction(action);
-        assertEquals(action, validatorErrorLocation.getAction());
+        TableAction tableAction = new TableAction();
+        tableAction.setName("Test subject charlie.");
+        validatorErrorLocation.setTableAction(tableAction);
+        assertEquals(tableAction, validatorErrorLocation.getAction());
     }
 
     @Test
     public void getRowNumber() {
-        assertEquals(1, validatorErrorLocation.getRowNumber());
+        assertEquals(1, validatorErrorLocation.getTableRowNumber());
     }
 
     @Test
     public void setRowNumber() {
         int input = 2;
-        validatorErrorLocation.setRowNumber(input);
-        assertEquals(input, validatorErrorLocation.getRowNumber());
+        validatorErrorLocation.setTableRowNumber(input);
+        assertEquals(input, validatorErrorLocation.getTableRowNumber());
     }
 
     @Test
     public void getColumnNumber() {
-        assertEquals(1, validatorErrorLocation.getColumnNumber());
+        assertEquals(1, validatorErrorLocation.getTableColumnNumber());
     }
 
     @Test
     public void setColumnNumber() {
         int input = 2;
-        validatorErrorLocation.setColumnNumber(input);
-        assertEquals(input, validatorErrorLocation.getColumnNumber());
+        validatorErrorLocation.setTableColumnNumber(input);
+        assertEquals(input, validatorErrorLocation.getTableColumnNumber());
     }
 }

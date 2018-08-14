@@ -16,10 +16,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableRow;
 import utilities.DecisionTableService;
 
 import java.util.Collections;
@@ -36,16 +36,16 @@ public class ValidationTest {
 
     @Before
     public void setUp() {
-        Condition condition = new Condition();
+        TableCondition condition = new TableCondition();
         condition.setDataType("string");
-        Action action = new Action();
+        TableAction action = new TableAction();
         action.setDatatype("string");
-        Row row = new Row();
+        TableRow row = new TableRow();
         row.setValues(Collections.singletonList("Test"));
         row.setActionValues(Collections.singletonList("Test"));
         Mockito.when(decisionTable.getRawRowData()).thenReturn(Collections.singletonList(row));
-        Mockito.when(decisionTable.getConditions()).thenReturn(Collections.singletonList(condition));
-        Mockito.when(decisionTable.getActions()).thenReturn(Collections.singletonList(action));
+        Mockito.when(decisionTable.getTableConditions()).thenReturn(Collections.singletonList(condition));
+        Mockito.when(decisionTable.getTableActions()).thenReturn(Collections.singletonList(action));
         Mockito.when(decisionTable.getTableDescription()).thenReturn("Hello");
         Mockito.when(decisionTable.getTableName()).thenReturn("No");
     }

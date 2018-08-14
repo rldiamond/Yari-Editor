@@ -7,7 +7,6 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package view;
 
 import com.jfoenix.controls.JFXSpinner;
@@ -23,7 +22,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import org.yari.core.table.DecisionTable;
 import settings.SettingsView;
 import utilities.FXUtil;
 import utilities.FileUtil;
@@ -31,8 +29,9 @@ import utilities.SettingsUtil;
 import utilities.ThemeUtil;
 
 /**
- * View displayed when the application is first launched. Provides extra direction for users such as create a new table,
- * open a saved table from a file, change settings as well as listing recommended files.
+ * View displayed when the application is first launched. Provides extra
+ * direction for users such as create a new table, open a saved table from a
+ * file, change settings as well as listing recommended files.
  */
 public class WelcomeView extends VBox {
 
@@ -50,10 +49,9 @@ public class WelcomeView extends VBox {
         this.stage = stage;
 
         setId("welcomeSplash");
-        setPrefSize(575, 350);
-        setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
-        setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
-
+        super.setPrefSize(575, 350);
+        super.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        super.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
 
         //header area
         //dragbar
@@ -168,7 +166,7 @@ public class WelcomeView extends VBox {
         rightContent.getChildren().add(openContainer);
 
         //busy indicator
-        var busySpinner = new JFXSpinner();
+        JFXSpinner busySpinner = new JFXSpinner();
         busySpinner.setRadius(25);
         busySpinner.visibleProperty().bind(busy);
         busySpinner.managedProperty().bind(busy);
@@ -194,8 +192,7 @@ public class WelcomeView extends VBox {
         settingsContainer.getChildren().add(settingsButton);
         rightContent.getChildren().add(settingsContainer);
 
-
-        getChildren().setAll(contentContainer);
+        super.getChildren().setAll(contentContainer);
 
     }
 

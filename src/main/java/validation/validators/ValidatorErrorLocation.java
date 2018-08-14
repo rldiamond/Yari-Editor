@@ -7,19 +7,18 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package validation.validators;
 
 import objects.ToolView;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
+import org.yari.core.table.TableRow;
 
 public class ValidatorErrorLocation {
 
-    private Row row;
-    private Condition condition;
-    private Action action;
+    private TableRow row;
+    private TableCondition condition;
+    private TableAction action;
     private int rowNumber;
     private int columnNumber;
     private ToolView toolView;
@@ -32,43 +31,43 @@ public class ValidatorErrorLocation {
         this.toolView = toolView;
     }
 
-    public Row getRow() {
+    public TableRow getTableRow() {
         return row;
     }
 
-    public void setRow(Row row) {
+    public void setTableRow(TableRow row) {
         this.row = row;
     }
 
-    public Condition getCondition() {
+    public TableCondition getTableCondition() {
         return condition;
     }
 
-    public void setCondition(Condition condition) {
+    public void setTableCondition(TableCondition condition) {
         this.condition = condition;
     }
 
-    public Action getAction() {
+    public TableAction getAction() {
         return action;
     }
 
-    public void setAction(Action action) {
+    public void setTableAction(TableAction action) {
         this.action = action;
     }
 
-    public int getRowNumber() {
+    public int getTableRowNumber() {
         return rowNumber;
     }
 
-    public void setRowNumber(int rowNumber) {
+    public void setTableRowNumber(int rowNumber) {
         this.rowNumber = rowNumber;
     }
 
-    public int getColumnNumber() {
+    public int getTableColumnNumber() {
         return columnNumber;
     }
 
-    public void setColumnNumber(int columnNumber) {
+    public void setTableColumnNumber(int columnNumber) {
         this.columnNumber = columnNumber;
     }
 }

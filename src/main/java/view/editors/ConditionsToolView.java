@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+ /*
  * This file is part of Yari Editor.
  *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,7 +17,6 @@
  *
  * You should have received a copy of the GNU General Public License along with Yari Editor.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package view.editors;
 
 import com.jfoenix.controls.JFXButton;
@@ -30,13 +29,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableCondition;
 import utilities.DecisionTableService;
 import utilities.FXUtil;
 import validation.ValidateEvent;
 
 import java.util.Collections;
-
 
 public class ConditionsToolView extends StackPane implements DataEditor {
 
@@ -46,16 +44,16 @@ public class ConditionsToolView extends StackPane implements DataEditor {
     public ConditionsToolView() {
         setPadding(new Insets(20, 20, 20, 20));
         Card tableCard = new Card("Conditions Editor");
-        getChildren().setAll(tableCard);
+        super.getChildren().setAll(tableCard);
 
         //table
         conditionsTable.setItems(decisionTableService.getConditions());
         tableCard.setDisplayedContent(conditionsTable);
 
         ContextMenu contextMenu = new ContextMenu();
-        var addMenuItem = new MenuItem("ADD");
+        MenuItem addMenuItem = new MenuItem("ADD");
         addMenuItem.setOnAction(a -> addNewRow());
-        var removeMenuItem = new MenuItem("REMOVE");
+        MenuItem removeMenuItem = new MenuItem("REMOVE");
         removeMenuItem.setOnAction(a -> removeSelectedRow());
         contextMenu.getItems().setAll(addMenuItem, removeMenuItem);
         conditionsTable.setContextMenu(contextMenu);
@@ -88,7 +86,7 @@ public class ConditionsToolView extends StackPane implements DataEditor {
         if (conditionsTable.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        Condition selectedItem = conditionsTable.getSelectionModel().getSelectedItem();
+        TableCondition selectedItem = conditionsTable.getSelectionModel().getSelectedItem();
         decisionTableService.getConditions().remove(selectedItem);
     }
 
@@ -97,7 +95,7 @@ public class ConditionsToolView extends StackPane implements DataEditor {
      */
     @Override
     public void addNewRow() {
-        decisionTableService.getConditions().add(new Condition());
+        decisionTableService.getConditions().add(new TableCondition());
         FXUtil.runOnFXThread(() -> {
             conditionsTable.requestFocus();
             conditionsTable.getSelectionModel().selectLast();

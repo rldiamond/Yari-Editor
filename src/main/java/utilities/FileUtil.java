@@ -7,7 +7,6 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package utilities;
 
 import com.thoughtworks.xstream.XStream;
@@ -19,10 +18,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableRow;
 import validation.ValidationService;
 import validation.ValidationType;
 import view.RootLayoutFactory;
@@ -37,14 +36,13 @@ import java.io.FileReader;
  */
 public class FileUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
-    private static final ObjectProperty<File> currentFile = new SimpleObjectProperty<>(null);
-    private static final BooleanProperty dirty = new SimpleBooleanProperty(false);
-    private static final ValidationService validationService = ValidationService.getService();
-    private static final DecisionTableService decisionTableService = DecisionTableService.getService();
+    private static final ObjectProperty<File> CURRENT_FILE = new SimpleObjectProperty<>(null);
+    private static final BooleanProperty DIRTY = new SimpleBooleanProperty(false);
+    private static final ValidationService VALID_SVC = ValidationService.getService();
+    private static final DecisionTableService DECISION_TBL_SVC = DecisionTableService.getService();
     private static XStream xStream;
-
 
     /**
      * Private constructor to hide the implicit public constructor.
@@ -57,6 +55,8 @@ public class FileUtil {
      * Show a file chooser and attempt to open the selected file.
      *
      * @param stage the stage to base the file chooser on.
+     * @param busy
+     * @return
      */
     public static boolean openDecisionTableFile(Stage stage, BooleanProperty busy) {
         FileChooser fileChooser = new FileChooser();
@@ -68,7 +68,7 @@ public class FileUtil {
         // Show save file dialog
         File file = fileChooser.showOpenDialog(stage); //must be on fx thread
         if (file == null) {
-            logger.debug("A file was not chosen. Aborting open.");
+            LOGGER.debug("A file was not chosen. Aborting open.");
             return false;
         }
         openDecisionTableFile(file, stage, busy);
@@ -86,7 +86,7 @@ public class FileUtil {
             clearData();
             DecisionTable decisionTable = loadObjectFromFile(DecisionTable.class, file.getPath());
             if (decisionTable == null) {
-                logger.warn("DecisionTable failed to load.");
+                LOGGER.warn("DecisionTable failed to load.");
                 if (RootLayoutFactory.isDisplayed()) {
                     ToastUtil.sendPersistentToast("Failed to load the file. Is it a decision table file?");
                 } else {
@@ -109,23 +109,23 @@ public class FileUtil {
             }
 
             //load data into our own lists
-            decisionTableService.setDecisionTable(decisionTable);
-            for (Condition condition : decisionTable.getConditions()) {
-                decisionTableService.getConditions().add(condition);
+            DECISION_TBL_SVC.setDecisionTable(decisionTable);
+            for (TableCondition condition : decisionTable.getTableConditions()) {
+                DECISION_TBL_SVC.getConditions().add(condition);
             }
-            for (Action action : decisionTable.getActions()) {
-                decisionTableService.getActions().add(action);
+            for (TableAction action : decisionTable.getTableActions()) {
+                DECISION_TBL_SVC.getActions().add(action);
             }
-            var rowNumber = 0;
-            for (Row row : decisionTable.getRawRowData()) {
+            int rowNumber = 0;
+            for (TableRow row : decisionTable.getRawRowData()) {
                 row.setRowNumber(rowNumber++);
-                decisionTableService.getRows().add(row);
+                DECISION_TBL_SVC.getRows().add(row);
             }
 
             //ensure data is valid
-            validationService.runValidationImmediately();
-            if (!validationService.isValid()) {
-                logger.debug("The table that was loaded is not valid.");
+            VALID_SVC.runValidationImmediately();
+            if (!VALID_SVC.isValid()) {
+                LOGGER.debug("The table that was loaded is not valid.");
                 clearData();
                 if (busy != null) {
                     busy.setValue(false);
@@ -149,7 +149,7 @@ public class FileUtil {
             }
 
             setDirty(false);
-            currentFile.setValue(file);
+            CURRENT_FILE.setValue(file);
             SettingsUtil.addRecommendedFile(file);
             if (!SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED)) {
                 ValidationService.getService().setEnabled(true);
@@ -161,26 +161,26 @@ public class FileUtil {
         });
     }
 
-
     /**
      * Create a new file.
      */
     public static void newFile() {
-        currentFile.setValue(null);
+        CURRENT_FILE.setValue(null);
         clearData();
         DecisionTable decisionTable = new DecisionTable();
         decisionTable.setDescription("MyTable Description");
         decisionTable.setName("MyTable");
-        decisionTableService.setDecisionTable(decisionTable);
+        DECISION_TBL_SVC.setDecisionTable(decisionTable);
         setDirty(false);
     }
 
     /**
-     * Load an object of type T from file located at the supplied path value. May return null if the load failed.
+     * Load an object of type T from file located at the supplied path value.
+     * May return null if the load failed.
      *
      * @param type the class type the object is expected to be.
      * @param path the path of the file to attempt load from.
-     * @param <T>  the type of file to return.
+     * @param <T> the type of file to return.
      * @return object of type T loaded from file.
      */
     public static <T extends Object> T loadObjectFromFile(Class<T> type, String path) {
@@ -190,7 +190,7 @@ public class FileUtil {
         try (FileReader reader = new FileReader(path)) {
             loadedObj = (T) getXStream().fromXML(reader);
         } catch (Exception ex) {
-            logger.error("Failed to load file from path: " + path + ", of type " + type.getSimpleName() + ".", ex);
+            LOGGER.error("Failed to load file from path: " + path + ", of type " + type.getSimpleName() + ".", ex);
         }
 
         return loadedObj;
@@ -201,7 +201,7 @@ public class FileUtil {
      * Save the supplied object value to a file located at the supplied path.
      *
      * @param object the object to save.
-     * @param path   the path to save the object to.
+     * @param path the path to save the object to.
      * @return true if save succeeded, false if failed.
      */
     public static boolean saveObjectToFile(Object object, String path) {
@@ -212,14 +212,14 @@ public class FileUtil {
      * Save the supplied object value to a file located at the supplied path.
      *
      * @param object the object to save.
-     * @param file   the file to save the object to.
+     * @param file the file to save the object to.
      * @return true if save succeeded, false if failed.
      */
     public static boolean saveObjectToFile(Object object, File file) {
         try (FileOutputStream out = new FileOutputStream(file)) {
             getXStream().toXML(object, out);
         } catch (Exception ex) {
-            logger.error("Failed to save file to path: " + file.getPath() + ".");
+            LOGGER.error("Failed to save file to path: " + file.getPath() + ".");
             return false;
         }
         return true;
@@ -232,35 +232,36 @@ public class FileUtil {
      */
     public static void saveDecisionTableToFile(File file) {
         FXUtil.runAsync(() -> {
-            decisionTableService.updateTable();
-            validationService.runValidationImmediately();
+            DECISION_TBL_SVC.updateTable();
+            VALID_SVC.runValidationImmediately();
 
-            if (!validationService.validProperty().get()) {
-                logger.debug("The DecisionTable does not pass validation. Aborting save.");
+            if (!VALID_SVC.validProperty().get()) {
+                LOGGER.debug("The DecisionTable does not pass validation. Aborting save.");
                 ToastUtil.sendToast("Cannot save! The DecisionTable does not pass validation.");
                 return;
             }
 
-            boolean success = saveObjectToFile(decisionTableService.getDecisionTable(), file);
+            boolean success = saveObjectToFile(DECISION_TBL_SVC.getDecisionTable(), file);
             if (success) {
-                currentFile.setValue(file);
+                CURRENT_FILE.setValue(file);
                 SettingsUtil.addRecommendedFile(file);
                 setDirty(false);
                 ToastUtil.sendToast("File saved.");
             } else {
-                logger.error("Failed to save the file!");
+                LOGGER.error("Failed to save the file!");
                 ToastUtil.sendPersistentToast("Failed to save file!");
             }
         });
     }
 
-
     /**
      * Print the table.
+     *
+     * @param decisionTable The decision table
      */
     public static void print(DecisionTable decisionTable) {
         if (decisionTable == null) {
-            logger.warn("The DecisionTable was null. Cannot print!");
+            LOGGER.warn("The DecisionTable was null. Cannot print!");
             ToastUtil.sendToast("An error occurred! Could not print the file.");
             return;
         }
@@ -284,30 +285,30 @@ public class FileUtil {
     }
 
     private static void clearData() {
-        decisionTableService.getRows().clear();
-        decisionTableService.getActions().clear();
-        decisionTableService.getConditions().clear();
-        decisionTableService.setDecisionTable(null);
+        DECISION_TBL_SVC.getRows().clear();
+        DECISION_TBL_SVC.getActions().clear();
+        DECISION_TBL_SVC.getConditions().clear();
+        DECISION_TBL_SVC.setDecisionTable(null);
     }
 
     public static File getCurrentFile() {
-        return currentFile.get();
+        return CURRENT_FILE.get();
     }
 
     public static boolean isDirty() {
-        return dirty.get();
+        return DIRTY.get();
     }
 
     public static BooleanProperty dirtyProperty() {
-        return dirty;
+        return DIRTY;
     }
 
     public static void setDirty(boolean dirty) {
-        FileUtil.dirty.set(dirty);
+        FileUtil.DIRTY.set(dirty);
     }
 
     public static ReadOnlyObjectProperty<File> fileProperty() {
-        return currentFile;
+        return CURRENT_FILE;
     }
 
     private static XStream getXStream() {
@@ -319,9 +320,9 @@ public class FileUtil {
             xStream.alias("DecisionTable", DecisionTable.class);
             XStream.setupDefaultSecurity(xStream);
             xStream.allowTypesByWildcard(new String[]{
-                    "org.yari.core.table.**",
-                    "settings.**",
-                    "objects.**"
+                "org.yari.core.table.**",
+                "settings.**",
+                "objects.**"
             });
         }
         return xStream;

@@ -7,9 +7,10 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package validation;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -52,7 +53,6 @@ public class ValidationService {
     private Validation latestValidation;
 
     private boolean isStrict;
-
 
     /**
      * Setup the validation service.
@@ -97,12 +97,12 @@ public class ValidationService {
     /**
      * Runs the supplied XML String through Yari's validation process.
      *
-     * @param xml String representation of the {@link org.yari.core.table.DecisionTable} XML.
+     * @param xml String representation of the
+     * {@link org.yari.core.table.DecisionTable} XML.
      * @throws YariException if validation fails.
      */
     public void validateXML(String xml) throws YariException {
-        TableValidator tableValidator = new TableValidator();
-        tableValidator.validateXML(xml);
+        TableValidator.validateXML(new ByteArrayInputStream(xml.getBytes(Charset.forName("UTF-8"))));
     }
 
     /**
@@ -175,7 +175,6 @@ public class ValidationService {
     public ReadOnlyStringProperty quickMessageProperty() {
         return quickMessageProperty;
     }
-
 
     /**
      * Set whether the service should run strict validations or not.

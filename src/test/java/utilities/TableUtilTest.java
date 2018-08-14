@@ -7,17 +7,15 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package utilities;
 
 import javafx.collections.ObservableList;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
-import view.RootLayoutFactory;
 
 import static org.junit.Assert.*;
 
@@ -34,13 +32,13 @@ public class TableUtilTest extends ApplicationTest {
     @Test
     public void updateTable() {
         DecisionTable decisionTable = DecisionTableService.getService().getDecisionTable();
-        assertTrue(decisionTable.getActions().isEmpty());
-        assertTrue(decisionTable.getConditions().isEmpty());
-        DecisionTableService.getService().getActions().add(new Action());
-        DecisionTableService.getService().getConditions().add(new Condition());
+        assertTrue(decisionTable.getTableActions().isEmpty());
+        assertTrue(decisionTable.getTableConditions().isEmpty());
+        DecisionTableService.getService().getActions().add(new TableAction());
+        DecisionTableService.getService().getConditions().add(new TableCondition());
         DecisionTableService.getService().updateTable();
-        assertEquals(1, decisionTable.getActions().size());
-        assertEquals(1, decisionTable.getConditions().size());
+        assertEquals(1, decisionTable.getTableActions().size());
+        assertEquals(1, decisionTable.getTableConditions().size());
     }
 
     @Test
@@ -48,7 +46,7 @@ public class TableUtilTest extends ApplicationTest {
         DecisionTableService.getService().setDecisionTable(new DecisionTable());
         DecisionTable decisionTable = DecisionTableService.getService().getDecisionTable();
 
-        final ObservableList<Action> actionsList = DecisionTableService.getService().getActions();
+        final ObservableList<TableAction> actionsList = DecisionTableService.getService().getActions();
 
         DecisionTableService.getService().reorderActions(0, 1);
     }

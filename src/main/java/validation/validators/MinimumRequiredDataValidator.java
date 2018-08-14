@@ -7,13 +7,12 @@
  *
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package validation.validators;
 
 import objects.ToolView;
-import org.yari.core.table.Action;
-import org.yari.core.table.Condition;
-import org.yari.core.table.Row;
+import org.yari.core.table.TableAction;
+import org.yari.core.table.TableCondition;
+import org.yari.core.table.TableRow;
 
 import java.util.List;
 
@@ -29,9 +28,9 @@ public class MinimumRequiredDataValidator extends TableValidator {
 
     @Override
     protected void runValidation() {
-        List<Row> rows = getDecisionTable().getRawRowData();
-        List<Condition> conditions = getDecisionTable().getConditions();
-        List<Action> actions = getDecisionTable().getActions();
+        List<TableRow> rows = getDecisionTable().getRawRowData();
+        List<TableCondition> conditions = getDecisionTable().getTableConditions();
+        List<TableAction> actions = getDecisionTable().getTableActions();
 
         //verify we have enough of each
         if (MIN_ROWS_REQUIRED > 0) {
