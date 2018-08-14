@@ -54,6 +54,7 @@ public class YariEditor extends Application {
         Scene splashScene = new Scene(welcomeSplash);
         ThemeUtil.setThemeOnScene(splashScene);
 
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(splashScene);
         primaryStage.show();
     }
