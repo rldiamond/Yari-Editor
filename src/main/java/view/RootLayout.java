@@ -210,6 +210,7 @@ public class RootLayout extends BorderPane {
             FXUtil.runAsync(() -> {
                 loadingContent.setValue(true);
                 controlsLock.setValue(true);
+                FileUtil.newFile();
                 DecisionTable decisionTable = null;
                 try {
                     decisionTable = excelImporter.importFromExcel(file);
@@ -220,6 +221,7 @@ public class RootLayout extends BorderPane {
                         loadingContent.setValue(false);
                         controlsLock.setValue(false);
                     });
+                    return;
                 }
                 decisionTableService.setDecisionTable(decisionTable);
                 decisionTableService.updateFXListsFromTable();

@@ -59,6 +59,7 @@ public class ExcelImportResultsCard extends StackPane {
     public ExcelImportResultsCard(Throwable ex) {
         setPadding(new Insets(20, 20, 20, 20));
         Card card = new Card("Excel Import Failed");
+        super.getChildren().setAll(card);
 
         VBox content = new VBox(25);
         content.setAlignment(Pos.CENTER);
