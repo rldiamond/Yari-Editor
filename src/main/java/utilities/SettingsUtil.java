@@ -28,7 +28,6 @@ import java.io.File;
  */
 public class SettingsUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(SettingsUtil.class);
     private static ObjectProperty<Settings> settingsProperty = new SimpleObjectProperty<>(null);
 
     private SettingsUtil() {

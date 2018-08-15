@@ -102,12 +102,8 @@ public class EditableComboBoxCell<T extends Object> extends TableCell<T, String>
         comboBox.setItems(contents);
         comboBox.valueProperty().set(getString());
         comboBox.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-        comboBox.setOnAction(e -> {
-            commitEdit(comboBox.getSelectionModel().getSelectedItem());
-        });
-        comboBox.getSelectionModel().selectedItemProperty().addListener((obs, ov, selected) -> {
-            commitEdit(selected);
-        });
+        comboBox.setOnAction(e -> commitEdit(comboBox.getSelectionModel().getSelectedItem()));
+        comboBox.getSelectionModel().selectedItemProperty().addListener((obs, ov, selected) -> commitEdit(selected));
     }
 
     /**

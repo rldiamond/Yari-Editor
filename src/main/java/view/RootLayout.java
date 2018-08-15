@@ -389,9 +389,7 @@ public class RootLayout extends BorderPane {
         });
         JFXButton dismissButton = new JFXButton("DISMISS");
         dismissButton.getStyleClass().add("button-flat-gray");
-        dismissButton.setOnMouseClicked(me -> {
-            alert.hideWithAnimation();
-        });
+        dismissButton.setOnMouseClicked(me -> alert.hideWithAnimation());
         layout.setActions(saveButton, dismissButton);
         alert.setOverlayClose(false);
         alert.setAnimation(JFXAlertAnimation.CENTER_ANIMATION);

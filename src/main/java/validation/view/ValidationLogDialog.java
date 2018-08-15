@@ -78,9 +78,7 @@ public class ValidationLogDialog extends JFXDialog {
     }
 
     public void refreshLog(){
-        ValidationService.getService().getLatestValidation().ifPresent(validation -> {
-            validationLog.setItems(FXCollections.observableArrayList(validation.getAllErrors()));
-        });
+        ValidationService.getService().getLatestValidation().ifPresent(validation -> validationLog.setItems(FXCollections.observableArrayList(validation.getAllErrors())));
     }
 
 }

@@ -27,7 +27,7 @@ import utilities.FXUtil;
 import utilities.FileUtil;
 import utilities.SettingsUtil;
 import utilities.ThemeUtil;
-import utilities.stageSizing.ResizeHelper;
+import utilities.resizing.ResizeHelper;
 
 /**
  * View displayed when the application is first launched. Provides extra
@@ -121,12 +121,10 @@ public class WelcomeView extends VBox {
         Label createNewLabel = new Label("Create New");
         Tooltip.install(createNewContainer, new Tooltip("Create a new document"));
         createNewLabel.setId("splashLink");
-        createNewLabel.setOnMouseClicked(me -> {
-            FXUtil.runAsync(() -> {
-                FileUtil.newFile();
-                FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
-            });
-        });
+        createNewLabel.setOnMouseClicked(me -> FXUtil.runAsync(() -> {
+            FileUtil.newFile();
+            FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
+        }));
         createNewContainer.getChildren().addAll(createNewIcon, createNewLabel);
         createNewContainer.disableProperty().bind(busy);
         rightContent.getChildren().add(createNewContainer);

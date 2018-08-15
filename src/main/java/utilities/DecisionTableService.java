@@ -115,17 +115,16 @@ public class DecisionTableService {
     }
 
     /**
-     * Perform a table update, setting {@link Row}s, {@link Condition}s, and {@link Action}s in the table
+     * Perform a table update, setting {@link TableRow}s, {@link TableCondition}s, and {@link TableAction}s in the table
      * equal to the FX lists.
      * <p>
-     * TODO: This may be unnecessary with the new listeners.
      */
     public void updateTable() {
         updateRows();
         updateActions();
         updateConditions();
     }
-
+f
     private void renumberRows() {
         int rowNumber = 0;
         for (TableRow row : rows) {
