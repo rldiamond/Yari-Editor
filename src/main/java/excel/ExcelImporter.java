@@ -10,8 +10,6 @@
 
 package excel;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import objects.ComparatorType;
 import objects.DataType;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -31,6 +29,7 @@ import java.util.List;
 public class ExcelImporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelImporter.class);
+    private List<String> errorMessages = new ArrayList<>();
 
     public DecisionTable importFromExcel(File file) throws IOException, InvalidFormatException {
         //create Apache POI workbook from .xls/.xlsx file
@@ -64,7 +63,7 @@ public class ExcelImporter {
                     break;
                 case 4:
                     processNameRow(row, excelDecisionTableItemList);
-                    populdateTable(excelDecisionTableItemList, decisionTable);
+                    populateTable(excelDecisionTableItemList, decisionTable);
                     break;
                 default:
                     processDataRow(row, excelDecisionTableItemList, decisionTable);
@@ -104,7 +103,7 @@ public class ExcelImporter {
 
     }
 
-    private void populdateTable(List<ExcelDecisionTableItem> excelDecisionTableItemList, DecisionTable decisionTable) {
+    private void populateTable(List<ExcelDecisionTableItem> excelDecisionTableItemList, DecisionTable decisionTable) {
         excelDecisionTableItemList.forEach(item -> {
 
             switch (item.getType()) {
@@ -202,13 +201,15 @@ public class ExcelImporter {
             }
 
             DataType dataType = DataType.getFromTableString(cellValue);
-            if (dataType == null) {
-                return;
-            }
 
             int i = cell.getColumnIndex() - 1;
 
-            excelDecisionTableItemList.get(i).setDataType(dataType);
+            if (dataType != null) {
+                excelDecisionTableItemList.get(i).setDataType(dataType);
+            } else {
+                errorMessages.add("Data Type " + cellValue + " entered in column " + i + " is invalid. Auto-set to String.");
+                excelDecisionTableItemList.get(i).setDataType(DataType.STRING);
+            }
 
         });
     }
@@ -225,15 +226,21 @@ public class ExcelImporter {
             }
 
             ComparatorType comparatorType = ComparatorType.getFromTableString(cellValue);
-            if (comparatorType == null) {
-                return;
-            }
 
             int i = cell.getColumnIndex() - 1;
 
-            excelDecisionTableItemList.get(i).setComparatorType(comparatorType);
+            if (comparatorType != null) {
+                excelDecisionTableItemList.get(i).setComparatorType(comparatorType);
+            } else {
+                errorMessages.add("Comparator Type " + cellValue + " entered in column " + i + " is invalid. Auto-set to ==.");
+                excelDecisionTableItemList.get(i).setComparatorType(ComparatorType.EQUAL);
+            }
 
         });
+    }
+
+    public List<String> getErrorMessages() {
+        return errorMessages;
     }
 
     public void exportToExcel(DecisionTable decisionTable) {
