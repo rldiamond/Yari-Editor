@@ -75,9 +75,7 @@ public class ValidationService {
         validationQueue.addListener((ListChangeListener.Change<? extends Validation> change) -> {
             change.next();
             change.getAddedSubList().forEach(validation -> {
-                executorService.submit(() -> {
-                    runValidation(validation);
-                });
+                executorService.submit(() -> runValidation(validation));
             });
         });
     }

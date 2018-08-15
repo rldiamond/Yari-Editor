@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
 import utilities.DecisionTableService;
-import view.RootLayoutFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +41,7 @@ public abstract class TableValidator implements Validator {
     @Override
     public void run() {
         if (getDecisionTable() == null) {
-            logger.warn("The DecisionTable object provided to the validator " + getClass().getSimpleName() + " was null.");
+            logger.warn("The DecisionTable object provided to the validator {} was null.", getClass().getSimpleName());
             ValidatorError validatorError = new ValidatorError("An error occurred: the DecisionTable was null.");
             addError(validatorError);
             hasRun = true;

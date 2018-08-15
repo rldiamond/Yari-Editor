@@ -25,7 +25,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import objects.KeyboardShortcut;
 import utilities.ThemeUtil;
-import utilities.stageSizing.ResizeHelper;
+import utilities.resizing.ResizeHelper;
 
 import java.util.Arrays;
 
@@ -62,12 +62,10 @@ public class RootLayoutFactory {
         stage.setHeight(550);
 
         //add keyboard shortcuts
-        scene.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-            Arrays.stream(KeyboardShortcut.values())
-                    .filter(value -> value.getKeyCombination().match(event))
-                    .findFirst()
-                    .ifPresent(KeyboardShortcut::runShortcutAction);
-        });
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> Arrays.stream(KeyboardShortcut.values())
+                .filter(value -> value.getKeyCombination().match(event))
+                .findFirst()
+                .ifPresent(KeyboardShortcut::runShortcutAction));
 
         //allow dragging and header double-click to resize
         ResizeHelper.addHeaderResizeListener(stage, getInstance().getHeader());
