@@ -99,6 +99,10 @@ public class ExcelImporter {
 
             String cellValue = dataFormatter.formatCellValue(cell).trim();
 
+            if ("".equals(cellValue)){
+                return;
+            }
+
             int i = cell.getColumnIndex() - 1;
             ExcelDecisionTableItem excelDecisionTableItem = excelDecisionTableItemList.get(i);
             switch (excelDecisionTableItem.getType()) {
