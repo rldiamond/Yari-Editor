@@ -28,16 +28,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExcelService {
+public class ExcelImporter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelService.class);
-    private final DoubleProperty progress = new SimpleDoubleProperty(0);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelImporter.class);
 
     public DecisionTable importFromExcel(File file) throws IOException, InvalidFormatException {
-        setProgress(5);
         //create Apache POI workbook from .xls/.xlsx file
         Workbook workbook = WorkbookFactory.create(file);
-        setProgress(20);
 
         //NOTE: expect only one sheet, we only process first
         Sheet sheet = workbook.getSheetAt(0);
@@ -47,15 +44,16 @@ public class ExcelService {
             return null;
         }
 
-        final double progressStepSize = getProgressStepSize(sheet, 20, 80);
-
-
         DecisionTable decisionTable = new DecisionTable();
         List<ExcelDecisionTableItem> excelDecisionTableItemList = new ArrayList<>();
 
         sheet.forEach(row -> {
             int rowNum = row.getRowNum();
-
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             switch (rowNum) {
                 case 0:
                     processTypeRow(row, excelDecisionTableItemList);
@@ -77,11 +75,8 @@ public class ExcelService {
                     processDataRow(row, excelDecisionTableItemList, decisionTable);
                     break;
             }
-            setProgress(progress.get() + progressStepSize);
 
         });
-        
-        setProgress(100);
 
         return decisionTable;
     }
@@ -246,26 +241,8 @@ public class ExcelService {
         });
     }
 
-    private double getProgressStepSize(Sheet sheet, double start, double end) {
-        double diff = end - start;
-
-        int firstRowNum = sheet.getFirstRowNum();
-        int lastRowNum = sheet.getLastRowNum();
-
-        int iterations = lastRowNum - firstRowNum;
-
-        return diff / iterations;
-    }
-
     public void exportToExcel(DecisionTable decisionTable) {
 
     }
 
-    private void setProgress(double d) {
-        progress.setValue(d);
-    }
-
-    public DoubleProperty progressProperty() {
-        return progress;
-    }
 }

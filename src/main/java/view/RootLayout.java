@@ -34,7 +34,7 @@ import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
 import components.MenuOption;
 import components.PopupMenuEntry;
-import excel.ExcelService;
+import excel.ExcelImporter;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -57,6 +57,7 @@ import javafx.stage.Stage;
 import objects.KeyboardShortcut;
 import objects.ToolView;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.yari.core.table.DecisionTable;
 import settings.SettingsView;
 import utilities.*;
 import validation.ValidateEvent;
@@ -203,14 +204,23 @@ public class RootLayout extends BorderPane {
         importExcel.setOnMouseClicked(me -> {
             FileChooser fileChooser = new FileChooser();
             File file = fileChooser.showOpenDialog(getScene().getWindow());
-            ExcelService es = new ExcelService();
-            try {
-                es.importFromExcel(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InvalidFormatException e) {
-                e.printStackTrace();
-            }
+            ExcelImporter excelImporter = new ExcelImporter();
+            FXUtil.runAsync(() -> {
+                loadingContent.setValue(true);
+                DecisionTable decisionTable = null;
+                try {
+                    decisionTable = excelImporter.importFromExcel(file);
+                } catch (IOException | InvalidFormatException e) {
+                    //TODO display an error dialog
+                    e.printStackTrace();
+                }
+                //TODO: dont set if error
+                decisionTableService.setDecisionTable(decisionTable);
+                decisionTableService.updateFXListsFromTable();
+                //TODO: lock controls?
+                loadingContent.setValue(false);
+            });
+
         });
         Tooltip.install(importExcel, new Tooltip("Import from Excel."));
 

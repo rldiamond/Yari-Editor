@@ -110,17 +110,7 @@ public class FileUtil {
 
             //load data into our own lists
             DECISION_TBL_SVC.setDecisionTable(decisionTable);
-            for (TableCondition condition : decisionTable.getTableConditions()) {
-                DECISION_TBL_SVC.getConditions().add(condition);
-            }
-            for (TableAction action : decisionTable.getTableActions()) {
-                DECISION_TBL_SVC.getActions().add(action);
-            }
-            int rowNumber = 0;
-            for (TableRow row : decisionTable.getRawRowData()) {
-                row.setRowNumber(rowNumber++);
-                DECISION_TBL_SVC.getRows().add(row);
-            }
+            DECISION_TBL_SVC.updateFXListsFromTable();
 
             //ensure data is valid
             VALID_SVC.runValidationImmediately();

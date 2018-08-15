@@ -16,9 +16,9 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yari.core.table.DecisionTable;
 import org.yari.core.table.TableAction;
 import org.yari.core.table.TableCondition;
-import org.yari.core.table.DecisionTable;
 import org.yari.core.table.TableRow;
 import validation.ValidationService;
 
@@ -169,6 +169,23 @@ public class DecisionTableService {
             return;
         }
         decisionTable.getValue().setTableConditions(new ArrayList<>(conditions));
+    }
+
+    public void updateFXListsFromTable() {
+        setEnabled(false);
+        //load data into our own lists
+        for (TableCondition condition : decisionTable.getValue().getTableConditions()) {
+            getConditions().add(condition);
+        }
+        for (TableAction action : decisionTable.getValue().getTableActions()) {
+            getActions().add(action);
+        }
+        int rowNumber = 0;
+        for (TableRow row : decisionTable.getValue().getRawRowData()) {
+            row.setRowNumber(rowNumber++);
+            getRows().add(row);
+        }
+        setEnabled(true);
     }
 
     private boolean isEnabled() {
