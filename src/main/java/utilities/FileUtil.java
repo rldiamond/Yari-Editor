@@ -209,7 +209,7 @@ public class FileUtil {
         try (FileOutputStream out = new FileOutputStream(file)) {
             getXStream().toXML(object, out);
         } catch (Exception ex) {
-            LOGGER.error("Failed to save file to path: " + file.getPath() + ".");
+            LOGGER.error("Failed to save file to path: {}.", file.getPath());
             return false;
         }
         return true;
