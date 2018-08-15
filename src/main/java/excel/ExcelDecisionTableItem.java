@@ -13,7 +13,7 @@ package excel;
 import objects.ComparatorType;
 import objects.DataType;
 
-public class ExcelDecisionTable {
+public class ExcelDecisionTableItem {
 
     private Type type;
     private DataType dataType;

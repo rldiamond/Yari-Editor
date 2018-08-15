@@ -34,6 +34,7 @@ import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
 import components.MenuOption;
 import components.PopupMenuEntry;
+import excel.ExcelService;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -55,6 +56,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import objects.KeyboardShortcut;
 import objects.ToolView;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import settings.SettingsView;
 import utilities.*;
 import validation.ValidateEvent;
@@ -66,6 +68,7 @@ import view.editors.DataEditor;
 import view.editors.RowsToolView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import javafx.animation.FadeTransition;
 
@@ -195,6 +198,22 @@ public class RootLayout extends BorderPane {
             open();
             fileMenuPopUp.hide();
         });
+
+        PopupMenuEntry importExcel = new PopupMenuEntry("Import Excel", KeyboardShortcut.OPEN);
+        importExcel.setOnMouseClicked(me -> {
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(getScene().getWindow());
+            ExcelService es = new ExcelService();
+            try {
+                es.importFromExcel(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
+            }
+        });
+        Tooltip.install(importExcel, new Tooltip("Import from Excel."));
+
         Tooltip.install(fileOpenMenuEntry, new Tooltip("Open a previously saved document."));
         PopupMenuEntry fileSaveMenuEntry = new PopupMenuEntry("Save", KeyboardShortcut.SAVE);
         fileSaveMenuEntry.setOnMouseClicked(me -> {
@@ -231,7 +250,7 @@ public class RootLayout extends BorderPane {
         });
         Tooltip.install(fileExitMenuEntry, new Tooltip("Exit the application."));
 
-        fileMenuList.getItems().addAll(fileNewMenuEntry, fileOpenMenuEntry, fileSaveMenuEntry, fileSaveAsMenuEntry, fileSettingsMenuEntry, filePrintMenuEntry, fileExitMenuEntry);
+        fileMenuList.getItems().addAll(fileNewMenuEntry, fileOpenMenuEntry, importExcel, fileSaveMenuEntry, fileSaveAsMenuEntry, fileSettingsMenuEntry, filePrintMenuEntry, fileExitMenuEntry);
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
         fileMenuPopUp.setPopupContent(fileMenuList);
 
