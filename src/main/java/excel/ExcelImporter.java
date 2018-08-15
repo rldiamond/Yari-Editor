@@ -49,11 +49,6 @@ public class ExcelImporter {
 
         sheet.forEach(row -> {
             int rowNum = row.getRowNum();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             switch (rowNum) {
                 case 0:
                     processTypeRow(row, excelDecisionTableItemList);
