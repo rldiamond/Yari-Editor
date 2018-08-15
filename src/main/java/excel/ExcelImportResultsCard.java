@@ -23,6 +23,11 @@ import java.util.List;
 
 public class ExcelImportResultsCard extends StackPane {
 
+    /**
+     * Display the results of an Excel import based on the provided error messages.
+     *
+     * @param errorMessages the error messages (if any, can be null) found when importing Excel.
+     */
     public ExcelImportResultsCard(List<String> errorMessages) {
         setPadding(new Insets(20, 20, 20, 20));
         Card card = new Card("Excel Import Complete");
@@ -35,7 +40,7 @@ public class ExcelImportResultsCard extends StackPane {
             Label success = new Label("The Excel file has been imported successfully. Select a Tool to the left to begin.");
             content.getChildren().setAll(success);
         } else {
-            Label errors = new Label("The Excel file has been imported with errors. See the below list of error messages. You may select a Tool to the left to edit your table.");
+            Label errors = new Label("The Excel file has been imported with errors. See the below list of error messages.");
             ListView<String> errorList = new ListView<>();
             errorList.setItems(FXCollections.observableArrayList(errorMessages));
             content.getChildren().setAll(errors, errorList);
@@ -44,6 +49,11 @@ public class ExcelImportResultsCard extends StackPane {
 
     }
 
+    /**
+     * Displays an error card.
+     *
+     * @param ex the exception caught during Excel import.
+     */
     public ExcelImportResultsCard(Throwable ex) {
         setPadding(new Insets(20, 20, 20, 20));
         Card card = new Card("Excel Import Failed");

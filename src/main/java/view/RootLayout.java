@@ -202,7 +202,7 @@ public class RootLayout extends BorderPane {
             fileMenuPopUp.hide();
         });
 
-        PopupMenuEntry importExcel = new PopupMenuEntry("Import Excel", KeyboardShortcut.OPEN);
+        PopupMenuEntry importExcel = new PopupMenuEntry("Import From Excel", null);
         importExcel.setOnMouseClicked(me -> {
             FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xls)", "*.xlsx");
@@ -225,7 +225,6 @@ public class RootLayout extends BorderPane {
                 }
                 decisionTableService.setDecisionTable(decisionTable);
                 decisionTableService.updateFXListsFromTable();
-                //TODO: lock controls?
                 ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(excelImporter.getErrorMessages());
                 FXUtil.runOnFXThread(() -> {
                     displayedContent.getChildren().setAll(excelImportResultsCard);

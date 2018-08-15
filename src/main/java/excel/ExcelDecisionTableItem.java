@@ -13,6 +13,9 @@ package excel;
 import objects.ComparatorType;
 import objects.DataType;
 
+/**
+ * Simple object to help create a DecisionTable from an Excel workbook.
+ */
 public class ExcelDecisionTableItem {
 
     private Type type;

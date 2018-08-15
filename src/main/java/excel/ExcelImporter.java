@@ -26,11 +26,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Allows importing of Excel files to DecisionTable objects.
+ */
 public class ExcelImporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelImporter.class);
     private List<String> errorMessages = new ArrayList<>();
 
+    /**
+     * Attempt to import the provided file as an Excel workbook to a DecisionTable object.
+     * Note: This not performed asynchronously, but can be.
+     *
+     * @param file the File to import from.
+     * @return a populated (but possibly invalid) DecisionTable.
+     * @throws IOException            may be thrown from Apache POI when creating the workbook.
+     * @throws InvalidFormatException may be thrown from Apache POI when creating the workbook.
+     */
     public DecisionTable importFromExcel(File file) throws IOException, InvalidFormatException {
         //create Apache POI workbook from .xls/.xlsx file
         Workbook workbook = WorkbookFactory.create(file);
@@ -239,12 +251,13 @@ public class ExcelImporter {
         });
     }
 
+    /**
+     * Return a list of error messages.
+     *
+     * @return a list of error messages.
+     */
     public List<String> getErrorMessages() {
         return errorMessages;
-    }
-
-    public void exportToExcel(DecisionTable decisionTable) {
-
     }
 
 }
