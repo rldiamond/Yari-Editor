@@ -40,25 +40,33 @@ public class ExcelImporter {
      *
      * @param file the File to import from.
      * @return a populated (but possibly invalid) DecisionTable.
-     * @throws IOException            may be thrown from Apache POI when creating the workbook.
-     * @throws InvalidFormatException may be thrown from Apache POI when creating the workbook.
+     * @throws ExcelImportException may be thrown from Apache POI when creating the workbook.
      */
-    public DecisionTable importFromExcel(File file) throws IOException, InvalidFormatException {
+    public DecisionTable importFromExcel(File file) throws ExcelImportException {
         //create Apache POI workbook from .xls/.xlsx file
-        Workbook workbook = WorkbookFactory.create(file);
+        Workbook workbook;
+
+        try {
+            workbook = WorkbookFactory.create(file);
+        } catch (IOException | InvalidFormatException ex) {
+            throw new ExcelImportException(ex.getMessage());
+        }
+
+        if (workbook == null) {
+            throw new ExcelImportException("An error occurred when importing the Excel file. The workbook was null.");
+        }
 
         //NOTE: expect only one sheet, we only process first
         Sheet sheet = workbook.getSheetAt(0);
 
         if (sheet == null) {
-            LOGGER.warn("An error occurred when importing the Excel file!");
-            return null;
+            throw new ExcelImportException("An error occurred when importing the Excel file. The sheet was null.");
         }
 
         DecisionTable decisionTable = new DecisionTable();
         List<ExcelDecisionTableItem> excelDecisionTableItemList = new ArrayList<>();
 
-        sheet.forEach(row -> {
+        for (Row row : sheet) {
             int rowNum = row.getRowNum();
             switch (rowNum) {
                 case 0:
@@ -82,7 +90,7 @@ public class ExcelImporter {
                     break;
             }
 
-        });
+        }
 
         return decisionTable;
     }
@@ -99,7 +107,7 @@ public class ExcelImporter {
 
             String cellValue = dataFormatter.formatCellValue(cell).trim();
 
-            if ("".equals(cellValue)){
+            if ("".equals(cellValue)) {
                 return;
             }
 
@@ -150,11 +158,13 @@ public class ExcelImporter {
 
             String cellValue = dataFormatter.formatCellValue(cell).trim();
 
-            if ("METHOD NAME".equalsIgnoreCase(cellValue)) {
+            int columnIndex = cell.getColumnIndex();
+
+            if (columnIndex == 0) {
                 return;
             }
 
-            int i = cell.getColumnIndex() - 1;
+            int i = columnIndex - 1;
 
             excelDecisionTableItemList.get(i).setMethodName(cellValue);
 
@@ -168,22 +178,23 @@ public class ExcelImporter {
 
             String cellValue = dataFormatter.formatCellValue(cell).trim();
 
-            if ("NAME".equalsIgnoreCase(cellValue)) {
+            int columnIndex = cell.getColumnIndex();
+
+            if (columnIndex == 0) {
                 return;
             }
 
-            int i = cell.getColumnIndex() - 1;
+            int i = columnIndex - 1;
 
             excelDecisionTableItemList.get(i).setName(cellValue);
 
         });
     }
 
-    private void processTypeRow(Row row, List<ExcelDecisionTableItem> excelDecisionTableItemList) {
+    private void processTypeRow(Row row, List<ExcelDecisionTableItem> excelDecisionTableItemList) throws ExcelImportException {
         DataFormatter dataFormatter = new DataFormatter();
 
-        row.forEach(cell -> {
-
+        for (Cell cell : row) {
             String cellValue = dataFormatter.formatCellValue(cell).trim().toUpperCase();
 
             ExcelDecisionTableItem excelTableItem = new ExcelDecisionTableItem();
@@ -199,10 +210,12 @@ public class ExcelImporter {
                     excelDecisionTableItemList.add(excelTableItem);
                     break;
                 default:
-                    break;
+                    String errorMessage = "Invalid Data Type of " + cellValue + ". Cannot proceed.";
+                    errorMessages.add(errorMessage);
+                    throw new ExcelImportException(errorMessage);
             }
 
-        });
+        }
     }
 
     private void processDataTypeRow(Row row, List<ExcelDecisionTableItem> excelDecisionTableItemList) {
@@ -212,18 +225,20 @@ public class ExcelImporter {
 
             String cellValue = dataFormatter.formatCellValue(cell).trim().toUpperCase();
 
-            if ("DATA TYPE".equalsIgnoreCase(cellValue)) {
+            int columnIndex = cell.getColumnIndex();
+
+            if (columnIndex == 0) {
                 return;
             }
 
-            DataType dataType = DataType.getFromTableString(cellValue);
+            int i = columnIndex - 1;
 
-            int i = cell.getColumnIndex() - 1;
+            DataType dataType = DataType.getFromTableString(cellValue);
 
             if (dataType != null) {
                 excelDecisionTableItemList.get(i).setDataType(dataType);
             } else {
-                errorMessages.add("Data Type " + cellValue + " entered in column " + i + " is invalid. Auto-set to String.");
+                errorMessages.add("Data Type " + cellValue + " entered in column " + columnIndex + " is invalid. Auto-set to String.");
                 excelDecisionTableItemList.get(i).setDataType(DataType.STRING);
             }
 
@@ -247,8 +262,8 @@ public class ExcelImporter {
 
             if (comparatorType != null) {
                 excelDecisionTableItemList.get(i).setComparatorType(comparatorType);
-            } else {
-                errorMessages.add("Comparator Type " + cellValue + " entered in column " + i + " is invalid. Auto-set to ==.");
+            } else if (!excelDecisionTableItemList.get(i).getType().equals(ExcelDecisionTableItem.Type.ACTION)) {
+                errorMessages.add("Comparator Type " + cellValue + " entered in column " + cell.getColumnIndex() + " is invalid. Auto-set to ==.");
                 excelDecisionTableItemList.get(i).setComparatorType(ComparatorType.EQUAL);
             }
 
@@ -262,6 +277,21 @@ public class ExcelImporter {
      */
     public List<String> getErrorMessages() {
         return errorMessages;
+    }
+
+    public class ExcelImportException extends Exception {
+
+        public ExcelImportException() {
+            super();
+        }
+
+        public ExcelImportException(String message) {
+            super(message);
+        }
+
+        public ExcelImportException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 
 }

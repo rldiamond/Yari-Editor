@@ -58,7 +58,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import objects.KeyboardShortcut;
 import objects.ToolView;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.yari.core.table.DecisionTable;
 import settings.SettingsView;
 import utilities.*;
@@ -71,7 +70,6 @@ import view.editors.DataEditor;
 import view.editors.RowsToolView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 
@@ -215,7 +213,7 @@ public class RootLayout extends BorderPane {
                 DecisionTable decisionTable = null;
                 try {
                     decisionTable = excelImporter.importFromExcel(file);
-                } catch (IOException | InvalidFormatException e) {
+                } catch (ExcelImporter.ExcelImportException e) {
                     ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(e);
                     FXUtil.runOnFXThread(() -> {
                         displayedContent.getChildren().setAll(excelImportResultsCard);

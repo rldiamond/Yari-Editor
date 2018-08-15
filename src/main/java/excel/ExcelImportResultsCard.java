@@ -16,6 +16,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -58,8 +60,16 @@ public class ExcelImportResultsCard extends StackPane {
         setPadding(new Insets(20, 20, 20, 20));
         Card card = new Card("Excel Import Failed");
 
+        VBox content = new VBox(25);
+        content.setAlignment(Pos.CENTER);
+
         Label label = new Label("The Excel import failed. Check the file for invalid content.");
-        card.setDisplayedContent(label);
+        TextArea exceptionMessage = new TextArea(ex.getMessage());
+        exceptionMessage.setWrapText(true);
+        VBox.setVgrow(exceptionMessage, Priority.ALWAYS);
+
+        content.getChildren().setAll(label, exceptionMessage);
+        card.setDisplayedContent(content);
     }
 
 }
