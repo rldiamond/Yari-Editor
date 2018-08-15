@@ -124,7 +124,7 @@ public class DecisionTableService {
         updateActions();
         updateConditions();
     }
-f
+
     private void renumberRows() {
         int rowNumber = 0;
         for (TableRow row : rows) {
