@@ -16,6 +16,8 @@ import objects.ComparatorType;
 import objects.DataType;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.TableAction;
 import org.yari.core.table.TableCondition;
@@ -28,6 +30,7 @@ import java.util.List;
 
 public class ExcelService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelService.class);
     private final DoubleProperty progress = new SimpleDoubleProperty(0);
 
     public DecisionTable importFromExcel(File file) throws IOException, InvalidFormatException {
@@ -40,6 +43,7 @@ public class ExcelService {
         Sheet sheet = workbook.getSheetAt(0);
 
         if (sheet == null) {
+            LOGGER.warn("An error occurred when importing the Excel file!");
             return null;
         }
 
@@ -76,13 +80,10 @@ public class ExcelService {
             setProgress(progress.get() + progressStepSize);
 
         });
-
-        //TODO: Loop through and create table (20-80)
-
-        //TODO: verification
+        
         setProgress(100);
 
-        return null;
+        return decisionTable;
     }
 
     private void processDataRow(Row row, List<ExcelDecisionTableItem> excelDecisionTableItemList, DecisionTable decisionTable) {
@@ -91,7 +92,7 @@ public class ExcelService {
 
         row.forEach(cell -> {
 
-            if (cell.getColumnIndex() == 1) {
+            if (cell.getColumnIndex() == 0) {
                 return;//this is empty
             }
 
@@ -193,7 +194,6 @@ public class ExcelService {
                     excelDecisionTableItemList.add(excelTableItem);
                     break;
                 default:
-                    //TODO: Handle
                     break;
             }
 
@@ -213,7 +213,6 @@ public class ExcelService {
 
             DataType dataType = DataType.getFromTableString(cellValue);
             if (dataType == null) {
-                //TODO: handle
                 return;
             }
 
@@ -235,9 +234,8 @@ public class ExcelService {
                 return;
             }
 
-            ComparatorType comparatorType = ComparatorType.valueOf(cellValue);
+            ComparatorType comparatorType = ComparatorType.getFromTableString(cellValue);
             if (comparatorType == null) {
-                //TODO: handle
                 return;
             }
 
@@ -245,18 +243,6 @@ public class ExcelService {
 
             excelDecisionTableItemList.get(i).setComparatorType(comparatorType);
 
-        });
-    }
-
-    private void processHeaderRow(Row row, List<ExcelDecisionTableItem> excelDecisionTableItemList) {
-        DataFormatter dataFormatter = new DataFormatter();
-
-
-        row.forEach(cell -> {
-            String cellValue = dataFormatter.formatCellValue(cell).trim();
-            if (cellValue.equalsIgnoreCase("type")) {
-                //first row, we must create a new object
-            }
         });
     }
 

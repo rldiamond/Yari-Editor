@@ -51,4 +51,10 @@ public enum ComparatorType {
                 .map(ComparatorType::getDisplayValue)
                 .collect(Collectors.toList());
     }
+
+    public static ComparatorType getFromTableString(String comparatorType) {
+        return Arrays.stream(values())
+                .filter(type -> type.getDisplayValue().equalsIgnoreCase(comparatorType))
+                .findFirst().orElse(null);
+    }
 }
