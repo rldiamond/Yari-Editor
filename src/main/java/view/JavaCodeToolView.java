@@ -85,10 +85,13 @@ public class JavaCodeToolView extends StackPane {
         sb.append("import org.yari.core.Context;\n\n");
 
         // Create Class and Constructor
-        sb.append("public class ").append(decisionTableService.getRuleName()).append(" () extends BasicRule {\n    public ").append(decisionTableService.getRuleName()).append(" throws FileNotFoundException, YariException {\n");
+        sb.append("public class ").append(decisionTableService.getRuleName()).append(" () extends TableRule {\n    public ").append(decisionTableService.getRuleName()).append(" throws FileNotFoundException, YariException {\n");
         sb.append("        super(\"").append(decisionTableService.getDecisionTable().getTableName()).append("\", \"").append(decisionTableService.getDecisionTable().getTableDescription()).append("\", \"XMLPATH\");\n    }\n\n");
         // Create lookupGlobals
         sb.append("    @Override\n    public void lookupGlobals(Context globalContext){\n    }\n\n");
+        // Create evaluate method
+        sb.append("    @Override\n    public boolean evaluate(Context context){\n        return; // TODO: return true to evaluate the rule, false to stop\n    }\n\n");
+
         // Create condition methods
         Set<String> conditionNames = new HashSet<>();
         for (TableCondition condition : decisionTableService.getDecisionTable().getTableConditions()) {
