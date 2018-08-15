@@ -172,6 +172,7 @@ public class DecisionTableService {
 
     public void updateFXListsFromTable() {
         setEnabled(false);
+        clearFXLists();
         //load data into our own lists
         for (TableCondition condition : decisionTable.getValue().getTableConditions()) {
             getConditions().add(condition);
@@ -185,6 +186,12 @@ public class DecisionTableService {
             getRows().add(row);
         }
         setEnabled(true);
+    }
+
+    private void clearFXLists() {
+        conditions.clear();
+        actions.clear();
+        rows.clear();
     }
 
     private boolean isEnabled() {
