@@ -18,10 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yari.core.table.TableAction;
-import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
-import org.yari.core.table.TableRow;
 import validation.ValidationService;
 import validation.ValidationType;
 import view.RootLayoutFactory;
@@ -83,7 +80,7 @@ public class FileUtil {
 
             //start simplified logic
             //load the file
-            clearData();
+            DECISION_TBL_SVC.clearData();
             DecisionTable decisionTable = loadObjectFromFile(DecisionTable.class, file.getPath());
             if (decisionTable == null) {
                 LOGGER.warn("DecisionTable failed to load.");
@@ -110,23 +107,13 @@ public class FileUtil {
 
             //load data into our own lists
             DECISION_TBL_SVC.setDecisionTable(decisionTable);
-            for (TableCondition condition : decisionTable.getTableConditions()) {
-                DECISION_TBL_SVC.getConditions().add(condition);
-            }
-            for (TableAction action : decisionTable.getTableActions()) {
-                DECISION_TBL_SVC.getActions().add(action);
-            }
-            int rowNumber = 0;
-            for (TableRow row : decisionTable.getRawRowData()) {
-                row.setRowNumber(rowNumber++);
-                DECISION_TBL_SVC.getRows().add(row);
-            }
+            DECISION_TBL_SVC.updateFXListsFromTable();
 
             //ensure data is valid
             VALID_SVC.runValidationImmediately();
             if (!VALID_SVC.isValid()) {
                 LOGGER.debug("The table that was loaded is not valid.");
-                clearData();
+                DECISION_TBL_SVC.clearData();
                 if (busy != null) {
                     busy.setValue(false);
                 }
@@ -166,7 +153,7 @@ public class FileUtil {
      */
     public static void newFile() {
         CURRENT_FILE.setValue(null);
-        clearData();
+        DECISION_TBL_SVC.clearData();
         DecisionTable decisionTable = new DecisionTable();
         decisionTable.setDescription("MyTable Description");
         decisionTable.setName("MyTable");
@@ -282,13 +269,6 @@ public class FileUtil {
                 }
             }
         }
-    }
-
-    private static void clearData() {
-        DECISION_TBL_SVC.getRows().clear();
-        DECISION_TBL_SVC.getActions().clear();
-        DECISION_TBL_SVC.getConditions().clear();
-        DECISION_TBL_SVC.setDecisionTable(null);
     }
 
     public static File getCurrentFile() {

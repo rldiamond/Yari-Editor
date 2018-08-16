@@ -16,11 +16,12 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yari.core.table.DecisionTable;
 import org.yari.core.table.TableAction;
 import org.yari.core.table.TableCondition;
-import org.yari.core.table.DecisionTable;
 import org.yari.core.table.TableRow;
 import validation.ValidationService;
+import validation.ValidationType;
 
 import java.util.ArrayList;
 
@@ -133,41 +134,79 @@ public class DecisionTableService {
     }
 
     private void updateRows() {
-        if (decisionTable.getValue() == null) {
-            LOGGER.warn("Could not update rows as the decision table was null.");
-            return;
-        }
         if (!isEnabled()) {
             LOGGER.debug("The decision table service is disabled. Not updating rows.");
             return;
         }
+
+        if (decisionTable.getValue() == null) {
+            LOGGER.warn("Could not update rows as the decision table was null.");
+            return;
+        }
+
         renumberRows();
         decisionTable.getValue().setTableRows(new ArrayList<>(rows));
     }
 
     private void updateActions() {
-        if (decisionTable.getValue() == null) {
-            LOGGER.warn("Could not update actions as the decision table was null.");
-            return;
-        }
         if (!isEnabled()) {
             LOGGER.debug("The decision table service is disabled. Not updating actions.");
             return;
         }
+
+        if (decisionTable.getValue() == null) {
+            LOGGER.warn("Could not update actions as the decision table was null.");
+            return;
+        }
+
         decisionTable.getValue().setTableActions(new ArrayList<>(actions));
 
     }
 
     private void updateConditions() {
-        if (decisionTable.getValue() == null) {
-            LOGGER.warn("Could not update conditions as the decision table was null.");
-            return;
-        }
         if (!isEnabled()) {
             LOGGER.debug("The decision table service is disabled. Not updating conditions.");
             return;
         }
+
+        if (decisionTable.getValue() == null) {
+            LOGGER.warn("Could not update conditions as the decision table was null.");
+            return;
+        }
+
         decisionTable.getValue().setTableConditions(new ArrayList<>(conditions));
+    }
+
+    public void updateFXListsFromTable() {
+        setEnabled(false);
+        //load data into our own lists
+        for (TableCondition condition : decisionTable.getValue().getTableConditions()) {
+            getConditions().add(condition);
+        }
+        for (TableAction action : decisionTable.getValue().getTableActions()) {
+            getActions().add(action);
+        }
+        int rowNumber = 0;
+        for (TableRow row : decisionTable.getValue().getRawRowData()) {
+            row.setRowNumber(rowNumber++);
+            getRows().add(row);
+        }
+        setEnabled(true);
+    }
+
+    public void clearData() {
+        setEnabled(false);
+        validationService.setEnabled(false);
+        decisionTable.set(null);
+        conditions.clear();
+        actions.clear();
+        rows.clear();
+        boolean enabled = true;
+        if (SettingsUtil.getSettings() != null) {
+            enabled = !SettingsUtil.getSettings().getValidationType().equals(ValidationType.DISABLED);
+        }
+        validationService.setEnabled(enabled);
+        setEnabled(true);
     }
 
     private boolean isEnabled() {

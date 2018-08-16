@@ -34,6 +34,9 @@ import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
 import components.MenuOption;
 import components.PopupMenuEntry;
+import excel.ExcelImportResultsCard;
+import excel.ExcelImporter;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -44,6 +47,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -55,6 +59,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import objects.KeyboardShortcut;
 import objects.ToolView;
+import org.yari.core.table.DecisionTable;
 import settings.SettingsView;
 import utilities.*;
 import validation.ValidateEvent;
@@ -67,7 +72,6 @@ import view.editors.RowsToolView;
 
 import java.io.File;
 import java.util.Optional;
-import javafx.animation.FadeTransition;
 
 
 public class RootLayout extends BorderPane {
@@ -76,6 +80,7 @@ public class RootLayout extends BorderPane {
     private final DecisionTableService decisionTableService = DecisionTableService.getService();
     private final ObservableList<MenuOption> menuOptions = FXCollections.observableArrayList();
     private final BooleanProperty loadingContent = new SimpleBooleanProperty(false);
+    private final BooleanProperty controlsLock = new SimpleBooleanProperty(false);
     private final StackPane displayedContent = new StackPane();
     private final AnchorPane header = new AnchorPane();
 
@@ -195,6 +200,17 @@ public class RootLayout extends BorderPane {
             open();
             fileMenuPopUp.hide();
         });
+
+        PopupMenuEntry importExcel = new PopupMenuEntry("Import From Excel", null);
+        importExcel.setOnMouseClicked(me -> {
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xls)", "*.xlsx");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File file = fileChooser.showOpenDialog(getScene().getWindow());
+            FXUtil.runAsync(() -> importExcel(file));
+        });
+        Tooltip.install(importExcel, new Tooltip("Import from Excel."));
+
         Tooltip.install(fileOpenMenuEntry, new Tooltip("Open a previously saved document."));
         PopupMenuEntry fileSaveMenuEntry = new PopupMenuEntry("Save", KeyboardShortcut.SAVE);
         fileSaveMenuEntry.setOnMouseClicked(me -> {
@@ -231,7 +247,7 @@ public class RootLayout extends BorderPane {
         });
         Tooltip.install(fileExitMenuEntry, new Tooltip("Exit the application."));
 
-        fileMenuList.getItems().addAll(fileNewMenuEntry, fileOpenMenuEntry, fileSaveMenuEntry, fileSaveAsMenuEntry, fileSettingsMenuEntry, filePrintMenuEntry, fileExitMenuEntry);
+        fileMenuList.getItems().addAll(fileNewMenuEntry, fileOpenMenuEntry, importExcel, fileSaveMenuEntry, fileSaveAsMenuEntry, fileSettingsMenuEntry, filePrintMenuEntry, fileExitMenuEntry);
         menu.setOnMouseClicked(me -> fileMenuPopUp.show(menu, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
         fileMenuPopUp.setPopupContent(fileMenuList);
 
@@ -275,6 +291,32 @@ public class RootLayout extends BorderPane {
 
     }
 
+    public void importExcel(File file) {
+        loadingContent.setValue(true);
+        controlsLock.setValue(true);
+        ExcelImporter excelImporter = new ExcelImporter();
+        FileUtil.newFile();
+        DecisionTable decisionTable = null;
+        try {
+            decisionTable = excelImporter.importFromExcel(file);
+        } catch (ExcelImporter.ExcelImportException e) {
+            ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(e);
+            FXUtil.runOnFXThread(() -> {
+                displayedContent.getChildren().setAll(excelImportResultsCard);
+                loadingContent.setValue(false);
+                controlsLock.setValue(false);
+            });
+            return;
+        }
+        decisionTableService.setDecisionTable(decisionTable);
+        decisionTableService.updateFXListsFromTable();
+        ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(excelImporter.getErrorMessages());
+        FXUtil.runOnFXThread(() -> {
+            displayedContent.getChildren().setAll(excelImportResultsCard);
+            loadingContent.setValue(false);
+            controlsLock.setValue(false);
+        });
+    }
 
     private void selectTab(String tabTitle) {
         menuOptions.stream().filter(tab -> tabTitle.equalsIgnoreCase(tab.getTitle())).findFirst().ifPresent(tab -> {
@@ -285,31 +327,40 @@ public class RootLayout extends BorderPane {
 
 
     private void prepareOptions() {
-        MenuOption actionsOption = new MenuOption("Actions", "mdTab-actions");
-        Tooltip.install(actionsOption, new Tooltip("Open the Actions Editor"));
-        actionsOption.setOnMouseClicked(me -> selectTab("actions"));
-        actionsOption.setOnSelectAction(() -> showView(ToolView.ACTIONS));
-        MenuOption conditionsOption = new MenuOption("Conditions", "mdTab-conditions");
-        Tooltip.install(conditionsOption, new Tooltip("Open the Conditions Editor"));
-        conditionsOption.setOnMouseClicked(me -> selectTab("conditions"));
-        conditionsOption.setOnSelectAction(() -> showView(ToolView.CONDITIONS));
-        MenuOption rowsOption = new MenuOption("Rows", "mdTab-rows");
-        Tooltip.install(rowsOption, new Tooltip("Open the Rows Editor"));
-        rowsOption.setOnMouseClicked(me -> selectTab("rows"));
-        rowsOption.setOnSelectAction(() -> showView(ToolView.ROWS));
-        MenuOption generalOption = new MenuOption("General", "mdTab-general");
-        Tooltip.install(generalOption, new Tooltip("Open the General Table Setting Editor"));
-        generalOption.setOnMouseClicked(me -> selectTab("general"));
-        generalOption.setOnSelectAction(() -> showView(ToolView.GENERAL));
-        MenuOption skeletonCode = new MenuOption("Java Code", "mdTab-code");
-        Tooltip.install(skeletonCode, new Tooltip("View Skeleton Java Code"));
-        skeletonCode.setOnSelectAction(() -> showView(ToolView.JAVA_CODE));
-        skeletonCode.setOnMouseClicked(me -> selectTab("java code"));
+        MenuOption actionsTool = new MenuOption("Actions", "mdTab-actions");
+        actionsTool.disableProperty().bind(controlsLock);
+        Tooltip.install(actionsTool, new Tooltip("Open the Actions Editor"));
+        actionsTool.setOnMouseClicked(me -> selectTab("actions"));
+        actionsTool.setOnSelectAction(() -> showView(ToolView.ACTIONS));
 
-        menuOptions.addAll(actionsOption, conditionsOption, rowsOption, generalOption, skeletonCode);
+        MenuOption conditionsTool = new MenuOption("Conditions", "mdTab-conditions");
+        conditionsTool.disableProperty().bind(controlsLock);
+        Tooltip.install(conditionsTool, new Tooltip("Open the Conditions Editor"));
+        conditionsTool.setOnMouseClicked(me -> selectTab("conditions"));
+        conditionsTool.setOnSelectAction(() -> showView(ToolView.CONDITIONS));
+
+        MenuOption rowsTool = new MenuOption("Rows", "mdTab-rows");
+        rowsTool.disableProperty().bind(controlsLock);
+        Tooltip.install(rowsTool, new Tooltip("Open the Rows Editor"));
+        rowsTool.setOnMouseClicked(me -> selectTab("rows"));
+        rowsTool.setOnSelectAction(() -> showView(ToolView.ROWS));
+
+        MenuOption generalTool = new MenuOption("General", "mdTab-general");
+        generalTool.disableProperty().bind(controlsLock);
+        Tooltip.install(generalTool, new Tooltip("Open the General Table Setting Editor"));
+        generalTool.setOnMouseClicked(me -> selectTab("general"));
+        generalTool.setOnSelectAction(() -> showView(ToolView.GENERAL));
+
+        MenuOption javaCodeTool = new MenuOption("Java Code", "mdTab-code");
+        javaCodeTool.disableProperty().bind(controlsLock);
+        Tooltip.install(javaCodeTool, new Tooltip("View Skeleton Java Code"));
+        javaCodeTool.setOnSelectAction(() -> showView(ToolView.JAVA_CODE));
+        javaCodeTool.setOnMouseClicked(me -> selectTab("java code"));
+
+        menuOptions.addAll(actionsTool, conditionsTool, rowsTool, generalTool, javaCodeTool);
 
         VBox optionsContainer = new VBox();
-        optionsContainer.getChildren().setAll(actionsOption, conditionsOption, rowsOption, generalOption, skeletonCode);
+        optionsContainer.getChildren().setAll(actionsTool, conditionsTool, rowsTool, generalTool, javaCodeTool);
 
         optionsContainer.setPadding(new Insets(25, 0, 0, 0));
         AnchorPane.setTopAnchor(optionsContainer, 0D);
@@ -495,6 +546,9 @@ public class RootLayout extends BorderPane {
         return header;
     }
 
+    public void displayNode(Node node) {
+        displayedContent.getChildren().setAll(node);
+    }
 
     public JFXSnackbar getToastBar() {
         return toastBar;
