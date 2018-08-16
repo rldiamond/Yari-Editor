@@ -47,6 +47,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -206,33 +207,7 @@ public class RootLayout extends BorderPane {
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xls)", "*.xlsx");
             fileChooser.getExtensionFilters().add(extFilter);
             File file = fileChooser.showOpenDialog(getScene().getWindow());
-            ExcelImporter excelImporter = new ExcelImporter();
-            FXUtil.runAsync(() -> {
-                loadingContent.setValue(true);
-                controlsLock.setValue(true);
-                FileUtil.newFile();
-                DecisionTable decisionTable = null;
-                try {
-                    decisionTable = excelImporter.importFromExcel(file);
-                } catch (ExcelImporter.ExcelImportException e) {
-                    ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(e);
-                    FXUtil.runOnFXThread(() -> {
-                        displayedContent.getChildren().setAll(excelImportResultsCard);
-                        loadingContent.setValue(false);
-                        controlsLock.setValue(false);
-                    });
-                    return;
-                }
-                decisionTableService.setDecisionTable(decisionTable);
-                decisionTableService.updateFXListsFromTable();
-                ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(excelImporter.getErrorMessages());
-                FXUtil.runOnFXThread(() -> {
-                    displayedContent.getChildren().setAll(excelImportResultsCard);
-                    loadingContent.setValue(false);
-                    controlsLock.setValue(false);
-                });
-            });
-
+            FXUtil.runAsync(() -> importExcel(file));
         });
         Tooltip.install(importExcel, new Tooltip("Import from Excel."));
 
@@ -316,6 +291,32 @@ public class RootLayout extends BorderPane {
 
     }
 
+    public void importExcel(File file) {
+        loadingContent.setValue(true);
+        controlsLock.setValue(true);
+        ExcelImporter excelImporter = new ExcelImporter();
+        FileUtil.newFile();
+        DecisionTable decisionTable = null;
+        try {
+            decisionTable = excelImporter.importFromExcel(file);
+        } catch (ExcelImporter.ExcelImportException e) {
+            ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(e);
+            FXUtil.runOnFXThread(() -> {
+                displayedContent.getChildren().setAll(excelImportResultsCard);
+                loadingContent.setValue(false);
+                controlsLock.setValue(false);
+            });
+            return;
+        }
+        decisionTableService.setDecisionTable(decisionTable);
+        decisionTableService.updateFXListsFromTable();
+        ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(excelImporter.getErrorMessages());
+        FXUtil.runOnFXThread(() -> {
+            displayedContent.getChildren().setAll(excelImportResultsCard);
+            loadingContent.setValue(false);
+            controlsLock.setValue(false);
+        });
+    }
 
     private void selectTab(String tabTitle) {
         menuOptions.stream().filter(tab -> tabTitle.equalsIgnoreCase(tab.getTitle())).findFirst().ifPresent(tab -> {
@@ -545,6 +546,9 @@ public class RootLayout extends BorderPane {
         return header;
     }
 
+    public void displayNode(Node node) {
+        displayedContent.getChildren().setAll(node);
+    }
 
     public JFXSnackbar getToastBar() {
         return toastBar;

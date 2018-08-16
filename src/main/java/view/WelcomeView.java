@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import settings.SettingsView;
 import utilities.FXUtil;
@@ -28,6 +29,8 @@ import utilities.FileUtil;
 import utilities.SettingsUtil;
 import utilities.ThemeUtil;
 import utilities.resizing.ResizeHelper;
+
+import java.io.File;
 
 /**
  * View displayed when the application is first launched. Provides extra
@@ -151,6 +154,37 @@ public class WelcomeView extends VBox {
         openContainer.getChildren().addAll(openIcon, openLabel);
         openContainer.disableProperty().bind(busy);
         rightContent.getChildren().add(openContainer);
+
+
+        //import
+        HBox importContainer = new HBox(10);
+        importContainer.setAlignment(Pos.CENTER_LEFT);
+        Tooltip.install(importContainer, new Tooltip("Import a table from Excel"));
+        VBox.setMargin(importContainer, new Insets(0,0,0,108));
+        Pane importIcon = new Pane();
+        importIcon.setPrefSize(12, 13);
+        importIcon.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        importIcon.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        importIcon.setId("importIcon");
+        Label importLabel = new Label("Import");
+        importLabel.setId("splashLink");
+        importContainer.disableProperty().bind(busy);
+        importContainer.getChildren().addAll(importIcon, importLabel);
+        importLabel.setOnMouseClicked(me -> {
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xls)", "*.xlsx");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File file = fileChooser.showOpenDialog(getScene().getWindow());
+            FXUtil.runAsync(() -> {
+                busy.set(true);
+                RootLayoutFactory.getInstance().importExcel(file);
+                FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
+                busy.set(false);
+            });
+
+        });
+        rightContent.getChildren().add(importContainer);
+
 
         //busy indicator
         JFXSpinner busySpinner = new JFXSpinner();
