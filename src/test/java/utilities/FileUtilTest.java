@@ -10,6 +10,7 @@
 
 package utilities;
 
+import javafx.stage.Stage;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
@@ -26,7 +27,7 @@ public class FileUtilTest extends ApplicationTest {
 
     @Test
     public void openFile() {
-        FileUtil.openDecisionTableFile(new File(""), null, null);
+        FXUtil.runOnFXThread(() -> FileUtil.openDecisionTableFile(new File(""), new Stage(), null));
     }
 
     @Test
