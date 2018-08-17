@@ -46,7 +46,7 @@ public abstract class AlertDialog extends StackPane {
     /**
      * Construct an error dialog that will be displayed in the supplied stage.
      */
-    AlertDialog(DialogType dialogType) {
+    AlertDialog(AlertDialogType alertDialogType) {
 
         stage = new Stage();
         stage.initStyle(StageStyle.UNDECORATED);
@@ -74,7 +74,7 @@ public abstract class AlertDialog extends StackPane {
         icon.setPrefSize(35, 35);
         icon.setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
         icon.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
-        icon.setId(dialogType.getIconId());
+        icon.setId(alertDialogType.getIconId());
 
         headerContainer.getChildren().setAll(icon, titleLabel);
 
@@ -89,8 +89,8 @@ public abstract class AlertDialog extends StackPane {
 
     }
 
-    AlertDialog(DialogType dialogType, Window modalOwner) {
-        this(dialogType);
+    AlertDialog(AlertDialogType alertDialogType, Window modalOwner) {
+        this(alertDialogType);
         if (modalOwner != null) {
             stage.initOwner(modalOwner);
         }

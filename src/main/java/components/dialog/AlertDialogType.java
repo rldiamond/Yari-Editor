@@ -10,7 +10,7 @@
 
 package components.dialog;
 
-public enum DialogType {
+public enum AlertDialogType {
 
     CONFIRMATION("confirmationIcon"),
     ERROR("errorIcon"),
@@ -19,7 +19,7 @@ public enum DialogType {
 
     private final String iconId;
 
-    DialogType(String iconId) {
+    AlertDialogType(String iconId) {
         this.iconId = iconId;
     }
 

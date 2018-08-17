@@ -27,10 +27,10 @@ public class ActionableAlertDialog extends AlertDialog {
     /**
      * Creates an AlertDialog of the supplied type with a DISMISS button as well as an action button.
      *
-     * @param dialogType the type of Dialog to create.
+     * @param alertDialogType the type of Dialog to create.
      */
-    public ActionableAlertDialog(DialogType dialogType) {
-        super(dialogType);
+    public ActionableAlertDialog(AlertDialogType alertDialogType) {
+        super(alertDialogType);
         initButtons();
     }
 
@@ -38,10 +38,10 @@ public class ActionableAlertDialog extends AlertDialog {
      * Creates an AlertDialog of the supplied type with a DISMISS button as well as an action button. Sets the owning
      * window to the supplied value.
      *
-     * @param dialogType the type of Dialog to create.
+     * @param alertDialogType the type of Dialog to create.
      */
-    public ActionableAlertDialog(DialogType dialogType, Window modalOwner) {
-        super(dialogType, modalOwner);
+    public ActionableAlertDialog(AlertDialogType alertDialogType, Window modalOwner) {
+        super(alertDialogType, modalOwner);
         initButtons();
     }
 

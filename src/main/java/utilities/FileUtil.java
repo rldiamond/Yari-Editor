@@ -10,9 +10,10 @@
 package utilities;
 
 import com.thoughtworks.xstream.XStream;
+import components.dialog.AlertDialogType;
+import components.dialog.NonActionableAlertDialog;
 import javafx.beans.property.*;
 import javafx.print.*;
-import javafx.scene.control.Alert;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -88,10 +89,10 @@ public class FileUtil {
                     ToastUtil.sendPersistentToast("Failed to load the file. Is it a decision table file?");
                 } else {
                     FXUtil.runOnFXThread(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ValidatorError");
-                        alert.setHeaderText("Could not load table data");
-                        alert.setContentText("Could not load table data from file. Is it a decision table file?");
+                        NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, stage.getOwner());
+                        alert.setTitle("Failed To Load");
+                        alert.setBody("Failed to load decision table data from the file. Ensure the file is formatted " +
+                                "as a decision table.");
                         alert.showAndWait();
                     });
                 }
@@ -124,10 +125,9 @@ public class FileUtil {
                     ToastUtil.sendPersistentToast("Could not load table data from file. The table from the file is was invalid.");
                 } else {
                     FXUtil.runOnFXThread(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ValidatorError");
-                        alert.setHeaderText("Could not load table data");
-                        alert.setContentText("Could not load table data from file. The table from the file is was invalid.");
+                        NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, stage.getOwner());
+                        alert.setTitle("Failed To Load");
+                        alert.setBody("Failed to load decision table data from the file. The table in the file is invalid.");
                         alert.showAndWait();
                     });
                 }

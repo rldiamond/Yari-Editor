@@ -31,10 +31,10 @@ public class NonActionableAlertDialog extends AlertDialog {
     /**
      * Creates an AlertDialog of the supplied type with only a DISMISS button.
      *
-     * @param dialogType the type of Dialog to create.
+     * @param alertDialogType the type of Dialog to create.
      */
-    public NonActionableAlertDialog(DialogType dialogType) {
-        super(dialogType);
+    public NonActionableAlertDialog(AlertDialogType alertDialogType) {
+        super(alertDialogType);
         initDismissButton();
     }
 
@@ -42,11 +42,11 @@ public class NonActionableAlertDialog extends AlertDialog {
      * Creates an AlertDialog of the supplied type with only a DISMISS button. Sets the owning window to the supplied
      * value.
      *
-     * @param dialogType the type of Dialog to create.
+     * @param alertDialogType the type of Dialog to create.
      * @param modalOwner the owning Window.
      */
-    public NonActionableAlertDialog(DialogType dialogType, Window modalOwner) {
-        super(dialogType, modalOwner);
+    public NonActionableAlertDialog(AlertDialogType alertDialogType, Window modalOwner) {
+        super(alertDialogType, modalOwner);
         initDismissButton();
     }
 
