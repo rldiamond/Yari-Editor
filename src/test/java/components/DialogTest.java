@@ -39,10 +39,7 @@ public class DialogTest extends ApplicationTest {
         String text = "This is some test content";
         assertThat(dialog).isVisible();
         dialog.setText(text);
-
-        //pull the text area out using css selector
-        TextArea textArea = lookup(".text-area").query();
-        assertThat(textArea).hasText(text);
+        assertThat(dialog).hasChild("This is some test content");
 
     }
 
