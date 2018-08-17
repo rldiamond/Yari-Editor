@@ -57,7 +57,7 @@ public abstract class AlertDialog extends StackPane {
         stage.setScene(alertScene);
 
         getStyleClass().add("errorDialog");
-        setPrefSize(450, 300);
+        setPrefSize(450, 275);
 
         setPadding(new Insets(0, 15, 15, 15));
 
