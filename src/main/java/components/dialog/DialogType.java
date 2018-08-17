@@ -8,21 +8,22 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package components;
+package components.dialog;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+public enum DialogType {
 
-public class AlertDialogTest extends Application {
+    CONFIRMATION("confirmationIcon"),
+    ERROR("errorIcon"),
+    INFORMATION("informationIcon"),
+    WARNING("warningIcon");
 
+    private final String iconId;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        AlertDialog alertDialog = new AlertDialog(primaryStage, AlertDialog.DialogType.ERROR);
-        alertDialog.setTitle("Error");
-        alertDialog.setBody("An error has occurred. Please check what you did wrong and fix it. Thank you and have a wonderful day.");
-        primaryStage.setScene(new Scene(alertDialog));
-        primaryStage.show();
+    DialogType(String iconId) {
+        this.iconId = iconId;
+    }
+
+    public String getIconId() {
+        return iconId;
     }
 }
