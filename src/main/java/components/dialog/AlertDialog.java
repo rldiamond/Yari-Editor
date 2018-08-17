@@ -46,7 +46,7 @@ public abstract class AlertDialog extends StackPane {
     /**
      * Construct an error dialog that will be displayed in the supplied stage.
      */
-    public AlertDialog(DialogType dialogType) {
+    AlertDialog(DialogType dialogType) {
 
         stage = new Stage();
         stage.initStyle(StageStyle.UNDECORATED);
@@ -89,7 +89,7 @@ public abstract class AlertDialog extends StackPane {
 
     }
 
-    public AlertDialog(DialogType dialogType, Window modalOwner) {
+    AlertDialog(DialogType dialogType, Window modalOwner) {
         this(dialogType);
         if (modalOwner != null) {
             stage.initOwner(modalOwner);
@@ -108,14 +108,26 @@ public abstract class AlertDialog extends StackPane {
         return stage;
     }
 
+    /**
+     * Set the title to display on the dialog.
+     *
+     * @param title the title to display on the dialog
+     */
     public void setTitle(String title) {
         this.title.setValue(title);
     }
 
+    /**
+     * Set the body content to display in the dialog.
+     * @param body the body to display in the dialog.
+     */
     public void setBody(String body) {
         this.body.setValue(body);
     }
 
+    /**
+     * Show the dialog on a new stage, and wait for the user to interact with the dialog before continuing.
+     */
     public void showAndWait() {
         stage.showAndWait();
     }

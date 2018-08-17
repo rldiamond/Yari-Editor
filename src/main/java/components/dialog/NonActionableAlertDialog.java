@@ -28,11 +28,23 @@ import javafx.stage.Window;
 
 public class NonActionableAlertDialog extends AlertDialog {
 
+    /**
+     * Creates an AlertDialog of the supplied type with only a DISMISS button.
+     *
+     * @param dialogType the type of Dialog to create.
+     */
     public NonActionableAlertDialog(DialogType dialogType) {
         super(dialogType);
         initDismissButton();
     }
 
+    /**
+     * Creates an AlertDialog of the supplied type with only a DISMISS button. Sets the owning window to the supplied
+     * value.
+     *
+     * @param dialogType the type of Dialog to create.
+     * @param modalOwner the owning Window.
+     */
     public NonActionableAlertDialog(DialogType dialogType, Window modalOwner) {
         super(dialogType, modalOwner);
         initDismissButton();

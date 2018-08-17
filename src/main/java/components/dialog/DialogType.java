@@ -23,6 +23,11 @@ public enum DialogType {
         this.iconId = iconId;
     }
 
+    /**
+     * Return the CSS ID of the icon to display in the AlertDialog.
+     *
+     * @return the CSS ID of the icon to display in the AlertDialog.
+     */
     public String getIconId() {
         return iconId;
     }

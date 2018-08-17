@@ -24,11 +24,22 @@ public class ActionableAlertDialog extends AlertDialog {
     private JFXButton actionButton;
     private Runnable action;
 
+    /**
+     * Creates an AlertDialog of the supplied type with a DISMISS button as well as an action button.
+     *
+     * @param dialogType the type of Dialog to create.
+     */
     public ActionableAlertDialog(DialogType dialogType) {
         super(dialogType);
         initButtons();
     }
 
+    /**
+     * Creates an AlertDialog of the supplied type with a DISMISS button as well as an action button. Sets the owning
+     * window to the supplied value.
+     *
+     * @param dialogType the type of Dialog to create.
+     */
     public ActionableAlertDialog(DialogType dialogType, Window modalOwner) {
         super(dialogType, modalOwner);
         initButtons();
@@ -64,10 +75,20 @@ public class ActionableAlertDialog extends AlertDialog {
         getFooter().getChildren().setAll(buttonContainer);
     }
 
+    /**
+     * Set the action to run when the action button is selected by the user.
+     *
+     * @param action the action to run when the action button is selected by the user.
+     */
     public void setAction(Runnable action) {
         this.action = action;
     }
 
+    /**
+     * Set the text on the action button. By default, this value is "OKAY".
+     *
+     * @param text the text on the action button.
+     */
     public void setActionButtonText(String text) {
         actionButton.setText(text);
     }
