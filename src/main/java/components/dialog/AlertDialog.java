@@ -128,12 +128,7 @@ public abstract class AlertDialog extends StackPane {
     /**
      * Show the dialog on a new stage, and wait for the user to interact with the dialog before continuing.
      */
-    public void showAndWait() {
-        stage.showAndWait();
-    }
-
-    protected void show(){
+    public void show() {
         stage.show();
     }
-
 }

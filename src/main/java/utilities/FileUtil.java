@@ -98,7 +98,7 @@ public class FileUtil {
                         alert.setTitle("Failed To Load");
                         alert.setBody("Failed to load decision table data from the file. Ensure the file is formatted " +
                                 "as a decision table.");
-                        alert.showAndWait();
+                        alert.show();
                     });
                 }
                 if (busy != null) {
@@ -133,7 +133,7 @@ public class FileUtil {
                         NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, stage.getOwner());
                         alert.setTitle("Failed To Load");
                         alert.setBody("Failed to load decision table data from the file. The table in the file is invalid.");
-                        alert.showAndWait();
+                        alert.show();
                     });
                 }
                 newFile();
