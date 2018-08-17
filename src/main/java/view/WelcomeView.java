@@ -177,8 +177,9 @@ public class WelcomeView extends VBox {
             File file = fileChooser.showOpenDialog(getScene().getWindow());
             FXUtil.runAsync(() -> {
                 busy.set(true);
-                RootLayoutFactory.getInstance().importExcel(file);
-                FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
+                if (RootLayoutFactory.getInstance().importExcel(file)) {
+                    FXUtil.runOnFXThread(() -> RootLayoutFactory.show(stage));
+                }
                 busy.set(false);
             });
 

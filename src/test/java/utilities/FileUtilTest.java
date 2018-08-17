@@ -16,17 +16,13 @@ import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FileUtilTest extends ApplicationTest {
 
     @Before
     public void setUp() throws Exception {
-    }
-
-    @Test
-    public void openFile() {
-        FileUtil.openDecisionTableFile(new File(""), null, null);
     }
 
     @Test
@@ -50,6 +46,7 @@ public class FileUtilTest extends ApplicationTest {
     @Test
     public void dirtyProperty() {
         boolean expected = false;
+        FileUtil.setDirty(expected);
         boolean result = FileUtil.dirtyProperty().get();
         assertEquals(expected, result);
     }

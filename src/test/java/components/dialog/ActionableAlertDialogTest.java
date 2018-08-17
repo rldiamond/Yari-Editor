@@ -8,39 +8,48 @@
  *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package components;
+package components.dialog;
 
-import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.StackPane;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 
+import static org.junit.Assert.assertTrue;
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-public class DialogTest extends ApplicationTest {
+public class ActionableAlertDialogTest extends ApplicationTest {
+    private ActionableAlertDialog dialog;
 
-    Dialog dialog;
+    private boolean didFunction = false;
 
     @Override
     public void start(Stage stage) throws Exception {
-        StackPane container = new StackPane();
-        dialog = new Dialog(container);
-        Scene scene = new Scene(container, 500,500);
-        stage.setScene(scene);
-        stage.show();
+        dialog = new ActionableAlertDialog(AlertDialogType.CONFIRMATION, stage.getOwner());
+        dialog.setTitle("Test Title");
+        dialog.setBody("Test Body");
         dialog.show();
     }
 
     @Test
-    public void setText() {
-
-        String text = "This is some test content";
-        assertThat(dialog).isVisible();
-        dialog.setText(text);
-        assertThat(dialog).hasChild("This is some test content");
-
+    public void testFX() {
+        assertThat(dialog).hasChild("Test Title");
+        assertThat(dialog).hasChild("Test Body");
+        assertThat(dialog).hasChild("DISMISS");
     }
 
+    @Test
+    public void setAction() {
+        dialog.setAction(() -> didFunction = true);
+        clickOn("OKAY");
+        assertTrue(didFunction);
+    }
+
+    @Test
+    public void setActionButtonText() {
+        Platform.runLater(() -> {
+            dialog.setActionButtonText("TEST");
+            assertThat(dialog).hasChild("TEST");
+        });
+    }
 }

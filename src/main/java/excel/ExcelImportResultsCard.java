@@ -51,26 +51,4 @@ public class ExcelImportResultsCard extends StackPane {
 
     }
 
-    /**
-     * Displays an error card.
-     *
-     * @param ex the exception caught during Excel import.
-     */
-    public ExcelImportResultsCard(Throwable ex) {
-        setPadding(new Insets(20, 20, 20, 20));
-        Card card = new Card("Excel Import Failed");
-        super.getChildren().setAll(card);
-
-        VBox content = new VBox(25);
-        content.setAlignment(Pos.CENTER);
-
-        Label label = new Label("The Excel import failed. Check the file for invalid content.");
-        TextArea exceptionMessage = new TextArea(ex.getMessage());
-        exceptionMessage.setWrapText(true);
-        VBox.setVgrow(exceptionMessage, Priority.ALWAYS);
-
-        content.getChildren().setAll(label, exceptionMessage);
-        card.setDisplayedContent(content);
-    }
-
 }

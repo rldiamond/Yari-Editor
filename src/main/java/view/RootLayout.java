@@ -34,6 +34,8 @@ import com.jfoenix.animation.alert.JFXAlertAnimation;
 import com.jfoenix.controls.*;
 import components.MenuOption;
 import components.PopupMenuEntry;
+import components.dialog.AlertDialogType;
+import components.dialog.NonActionableAlertDialog;
 import excel.ExcelImportResultsCard;
 import excel.ExcelImporter;
 import javafx.animation.FadeTransition;
@@ -57,6 +59,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import objects.KeyboardShortcut;
 import objects.ToolView;
 import org.yari.core.table.DecisionTable;
@@ -291,7 +294,8 @@ public class RootLayout extends BorderPane {
 
     }
 
-    public void importExcel(File file) {
+    public boolean importExcel(File file) {
+        boolean success = true;
         loadingContent.setValue(true);
         controlsLock.setValue(true);
         ExcelImporter excelImporter = new ExcelImporter();
@@ -300,13 +304,20 @@ public class RootLayout extends BorderPane {
         try {
             decisionTable = excelImporter.importFromExcel(file);
         } catch (ExcelImporter.ExcelImportException e) {
-            ExcelImportResultsCard excelImportResultsCard = new ExcelImportResultsCard(e);
+            Window owner = null;
+            if (getScene() != null){
+                owner = getScene().getWindow();
+            }
+            final Window lambdaWindow = owner;
             FXUtil.runOnFXThread(() -> {
-                displayedContent.getChildren().setAll(excelImportResultsCard);
+                NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, lambdaWindow);
+                alert.setTitle("Import Failed");
+                alert.setBody("Failed to import the Excel file. Ensure the Excel file is properly formatted for import using Yari Editor. More information can be found on the wiki. " + e.getMessage());
+                alert.show();
                 loadingContent.setValue(false);
                 controlsLock.setValue(false);
             });
-            return;
+            return false;
         }
         decisionTableService.setDecisionTable(decisionTable);
         decisionTableService.updateFXListsFromTable();
@@ -316,6 +327,7 @@ public class RootLayout extends BorderPane {
             loadingContent.setValue(false);
             controlsLock.setValue(false);
         });
+        return true;
     }
 
     private void selectTab(String tabTitle) {

@@ -10,12 +10,14 @@
 package utilities;
 
 import com.thoughtworks.xstream.XStream;
+import components.dialog.AlertDialogType;
+import components.dialog.NonActionableAlertDialog;
 import javafx.beans.property.*;
 import javafx.print.*;
-import javafx.scene.control.Alert;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
@@ -88,11 +90,15 @@ public class FileUtil {
                     ToastUtil.sendPersistentToast("Failed to load the file. Is it a decision table file?");
                 } else {
                     FXUtil.runOnFXThread(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ValidatorError");
-                        alert.setHeaderText("Could not load table data");
-                        alert.setContentText("Could not load table data from file. Is it a decision table file?");
-                        alert.showAndWait();
+                        Window owner = null;
+                        if (stage != null){
+                            owner = stage.getOwner();
+                        }
+                        NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, owner);
+                        alert.setTitle("Failed To Load");
+                        alert.setBody("Failed to load decision table data from the file. Ensure the file is formatted " +
+                                "as a decision table.");
+                        alert.show();
                     });
                 }
                 if (busy != null) {
@@ -124,11 +130,10 @@ public class FileUtil {
                     ToastUtil.sendPersistentToast("Could not load table data from file. The table from the file is was invalid.");
                 } else {
                     FXUtil.runOnFXThread(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ValidatorError");
-                        alert.setHeaderText("Could not load table data");
-                        alert.setContentText("Could not load table data from file. The table from the file is was invalid.");
-                        alert.showAndWait();
+                        NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, stage.getOwner());
+                        alert.setTitle("Failed To Load");
+                        alert.setBody("Failed to load decision table data from the file. The table in the file is invalid.");
+                        alert.show();
                     });
                 }
                 newFile();
