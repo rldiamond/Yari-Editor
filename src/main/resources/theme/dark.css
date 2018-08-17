@@ -727,3 +727,7 @@
     -fx-background-color: #303030;
     -fx-border-color: #303030;
 }
+
+.errorDialog .dialogHeader {
+    -fx-background-color: #353535;
+}

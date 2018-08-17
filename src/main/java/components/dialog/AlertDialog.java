@@ -40,7 +40,7 @@ public abstract class AlertDialog extends StackPane {
     private final StringProperty title = new SimpleStringProperty("");
     private final StringProperty body = new SimpleStringProperty("");
     private final Stage stage;
-    private final VBox displayedContent = new VBox(25);
+    private final VBox displayedContent = new VBox(15);
     private StackPane footer;
 
     /**
@@ -59,13 +59,13 @@ public abstract class AlertDialog extends StackPane {
         getStyleClass().add("errorDialog");
         setPrefSize(450, 275);
 
-        setPadding(new Insets(0, 15, 15, 15));
-
         HBox headerContainer = new HBox(15);
+        headerContainer.getStyleClass().add("dialogHeader");
         headerContainer.setAlignment(Pos.CENTER_LEFT);
-        headerContainer.setPadding(new Insets(20,0,0,0));
+        headerContainer.setPadding(new Insets(0,0,0,15));
         ResizeHelper.addUndecoratedStageDragListener(stage, headerContainer);
-        headerContainer.setPrefHeight(45);
+        headerContainer.setMinHeight(USE_PREF_SIZE);
+        headerContainer.setPrefHeight(75);
 
         Label titleLabel = new Label();
         titleLabel.textProperty().bind(title);
