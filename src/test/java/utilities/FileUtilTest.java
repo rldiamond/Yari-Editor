@@ -46,6 +46,7 @@ public class FileUtilTest extends ApplicationTest {
     @Test
     public void dirtyProperty() {
         boolean expected = false;
+        FileUtil.setDirty(expected);
         boolean result = FileUtil.dirtyProperty().get();
         assertEquals(expected, result);
     }
