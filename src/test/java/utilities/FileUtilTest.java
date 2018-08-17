@@ -27,7 +27,7 @@ public class FileUtilTest extends ApplicationTest {
 
     @Test
     public void openFile() {
-        FXUtil.runOnFXThread(() -> FileUtil.openDecisionTableFile(new File(""), new Stage(), null));
+        FXUtil.runOnFXThread(() -> FileUtil.openDecisionTableFile(new File(""), null, null));
     }
 
     @Test

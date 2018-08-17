@@ -132,4 +132,8 @@ public abstract class AlertDialog extends StackPane {
         stage.showAndWait();
     }
 
+    protected void show(){
+        stage.show();
+    }
+
 }

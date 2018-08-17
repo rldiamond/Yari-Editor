@@ -17,6 +17,7 @@ import javafx.print.*;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
@@ -89,7 +90,11 @@ public class FileUtil {
                     ToastUtil.sendPersistentToast("Failed to load the file. Is it a decision table file?");
                 } else {
                     FXUtil.runOnFXThread(() -> {
-                        NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, stage.getOwner());
+                        Window owner = null;
+                        if (stage != null){
+                            owner = stage.getOwner();
+                        }
+                        NonActionableAlertDialog alert = new NonActionableAlertDialog(AlertDialogType.ERROR, owner);
                         alert.setTitle("Failed To Load");
                         alert.setBody("Failed to load decision table data from the file. Ensure the file is formatted " +
                                 "as a decision table.");
