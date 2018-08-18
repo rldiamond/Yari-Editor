@@ -22,6 +22,7 @@ package components.dialog;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.geometry.Pos;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Window;
@@ -52,6 +53,7 @@ public class NonActionableAlertDialog extends AlertDialog {
 
     private void initDismissButton() {
         JFXButton dismissButton = new JFXButton("DISMISS");
+        Tooltip.install(dismissButton, new Tooltip("Dismiss this notification"));
         dismissButton.setButtonType(JFXButton.ButtonType.RAISED);
         dismissButton.getStyleClass().add("button-flat-brightred");
         dismissButton.setOnMouseClicked(me -> {
