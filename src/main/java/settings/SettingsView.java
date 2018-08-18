@@ -15,6 +15,7 @@ import components.Card;
 import components.EnumComboBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -22,10 +23,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import objects.Theme;
 import utilities.SettingsUtil;
+import utilities.ThemeUtil;
+import utilities.resizing.ResizeHelper;
 import validation.ValidationType;
 
 import java.io.File;
@@ -33,20 +35,32 @@ import java.io.File;
 public class SettingsView extends Card {
 
     private Settings settings;
-
     private EnumComboBox<ValidationType> validationTypeComboBox;
     private EnumComboBox<Theme> themeComboBox;
     private TextField projectDirectoryField;
-    private JFXButton okayButton;
+    private Stage stage;
 
-    public SettingsView(Settings settings, Stage stage) {
+    public SettingsView(Settings settings, Window owner) {
         super("Settings");
         this.settings = settings;
-        setId("settings");
+
+        stage = new Stage();
+        stage.initStyle(StageStyle.UNDECORATED);
+        if (owner != null) {
+            stage.initOwner(owner);
+            stage.initModality(Modality.APPLICATION_MODAL);
+        }
+        Scene scene = new Scene(this);
+        ThemeUtil.setThemeOnScene(scene);
+        stage.setScene(scene);
+
+        ResizeHelper.addUndecoratedStageDragListener(stage, getHeader());
+
+        getStyleClass().add("settingsView");
 
         //view settings
         VBox settingsContainer = new VBox(10);
-        settingsContainer.setPrefSize(550, 300);
+        settingsContainer.setPrefSize(450, 250);
         settingsContainer.setPadding(new Insets(5, 5, 5, 5));
 
         //build the view
@@ -103,7 +117,7 @@ public class SettingsView extends Card {
 
         //footer (buttons)
         //buttons
-        okayButton = new JFXButton();
+        JFXButton okayButton = new JFXButton();
         okayButton.setOnMouseClicked(a -> {
             saveSettings();
             stage.close();
@@ -125,6 +139,10 @@ public class SettingsView extends Card {
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
         buttonWrapper.getChildren().setAll(discard, okayButton);
         setFooterContent(buttonWrapper);
+    }
+
+    public void show() {
+        stage.show();
     }
 
     private void saveSettings() {

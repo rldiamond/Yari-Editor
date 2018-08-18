@@ -34,7 +34,7 @@ import javafx.scene.paint.Color;
 
 /**
  * Simple Pane designed to appear as a material design 'card'.
- *
+ * <p>
  * StyleClasses:
  * - Card = card
  * - Card title = title
@@ -45,6 +45,7 @@ public class Card extends StackPane {
     private final StackPane displayedContent = new StackPane();
     private final VBox cardContent = new VBox(10);
     private StackPane footerContent;
+    private HBox header;
 
     /**
      * Construct a card with no title.
@@ -76,10 +77,10 @@ public class Card extends StackPane {
         //title
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add("title");
-        HBox titleWrapper = new HBox(titleLabel);
-        titleWrapper.setAlignment(Pos.CENTER);
+        header = new HBox(titleLabel);
+        header.setAlignment(Pos.CENTER);
 
-        cardContent.getChildren().add(0, titleWrapper);
+        cardContent.getChildren().add(0, header);
     }
 
     /**
@@ -105,6 +106,14 @@ public class Card extends StackPane {
             cardContent.getChildren().add(footerContent);
         }
         footerContent.getChildren().setAll(node);
+    }
+
+    /**
+     * Return the header container for modification. Contains the title label.
+     * @return the header container for modification. Contains the title label.
+     */
+    protected HBox getHeader() {
+        return header;
     }
 
 }

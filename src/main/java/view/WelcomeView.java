@@ -16,7 +16,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -160,7 +159,7 @@ public class WelcomeView extends VBox {
         HBox importContainer = new HBox(10);
         importContainer.setAlignment(Pos.CENTER_LEFT);
         Tooltip.install(importContainer, new Tooltip("Import a table from Excel"));
-        VBox.setMargin(importContainer, new Insets(0,0,0,108));
+        VBox.setMargin(importContainer, new Insets(0, 0, 0, 108));
         Pane importIcon = new Pane();
         importIcon.setPrefSize(12, 13);
         importIcon.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
@@ -201,11 +200,8 @@ public class WelcomeView extends VBox {
         Pane settingsButton = new Pane();
         Tooltip.install(settingsButton, new Tooltip("Settings"));
         settingsButton.setOnMouseClicked(e -> {
-            Stage settingsStage = new Stage();
-            Scene settingsScene = new Scene(new SettingsView(SettingsUtil.getSettings(), settingsStage));
-            ThemeUtil.setThemeOnScene(settingsScene);
-            settingsStage.setScene(settingsScene);
-            settingsStage.show();
+            SettingsView settingsView = new SettingsView(SettingsUtil.getSettings(), stage.getOwner());
+            settingsView.show();
         });
         settingsButton.setId("settingsButton");
         settingsButton.setPrefSize(14, 14);

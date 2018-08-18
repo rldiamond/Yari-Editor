@@ -584,7 +584,7 @@
     -fx-opacity: .4;
 }
 
-#settings {
+.settingsView {
     -fx-background-color: white;
 }
 

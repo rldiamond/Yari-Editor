@@ -99,6 +99,7 @@ public abstract class AlertDialog extends StackPane {
     protected StackPane getFooter() {
         if (footer == null) {
             footer = new StackPane();
+            footer.setPadding(new Insets(0,10,10,10));
             displayedContent.getChildren().add(footer);
         }
         return footer;
