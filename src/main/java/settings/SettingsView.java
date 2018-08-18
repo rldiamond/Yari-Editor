@@ -141,6 +141,9 @@ public class SettingsView extends Card {
         setFooterContent(buttonWrapper);
     }
 
+    /**
+     * Show the settings view in a new stage.
+     */
     public void show() {
         stage.show();
     }

@@ -15,6 +15,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import objects.RecommendedFile;
 import settings.Settings;
@@ -73,6 +75,14 @@ public class RecommendedFileListView extends ListView<RecommendedFile> {
         getItems().addListener((ListChangeListener.Change<? extends RecommendedFile> c) -> {
             c.next();
             refresh();
+        });
+
+        super.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER && super.getSelectionModel().getSelectedItem() != null) {
+                busy.set(true);
+                FileUtil.openDecisionTableFile(new File(super.getSelectionModel().getSelectedItem().getPath()), stage, busy);
+                busy.set(false);
+            }
         });
 
     }
