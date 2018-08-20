@@ -733,4 +733,10 @@
 
 .rowHeader .subText {
     -fx-font-size: 12px;
+    -fx-font-weight: null;
+}
+.column-header {
+    -fx-font-family: "Helvetica";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
 }
