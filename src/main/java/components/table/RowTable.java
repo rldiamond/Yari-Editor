@@ -172,7 +172,7 @@ public class RowTable extends YariTable<org.yari.core.table.TableRow> {
 //            Tooltip.install(actionLabel, new Tooltip(actionTitle));
 
             TableColumn col = new TableColumn();
-            col.setGraphic(new RowColumnHeaderGraphic(action));
+            col.setGraphic(new HoverableRowColumnHeaderGraphic(action));
 
             final int column = 0;
             // Assign data to a column.
