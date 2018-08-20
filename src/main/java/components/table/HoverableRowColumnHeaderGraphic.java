@@ -10,17 +10,22 @@
 
 package components.table;
 
+import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import objects.ComparatorType;
 import objects.DataType;
 import org.yari.core.table.TableAction;
 import org.yari.core.table.TableCondition;
+import utilities.FXUtil;
 
 public class HoverableRowColumnHeaderGraphic extends StackPane {
 
@@ -80,7 +85,7 @@ public class HoverableRowColumnHeaderGraphic extends StackPane {
 
         sticky.addListener((obs, ov, isSticky) -> {
            if (isSticky){
-               
+
            }
         });
 
@@ -102,5 +107,29 @@ public class HoverableRowColumnHeaderGraphic extends StackPane {
 
 
         super.getChildren().setAll(container);
+    }
+
+    private class HeaderMouseEventHandler implements EventHandler<MouseEvent> {
+        FadeTransition fadeIn;
+        FadeTransition fadeOut;
+
+        public HeaderMouseEventHandler(Label headerLabel) {
+            fadeIn = FXUtil.installFade(headerLabel, FXUtil.AnimationFadeType.IN);
+            fadeOut = FXUtil.installFade(headerLabel, FXUtil.AnimationFadeType.OUT);
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+
+            final EventType<? extends MouseEvent> eventType = event.getEventType();
+
+            if (MouseEvent.MOUSE_ENTERED.equals(eventType)) {
+                fadeOut.stop();
+                fadeIn.play();
+            } else if (MouseEvent.MOUSE_EXITED.equals(eventType)) {
+                fadeIn.stop();
+                fadeOut.play();
+            }
+        }
     }
 }
