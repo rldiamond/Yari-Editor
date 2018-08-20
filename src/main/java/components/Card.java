@@ -112,7 +112,7 @@ public class Card extends StackPane {
      * Return the header container for modification. Contains the title label.
      * @return the header container for modification. Contains the title label.
      */
-    protected HBox getHeader() {
+    public HBox getHeader() {
         return header;
     }
 

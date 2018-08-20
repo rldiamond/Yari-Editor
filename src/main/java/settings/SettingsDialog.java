@@ -32,7 +32,9 @@ import validation.ValidationType;
 
 import java.io.File;
 
-public class SettingsView extends Card {
+import static javafx.scene.control.PopupControl.USE_COMPUTED_SIZE;
+
+public class SettingsDialog {
 
     private Settings settings;
     private EnumComboBox<ValidationType> validationTypeComboBox;
@@ -40,8 +42,8 @@ public class SettingsView extends Card {
     private TextField projectDirectoryField;
     private Stage stage;
 
-    public SettingsView(Settings settings, Window owner) {
-        super("Settings");
+    public SettingsDialog(Settings settings, Window owner) {
+        Card card = new Card("Settings");
         this.settings = settings;
 
         stage = new Stage();
@@ -50,13 +52,13 @@ public class SettingsView extends Card {
             stage.initOwner(owner);
             stage.initModality(Modality.APPLICATION_MODAL);
         }
-        Scene scene = new Scene(this);
+        Scene scene = new Scene(card);
         ThemeUtil.setThemeOnScene(scene);
         stage.setScene(scene);
 
-        ResizeHelper.addUndecoratedStageDragListener(stage, getHeader());
+        ResizeHelper.addUndecoratedStageDragListener(stage, card.getHeader());
 
-        getStyleClass().add("settingsView");
+        card.getStyleClass().add("settingsView");
 
         //view settings
         VBox settingsContainer = new VBox(10);
@@ -113,7 +115,7 @@ public class SettingsView extends Card {
         //call to initially populate the fields
         resetSettings();
 
-        setDisplayedContent(settingsContainer);
+        card.setDisplayedContent(settingsContainer);
 
         //footer (buttons)
         //buttons
@@ -138,7 +140,7 @@ public class SettingsView extends Card {
         HBox buttonWrapper = new HBox(5);
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
         buttonWrapper.getChildren().setAll(discard, okayButton);
-        setFooterContent(buttonWrapper);
+        card.setFooterContent(buttonWrapper);
     }
 
     /**

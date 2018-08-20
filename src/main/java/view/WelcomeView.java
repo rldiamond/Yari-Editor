@@ -22,7 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import settings.SettingsView;
+import settings.SettingsDialog;
 import utilities.FXUtil;
 import utilities.FileUtil;
 import utilities.SettingsUtil;
@@ -200,8 +200,8 @@ public class WelcomeView extends VBox {
         Pane settingsButton = new Pane();
         Tooltip.install(settingsButton, new Tooltip("Settings"));
         settingsButton.setOnMouseClicked(e -> {
-            SettingsView settingsView = new SettingsView(SettingsUtil.getSettings(), stage.getOwner());
-            settingsView.show();
+            SettingsDialog settingsDialog = new SettingsDialog(SettingsUtil.getSettings(), stage.getOwner());
+            settingsDialog.show();
         });
         settingsButton.setId("settingsButton");
         settingsButton.setPrefSize(14, 14);
