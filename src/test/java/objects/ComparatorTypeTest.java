@@ -30,32 +30,32 @@ public class ComparatorTypeTest {
 
         //equal
         expected = "==";
-        result = ComparatorType.EQUAL.getDisplayValue();
+        result = ComparatorType.EQUAL.getTableValue();
         assertEquals(expected, result);
 
         //not equal
         expected = "!=";
-        result = ComparatorType.NOT_EQUAL.getDisplayValue();
+        result = ComparatorType.NOT_EQUAL.getTableValue();
         assertEquals(expected, result);
 
         //greater than
         expected = "GT";
-        result = ComparatorType.GREATER_THAN.getDisplayValue();
+        result = ComparatorType.GREATER_THAN.getTableValue();
         assertEquals(expected, result);
 
         //greater than equal to
         expected = "GE";
-        result = ComparatorType.GREATER_THAN_EQUAL.getDisplayValue();
+        result = ComparatorType.GREATER_THAN_EQUAL.getTableValue();
         assertEquals(expected, result);
 
         //less than
         expected = "LT";
-        result = ComparatorType.LESS_THAN.getDisplayValue();
+        result = ComparatorType.LESS_THAN.getTableValue();
         assertEquals(expected, result);
 
         //less than equal to
         expected = "LE";
-        result = ComparatorType.LESS_THAN_EQUAL.getDisplayValue();
+        result = ComparatorType.LESS_THAN_EQUAL.getTableValue();
         assertEquals(expected, result);
 
     }

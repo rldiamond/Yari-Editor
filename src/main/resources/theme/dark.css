@@ -721,3 +721,16 @@
 .errorDialog .dialogHeader {
     -fx-background-color: #353535;
 }
+
+.rowHeader .titleText {
+    -fx-font-family: "Helvetica";
+}
+
+.rowHeader .titleText {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.rowHeader .subText {
+    -fx-font-size: 12px;
+}

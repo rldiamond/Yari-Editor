@@ -126,13 +126,13 @@ public class RowTable extends YariTable<org.yari.core.table.TableRow> {
         //conditions
         int columnNum = 0;
         for (TableCondition condition : DECISION_TABLE_SERVICE.getConditions()) {
-            final String condTitle = TextUtil.toTitleCase(condition.getName() + " (" + condition.getDataType() + ", " + condition.getComparator() + ")");
-
-            Label condLabel = new Label(condTitle);
-            Tooltip.install(condLabel, new Tooltip(condTitle));
+//            final String condTitle = TextUtil.toTitleCase(condition.getName() + " (" + condition.getDataType() + ", " + condition.getComparator() + ")");
+//
+//            Label condLabel = new Label(condTitle);
+//            Tooltip.install(condLabel, new Tooltip(condTitle));
 
             TableColumn conditionCol = new TableColumn();
-            conditionCol.setGraphic(condLabel);
+            conditionCol.setGraphic(new RowColumnHeaderGraphic(condition));
 
             final int column = columnNum;
             // Assign data to a column.
@@ -166,13 +166,13 @@ public class RowTable extends YariTable<org.yari.core.table.TableRow> {
         //actions
         // Create the action columns.
         for (TableAction action : DECISION_TABLE_SERVICE.getActions()) {
-            final String actionTitle = TextUtil.toTitleCase(action.getName()) + " (" + action.getDataType() + ")";
-
-            Label actionLabel = new Label(actionTitle);
-            Tooltip.install(actionLabel, new Tooltip(actionTitle));
+//            final String actionTitle = TextUtil.toTitleCase(action.getName()) + " (" + action.getDataType() + ")";
+//
+//            Label actionLabel = new Label(actionTitle);
+//            Tooltip.install(actionLabel, new Tooltip(actionTitle));
 
             TableColumn col = new TableColumn();
-            col.setGraphic(actionLabel);
+            col.setGraphic(new RowColumnHeaderGraphic(action));
 
             final int column = 0;
             // Assign data to a column.
