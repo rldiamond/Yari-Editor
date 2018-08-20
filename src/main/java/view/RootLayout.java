@@ -230,12 +230,8 @@ public class RootLayout extends BorderPane {
         Tooltip.install(fileSaveAsMenuEntry, new Tooltip("Save the current document as a new file."));
         PopupMenuEntry fileSettingsMenuEntry = new PopupMenuEntry("Settings");
         fileSettingsMenuEntry.setOnMouseClicked(me -> {
-            Stage stage = new Stage();
-            Scene scene = new Scene(new SettingsView(SettingsUtil.getSettings(), stage));
-            ThemeUtil.setThemeOnScene(scene);
-            stage.setScene(scene);
-            stage.show();
-
+            SettingsView settingsView = new SettingsView(SettingsUtil.getSettings(), getScene().getWindow());
+            settingsView.show();
         });
         PopupMenuEntry filePrintMenuEntry = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
         filePrintMenuEntry.setOnMouseClicked(me -> {
