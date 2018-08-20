@@ -135,7 +135,7 @@ public class RootLayout extends BorderPane {
         validationService.validProperty().addListener((obs, ov, nv) -> {
             if (!ov && nv) {
                 toastBar.close();
-                ToastUtil.sendToast("Workspace now validates!");
+                ToastUtil.sendToast("The decision table now validates!");
             }
         });
 
