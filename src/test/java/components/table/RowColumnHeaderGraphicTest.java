@@ -53,13 +53,5 @@ public class RowColumnHeaderGraphicTest extends ApplicationTest {
         assertThat(titleLabel).isVisible();
         assertThat(subtextLabel).isInvisible();
 
-        moveTo(graphic);
-
-        assertThat(titleLabel).isVisible();
-        assertThat(subtextLabel).isVisible();
-
-        moveBy(200, 200);
-        assertThat(titleLabel).isVisible();
-        assertThat(subtextLabel).isInvisible();
     }
 }
