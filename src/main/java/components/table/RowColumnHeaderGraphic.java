@@ -96,20 +96,16 @@ public class RowColumnHeaderGraphic extends StackPane {
         sticky.addListener((obs, ov, isSticky) -> {
 
             if (isSticky) {
-                FXUtil.runOnFXThread(() -> {
                     super.removeEventHandler(MouseEvent.MOUSE_ENTERED, mouseEventHandler);
                     super.removeEventHandler(MouseEvent.MOUSE_EXITED, mouseEventHandler);
                     subtext.setVisible(true);
                     subtext.setOpacity(1);
                     subtext.setManaged(true);
-                });
             } else {
-                FXUtil.runOnFXThread(() -> {
                     subtext.setVisible(false);
                     subtext.setManaged(false);
                     super.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEventHandler);
                     super.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEventHandler);
-                });
             }
 
         });

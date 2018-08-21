@@ -92,4 +92,11 @@ public class SettingsTest {
         settings.addRecentFile(file);
         assertEquals(1, settings.getRecommendedFiles().size());
     }
+
+    @Test
+    public void testGetSetSticky(){
+        boolean isSticky = settings.isRowColumnHeaderSticky();
+        settings.setRowColumnHeaderSticky(!isSticky);
+        assertEquals(!isSticky, settings.isRowColumnHeaderSticky());
+    }
 }
