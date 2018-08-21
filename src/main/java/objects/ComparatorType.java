@@ -19,17 +19,28 @@ import java.util.stream.Collectors;
  */
 public enum ComparatorType {
 
-    EQUAL("=="),
-    NOT_EQUAL("!="),
-    GREATER_THAN("GT"),
-    GREATER_THAN_EQUAL("GE"),
-    LESS_THAN("LT"),
-    LESS_THAN_EQUAL("LE");
+    EQUAL("==", "=="),
+    NOT_EQUAL("!=", "!="),
+    GREATER_THAN("GT", ">"),
+    GREATER_THAN_EQUAL("GE", "≥"),
+    LESS_THAN("LT", "<"),
+    LESS_THAN_EQUAL("LE", "≤");
 
+    private final String tableValue;
     private final String displayValue;
 
-    ComparatorType(String displayValue) {
+    ComparatorType(String tableValue, String displayValue) {
+        this.tableValue = tableValue;
         this.displayValue = displayValue;
+    }
+
+    /**
+     * Return the table-friendly value of the comparator.
+     *
+     * @return the table friendly value of the comparator.
+     */
+    public String getTableValue() {
+        return tableValue;
     }
 
     /**
@@ -48,13 +59,13 @@ public enum ComparatorType {
      */
     public static List<String> getFXCompatibleList() {
         return Arrays.stream(values())
-                .map(ComparatorType::getDisplayValue)
+                .map(ComparatorType::getTableValue)
                 .collect(Collectors.toList());
     }
 
     public static ComparatorType getFromTableString(String comparatorType) {
         return Arrays.stream(values())
-                .filter(type -> type.getDisplayValue().equalsIgnoreCase(comparatorType))
+                .filter(type -> type.getTableValue().equalsIgnoreCase(comparatorType))
                 .findFirst().orElse(null);
     }
 }

@@ -12,6 +12,7 @@ package components.dialog;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.geometry.Pos;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Window;
@@ -48,6 +49,7 @@ public class ActionableAlertDialog extends AlertDialog {
     private void initButtons() {
 
         actionButton = new JFXButton("OKAY");
+        Tooltip.install(actionButton, new Tooltip("Confirm and continue"));
         actionButton.setButtonType(JFXButton.ButtonType.RAISED);
         actionButton.getStyleClass().add("button-flat-white");
         actionButton.setOnMouseClicked(me -> {
@@ -62,6 +64,7 @@ public class ActionableAlertDialog extends AlertDialog {
         });
 
         JFXButton dismissButton = new JFXButton("DISMISS");
+        Tooltip.install(dismissButton, new Tooltip("Dismiss this notification"));
         dismissButton.setButtonType(JFXButton.ButtonType.RAISED);
         dismissButton.getStyleClass().add("button-flat-brightred");
         dismissButton.setOnMouseClicked(me -> {

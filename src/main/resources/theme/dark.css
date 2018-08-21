@@ -1,16 +1,6 @@
 /*
  * This file is part of Yari Editor.
  *
- *  Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- *  Yari Editor is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License along with Yari Editor. If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * This file is part of Yari Editor.
- *
  * Yari Editor is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
  * Yari Editor is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
@@ -584,7 +574,7 @@
     -fx-opacity: .4;
 }
 
-#settings {
+.settingsView {
     -fx-background-color: white;
 }
 
@@ -726,4 +716,28 @@
 .errorDialog .text-area .content {
     -fx-background-color: #303030;
     -fx-border-color: #303030;
+}
+
+.errorDialog .dialogHeader {
+    -fx-background-color: #353535;
+}
+
+.rowHeader .titleText {
+    -fx-font-family: "Helvetica";
+}
+
+.rowHeader .titleText {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.rowHeader .subText {
+    -fx-font-size: 12px;
+    -fx-font-weight: null;
+}
+.column-header {
+    -fx-font-family: "Helvetica";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
 }

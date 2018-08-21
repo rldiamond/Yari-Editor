@@ -22,6 +22,7 @@ package settings;
 
 import objects.RecommendedFile;
 import objects.Theme;
+import utilities.SettingsUtil;
 import validation.ValidationType;
 
 import java.io.File;
@@ -30,6 +31,8 @@ import java.util.List;
 
 /**
  * Simple object describing several user-adjustable settings.
+ *
+ * NOTE: When adding new items to user settings, ensure that you set the default value in {@link SettingsUtil#getDefaults()}. A proper UI element should also be added to the {@link SettingsDialog}.
  */
 public class Settings {
 
@@ -44,6 +47,8 @@ public class Settings {
 
     //recent files
     private List<RecommendedFile> recommendedFiles;
+
+    private boolean isRowColumnHeaderSticky;
 
     public String getProjectDirectory() {
         return projectDirectory;
@@ -93,5 +98,13 @@ public class Settings {
 
     public List<RecommendedFile> getRecommendedFiles() {
         return recommendedFiles;
+    }
+
+    public boolean isRowColumnHeaderSticky() {
+        return isRowColumnHeaderSticky;
+    }
+
+    public void setRowColumnHeaderSticky(boolean rowColumnHeaderSticky) {
+        isRowColumnHeaderSticky = rowColumnHeaderSticky;
     }
 }

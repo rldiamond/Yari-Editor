@@ -50,7 +50,6 @@ import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -63,7 +62,7 @@ import javafx.stage.Window;
 import objects.KeyboardShortcut;
 import objects.ToolView;
 import org.yari.core.table.DecisionTable;
-import settings.SettingsView;
+import settings.SettingsDialog;
 import utilities.*;
 import validation.ValidateEvent;
 import validation.ValidationService;
@@ -136,7 +135,7 @@ public class RootLayout extends BorderPane {
         validationService.validProperty().addListener((obs, ov, nv) -> {
             if (!ov && nv) {
                 toastBar.close();
-                ToastUtil.sendToast("Workspace now validates!");
+                ToastUtil.sendToast("The decision table now validates!");
             }
         });
 
@@ -230,12 +229,8 @@ public class RootLayout extends BorderPane {
         Tooltip.install(fileSaveAsMenuEntry, new Tooltip("Save the current document as a new file."));
         PopupMenuEntry fileSettingsMenuEntry = new PopupMenuEntry("Settings");
         fileSettingsMenuEntry.setOnMouseClicked(me -> {
-            Stage stage = new Stage();
-            Scene scene = new Scene(new SettingsView(SettingsUtil.getSettings(), stage));
-            ThemeUtil.setThemeOnScene(scene);
-            stage.setScene(scene);
-            stage.show();
-
+            SettingsDialog settingsDialog = new SettingsDialog(SettingsUtil.getSettings(), getScene().getWindow());
+            settingsDialog.show();
         });
         PopupMenuEntry filePrintMenuEntry = new PopupMenuEntry("Print", KeyboardShortcut.PRINT);
         filePrintMenuEntry.setOnMouseClicked(me -> {

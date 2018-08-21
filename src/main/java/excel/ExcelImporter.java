@@ -133,7 +133,7 @@ public class ExcelImporter {
             switch (item.getType()) {
                 case CONDITION:
                     TableCondition tableCondition = new TableCondition();
-                    tableCondition.setComparator(item.getComparatorType().getDisplayValue());
+                    tableCondition.setComparator(item.getComparatorType().getTableValue());
                     tableCondition.setDataType(item.getDataType().getDisplayValue());
                     tableCondition.setMethodName(item.getMethodName());
                     tableCondition.setName(item.getName());

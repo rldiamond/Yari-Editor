@@ -10,6 +10,7 @@
 
 package utilities;
 
+import components.table.RowColumnHeaderGraphic;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import objects.RecommendedFile;
@@ -104,6 +105,7 @@ public class SettingsUtil {
         ValidationService.getService().setStrict(!newestSettings.getValidationType().equals(ValidationType.STRICT));
         ThemeUtil.setActiveTheme(newestSettings.getTheme());
         ThemeUtil.refreshThemes();
+        RowColumnHeaderGraphic.setSticky(newestSettings.isRowColumnHeaderSticky());
     }
 
     private static String getUserDirectory() {
@@ -118,6 +120,7 @@ public class SettingsUtil {
         defaultSettings.setTheme(Theme.DARK);
         defaultSettings.setValidationType(ValidationType.STRICT);
         defaultSettings.setProjectDirectory(null);
+        defaultSettings.setRowColumnHeaderSticky(false);
         return defaultSettings;
     }
 

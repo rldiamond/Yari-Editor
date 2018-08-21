@@ -52,7 +52,35 @@ public class FXUtil {
     }
 
     // --------------- ANIMATIONS --------------------
+
+    /**
+     * Install a FadeTransition on the provided Node. The {@link AnimationFadeType} determines whether the
+     * transition should be a fade in, or fade out. This method provides a default duration of 200ms.
+     * <p>
+     * At the end of the fade, we set the Node's managed property to FALSE and the Node's visible property
+     * to FALSE.
+     *
+     * @param node              the Node to install the fade onto.
+     * @param animationFadeType whether the fade should fade in or fade out.
+     * @return a complete FadeTransition ready to {@link FadeTransition#play()}.
+     */
     public static FadeTransition installFade(Node node, AnimationFadeType animationFadeType) {
+        return installFade(node, animationFadeType, Duration.millis(200));
+    }
+
+    /**
+     * Install a FadeTransition on the provided Node. The {@link AnimationFadeType} determines whether the
+     * transition should be a fade in, or fade out. This method provides the ability to set a custom Duration.
+     * <p>
+     * At the end of the fade, we set the Node's managed property to FALSE and the Node's visible property
+     * to FALSE.
+     *
+     * @param node              the Node to install the fade onto.
+     * @param animationFadeType whether the fade should fade in or fade out.
+     * @param duration          the Duration to run the fade for.
+     * @return a complete FadeTransition ready to {@link FadeTransition#play()}.
+     */
+    public static FadeTransition installFade(Node node, AnimationFadeType animationFadeType, Duration duration) {
         int from = 0;
         int to = 0;
 
@@ -72,10 +100,10 @@ public class FXUtil {
                 });
                 break;
             default:
-            //..
+                //..
         }
 
-        fade.setDuration(Duration.millis(200));
+        fade.setDuration(duration);
         fade.setFromValue(from);
         fade.setToValue(to);
         fade.setNode(node);

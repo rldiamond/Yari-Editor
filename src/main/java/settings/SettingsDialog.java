@@ -11,10 +11,13 @@
 package settings;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXToggleButton;
 import components.Card;
 import components.EnumComboBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -22,31 +25,47 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import objects.Theme;
 import utilities.SettingsUtil;
+import utilities.ThemeUtil;
+import utilities.resizing.ResizeHelper;
 import validation.ValidationType;
 
 import java.io.File;
 
-public class SettingsView extends Card {
+import static javafx.scene.control.PopupControl.USE_COMPUTED_SIZE;
+
+public class SettingsDialog {
 
     private Settings settings;
-
     private EnumComboBox<ValidationType> validationTypeComboBox;
     private EnumComboBox<Theme> themeComboBox;
     private TextField projectDirectoryField;
-    private JFXButton okayButton;
+    private Stage stage;
+    private JFXToggleButton stickyHeaderToggle;
 
-    public SettingsView(Settings settings, Stage stage) {
-        super("Settings");
+    public SettingsDialog(Settings settings, Window owner) {
+        Card card = new Card("Settings");
         this.settings = settings;
-        setId("settings");
+
+        stage = new Stage();
+        stage.initStyle(StageStyle.UNDECORATED);
+        if (owner != null) {
+            stage.initOwner(owner);
+            stage.initModality(Modality.APPLICATION_MODAL);
+        }
+        Scene scene = new Scene(card);
+        ThemeUtil.setThemeOnScene(scene);
+        stage.setScene(scene);
+
+        ResizeHelper.addUndecoratedStageDragListener(stage, card.getHeader());
+
+        card.getStyleClass().add("settingsView");
 
         //view settings
         VBox settingsContainer = new VBox(10);
-        settingsContainer.setPrefSize(550, 300);
+        settingsContainer.setPrefSize(450, 250);
         settingsContainer.setPadding(new Insets(5, 5, 5, 5));
 
         //build the view
@@ -94,16 +113,24 @@ public class SettingsView extends Card {
         projectsDirectorySettings.setSpacing(3);
         Tooltip.install(projectsDirectorySettings, new Tooltip("Select a project directory."));
 
-        settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings);
+        //sticky row header settings
+        Label columnHeaderLabel = new Label("Sticky Column Header");
+        columnHeaderLabel.setPrefWidth(145);
+        stickyHeaderToggle = new JFXToggleButton();
+        HBox rowColumnHeaderSettings = new HBox(columnHeaderLabel, stickyHeaderToggle);
+        rowColumnHeaderSettings.setAlignment(Pos.CENTER_LEFT);
+        Tooltip.install(rowColumnHeaderSettings, new Tooltip("Set if column header should always show additional data."));
+
+        settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings, rowColumnHeaderSettings);
 
         //call to initially populate the fields
         resetSettings();
 
-        setDisplayedContent(settingsContainer);
+        card.setDisplayedContent(settingsContainer);
 
         //footer (buttons)
         //buttons
-        okayButton = new JFXButton();
+        JFXButton okayButton = new JFXButton();
         okayButton.setOnMouseClicked(a -> {
             saveSettings();
             stage.close();
@@ -124,7 +151,14 @@ public class SettingsView extends Card {
         HBox buttonWrapper = new HBox(5);
         buttonWrapper.setAlignment(Pos.CENTER_RIGHT);
         buttonWrapper.getChildren().setAll(discard, okayButton);
-        setFooterContent(buttonWrapper);
+        card.setFooterContent(buttonWrapper);
+    }
+
+    /**
+     * Show the settings view in a new stage.
+     */
+    public void show() {
+        stage.show();
     }
 
     private void saveSettings() {
@@ -134,6 +168,7 @@ public class SettingsView extends Card {
         }
         updatedSettings.setTheme(themeComboBox.getValue());
         updatedSettings.setValidationType(validationTypeComboBox.getValue());
+        updatedSettings.setRowColumnHeaderSticky(stickyHeaderToggle.isSelected());
 
         SettingsUtil.saveSettings(updatedSettings);
         settings = updatedSettings;
@@ -143,5 +178,6 @@ public class SettingsView extends Card {
         validationTypeComboBox.getSelectionModel().select(settings.getValidationType());
         themeComboBox.getSelectionModel().select(settings.getTheme());
         projectDirectoryField.setText(settings.getProjectDirectory());
+        stickyHeaderToggle.setSelected(settings.isRowColumnHeaderSticky());
     }
 }
