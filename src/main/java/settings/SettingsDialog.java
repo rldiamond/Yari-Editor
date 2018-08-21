@@ -11,6 +11,8 @@
 package settings;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXToggleButton;
 import components.Card;
 import components.EnumComboBox;
 import javafx.geometry.Insets;
@@ -41,6 +43,7 @@ public class SettingsDialog {
     private EnumComboBox<Theme> themeComboBox;
     private TextField projectDirectoryField;
     private Stage stage;
+    private JFXToggleButton stickyHeaderToggle;
 
     public SettingsDialog(Settings settings, Window owner) {
         Card card = new Card("Settings");
@@ -110,7 +113,15 @@ public class SettingsDialog {
         projectsDirectorySettings.setSpacing(3);
         Tooltip.install(projectsDirectorySettings, new Tooltip("Select a project directory."));
 
-        settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings);
+        //sticky row header settings
+        Label columnHeaderLabel = new Label("Sticky Column Header");
+        columnHeaderLabel.setPrefWidth(145);
+        stickyHeaderToggle = new JFXToggleButton();
+        HBox rowColumnHeaderSettings = new HBox(columnHeaderLabel, stickyHeaderToggle);
+        rowColumnHeaderSettings.setAlignment(Pos.CENTER_LEFT);
+        Tooltip.install(rowColumnHeaderSettings, new Tooltip("Set if column header should always show additional data."));
+
+        settingsContainer.getChildren().addAll(validationSettings, themeSettings, projectsDirectorySettings, rowColumnHeaderSettings);
 
         //call to initially populate the fields
         resetSettings();
@@ -157,6 +168,7 @@ public class SettingsDialog {
         }
         updatedSettings.setTheme(themeComboBox.getValue());
         updatedSettings.setValidationType(validationTypeComboBox.getValue());
+        updatedSettings.setRowColumnHeaderSticky(stickyHeaderToggle.isSelected());
 
         SettingsUtil.saveSettings(updatedSettings);
         settings = updatedSettings;
@@ -166,5 +178,6 @@ public class SettingsDialog {
         validationTypeComboBox.getSelectionModel().select(settings.getValidationType());
         themeComboBox.getSelectionModel().select(settings.getTheme());
         projectDirectoryField.setText(settings.getProjectDirectory());
+        stickyHeaderToggle.setSelected(settings.isRowColumnHeaderSticky());
     }
 }
