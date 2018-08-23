@@ -29,7 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 import validation.ValidateEvent;
 
 public class GeneralToolView extends StackPane {

@@ -10,10 +10,9 @@
 
 package components.wizard;
 
-/**
- * Interface to be implemented on any view that is also a Wizard step.
- */
-public interface WizardStep {
+import javafx.scene.layout.StackPane;
+
+public abstract class WizardStep extends StackPane {
 
     /**
      * Determines if the wizard step is complete. This method should run data validations to ensure the user-entered
@@ -21,14 +20,13 @@ public interface WizardStep {
      *
      * @return true if the step is complete, false if not.
      */
-    boolean isComplete();
+    public abstract boolean isComplete();
 
     /**
-     * This method should return a message detailing the reasons why a wizard step is currently incomplete. This method
-     * is called if {@link WizardStep#isComplete()} returns FALSE to display a dialog to the user.
+     * This method should return a message detailing the reasons why a wizard step is currently incomplete.
+     * This method is called if {@link WizardStep#isComplete() returns FALSE to display a dialog to the user.
      *
      * @return a detailed message explaining why the step is currently incomplete.
      */
-    String getIncompleteMessage();
-
+    public abstract String getIncompleteMessage();
 }

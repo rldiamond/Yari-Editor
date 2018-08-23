@@ -9,7 +9,6 @@
  */
 package validation.validators;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.TableRow;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.yari.core.table.DecisionTable;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

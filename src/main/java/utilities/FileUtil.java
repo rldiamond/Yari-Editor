@@ -21,6 +21,7 @@ import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
+import table.DecisionTableService;
 import validation.ValidationService;
 import validation.ValidationType;
 import view.RootLayoutFactory;

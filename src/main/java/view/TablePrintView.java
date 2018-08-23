@@ -16,7 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.yari.core.table.DecisionTable;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 import utilities.ThemeUtil;
 import components.table.RowTable;
 

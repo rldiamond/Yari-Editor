@@ -32,6 +32,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.util.Optional;
+
 /**
  * Simple Pane designed to appear as a material design 'card'.
  * <p>
@@ -90,6 +92,19 @@ public class Card extends StackPane {
      */
     public void setDisplayedContent(Node node) {
         displayedContent.getChildren().setAll(node);
+    }
+
+    /**
+     * Return the currently displayed Node.
+     *
+     * @return the currently displayed Node.
+     */
+    public Optional<Node> getDisplayedContent() {
+        if (displayedContent.getChildren().isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(displayedContent.getChildren().get(0));
+        }
     }
 
     /**

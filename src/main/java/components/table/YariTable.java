@@ -34,7 +34,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 
 import java.util.List;
 

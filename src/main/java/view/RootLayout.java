@@ -36,6 +36,8 @@ import components.MenuOption;
 import components.PopupMenuEntry;
 import components.dialog.AlertDialogType;
 import components.dialog.NonActionableAlertDialog;
+import table.DecisionTableService;
+import table.wizard.NewTableWizard;
 import excel.ExcelImportResultsCard;
 import excel.ExcelImporter;
 import javafx.animation.FadeTransition;
@@ -193,7 +195,9 @@ public class RootLayout extends BorderPane {
             if (FileUtil.isDirty()) {
                 handleDirty();
             }
-            FileUtil.newFile();
+            displayNode(new NewTableWizard());
+
+//            FileUtil.newFile();
             fileMenuPopUp.hide();
         });
         Tooltip.install(fileNewMenuEntry, new Tooltip("Start a new document."));

@@ -31,7 +31,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.yari.core.table.TableAction;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 import utilities.FXUtil;
 import validation.ValidateEvent;
 

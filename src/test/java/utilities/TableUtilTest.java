@@ -16,6 +16,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.yari.core.table.TableAction;
 import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
+import table.DecisionTableService;
 
 import static org.junit.Assert.*;
 

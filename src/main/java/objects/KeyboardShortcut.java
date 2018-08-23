@@ -13,7 +13,7 @@ package objects;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 import utilities.FileUtil;
 import validation.ValidationService;
 import view.RootLayoutFactory;

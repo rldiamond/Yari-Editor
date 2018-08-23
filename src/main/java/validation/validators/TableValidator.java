@@ -13,7 +13,7 @@ package validation.validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yari.core.table.DecisionTable;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 
 import java.util.ArrayList;
 import java.util.Collections;

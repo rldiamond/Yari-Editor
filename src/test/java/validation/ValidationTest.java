@@ -20,7 +20,7 @@ import org.yari.core.table.TableAction;
 import org.yari.core.table.TableCondition;
 import org.yari.core.table.DecisionTable;
 import org.yari.core.table.TableRow;
-import utilities.DecisionTableService;
+import table.DecisionTableService;
 
 import java.util.Collections;
 
